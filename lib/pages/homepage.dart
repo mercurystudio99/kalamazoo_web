@@ -13,18 +13,34 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const double _opacity = 0;
+  late ScrollController _scrollController;
+  static double _scrollPosition = 0;
+  static double _opacity = 0;
+
+  _scrollListener() {
+    setState(() {
+      _scrollPosition = _scrollController.position.pixels;
+    });
+  }
+
+  @override
+  void initState() {
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
+    _opacity = _scrollPosition < screenSize.height * 0.40 ? 0 : 1;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: ResponsiveWidget.isSmallScreen(context)
           ? AppBar(
               // for smaller screen sizes
-              backgroundColor: Colors.transparent,
+              backgroundColor: Colors.blueGrey[900]?.withOpacity(_opacity),
               elevation: 0,
               title: Text(
                 'EXPLORE',
@@ -40,10 +56,11 @@ class _HomePageState extends State<HomePage> {
           : PreferredSize(
               // for larger & medium screen sizes
               preferredSize: Size(screenSize.width, 1000),
-              child: const TopBarContents(_opacity),
+              child: TopBarContents(_opacity),
             ),
       drawer: MobileDrawer(),
       body: SingleChildScrollView(
+        controller: _scrollController,
         physics: ClampingScrollPhysics(),
         child: Column(children: [
           Stack(
