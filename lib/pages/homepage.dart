@@ -1,3 +1,4 @@
+import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/bottom_bar.dart';
 
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static List<dynamic> _isHovering = [false];
+  static const double _opacity = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -20,83 +21,7 @@ class _HomePageState extends State<HomePage> {
       extendBodyBehindAppBar: true,
       appBar: PreferredSize(
         preferredSize: Size(screenSize.width, 1000),
-        child: Container(
-          color: Colors.blue.withOpacity(0.5),
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: Row(
-              children: [
-                Text('EXPLORE'),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () {},
-                        onHover: (value) {
-                          setState(() {
-                            _isHovering[0] = value;
-                          });
-                        },
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Discover',
-                              style: TextStyle(
-                                color: _isHovering[0]
-                                    ? Colors.blue.shade200
-                                    : Colors.white,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            // For showing an underline on hover
-                            Visibility(
-                              maintainAnimation: true,
-                              maintainState: true,
-                              maintainSize: true,
-                              visible: _isHovering[0],
-                              child: Container(
-                                height: 2,
-                                width: 20,
-                                color: Colors.white,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(width: screenSize.width / 20),
-                      InkWell(
-                        onTap: () {},
-                        child: Text(
-                          'Contact Us',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                InkWell(
-                  onTap: () {},
-                  child: Text(
-                    'Sign Up',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-                SizedBox(
-                  width: screenSize.width / 50,
-                ),
-                InkWell(
-                  onTap: () {},
-                  child: Text(
-                    'Login',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        child: const TopBarContents(_opacity),
       ),
       body: SingleChildScrollView(
         physics: ClampingScrollPhysics(),
