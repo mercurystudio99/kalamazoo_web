@@ -1,4 +1,5 @@
 import 'package:bestlocaleats/widgets/top_bar.dart';
+import 'package:bestlocaleats/widgets/drawer.dart';
 import 'package:bestlocaleats/widgets/bottom_bar.dart';
 
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class _HomePageState extends State<HomePage> {
         preferredSize: Size(screenSize.width, 1000),
         child: const TopBarContents(_opacity),
       ),
+      drawer: MobileDrawer(),
       body: SingleChildScrollView(
         physics: ClampingScrollPhysics(),
         child: Column(children: [
@@ -54,7 +56,12 @@ class _HomePageState extends State<HomePage> {
               )
             ],
           ),
-          BottomBar(),
+          Container(
+            width: screenSize.width,
+            height: screenSize.height,
+            color: Colors.blue.shade100,
+          ),
+          const BottomBar(),
         ]),
       ),
     );

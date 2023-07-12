@@ -15,7 +15,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Bestlocaleats',
       theme: ThemeData(visualDensity: VisualDensity.adaptivePlatformDensity),
-      home: HomePage(),
+      debugShowCheckedModeBanner: false,
+      home: const HomePage(),
     );
   }
 }
