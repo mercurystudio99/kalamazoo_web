@@ -1,6 +1,7 @@
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/drawer.dart';
 import 'package:bestlocaleats/widgets/bottom_bar.dart';
+import 'package:bestlocaleats/widgets/responsive.dart';
 
 import 'package:flutter/material.dart';
 
@@ -20,10 +21,27 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: PreferredSize(
-        preferredSize: Size(screenSize.width, 1000),
-        child: const TopBarContents(_opacity),
-      ),
+      appBar: ResponsiveWidget.isSmallScreen(context)
+          ? AppBar(
+              // for smaller screen sizes
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              title: Text(
+                'EXPLORE',
+                style: TextStyle(
+                  color: Colors.blueGrey.shade100,
+                  fontSize: 20,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 3,
+                ),
+              ),
+            )
+          : PreferredSize(
+              // for larger & medium screen sizes
+              preferredSize: Size(screenSize.width, 1000),
+              child: const TopBarContents(_opacity),
+            ),
       drawer: MobileDrawer(),
       body: SingleChildScrollView(
         physics: ClampingScrollPhysics(),
