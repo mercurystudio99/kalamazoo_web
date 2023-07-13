@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-    _opacity = _scrollPosition < screenSize.height * 0.40 ? 0 : 1;
+    _opacity = _scrollPosition == 0 ? 0 : 1;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
           : PreferredSize(
               // for larger & medium screen sizes
               preferredSize: Size(screenSize.width, 1000),
-              child: TopBarContents(_opacity),
+              child: TopBarContents(_opacity, 1),
             ),
       drawer: MobileDrawer(),
       body: SingleChildScrollView(
