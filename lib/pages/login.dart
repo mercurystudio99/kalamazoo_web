@@ -17,16 +17,15 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final List _isHovering = [
     false, // 0: logo
+    false, // 1: forgot password
   ];
 
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
 
-  final FocusNode _focusEmail = FocusNode();
-  final FocusNode _focusPass = FocusNode();
-
   bool _obscureText = true;
+  bool _isChecked = false;
 
   @override
   void initState() {
@@ -35,8 +34,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    _focusEmail.dispose();
-    _focusPass.dispose();
     super.dispose();
   }
 
@@ -49,20 +46,20 @@ class _LoginPageState extends State<LoginPage> {
 
   String? _validatePassword(String value) {
     if (value.isEmpty) {
-      return '\u26A0 Please enter your password';
+      return 'Please enter your password';
     }
     if (value.length < 8) {
-      return '\u26A0 The Password must be at least 8 characters.';
+      return 'The Password must be at least 8 characters.';
     }
     return null;
   }
 
   String? _validateEmail(String value) {
     if (value.isEmpty) {
-      return "\u26A0 Please enter your email";
+      return "Please enter your email";
     }
     if (!(value.isNotEmpty && value.contains("@") && value.contains("."))) {
-      return '\u26A0 The E-mail Address must be a valid email address.';
+      return 'The E-mail Address must be a valid email address.';
     }
     return null;
   }
@@ -92,41 +89,28 @@ class _LoginPageState extends State<LoginPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.asset(Constants.IMG_START,
-                      width: screenSize.width * 0.4),
+                  SizedBox(
+                      width: screenSize.width * 0.5,
+                      child: Center(
+                        child: Image.asset(Constants.IMG_START,
+                            width: screenSize.width * 0.35,
+                            height: screenSize.width * 0.35),
+                      )),
                   Expanded(
                       child: Column(
                     children: <Widget>[
-                      const SizedBox(
-                        height: 120,
-                      ),
                       const Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: Constants.mainPadding),
                         child: Text(
-                          'Util.loginTitle',
+                          'Log in',
                           style: TextStyle(
                               color: CustomColor.primaryColor,
                               fontWeight: FontWeight.bold,
-                              fontSize: 11),
+                              fontSize: 38),
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(bottom: 15.0),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: Constants.mainPadding),
-                        child: Text(
-                          'Util.loginCaption',
-                          style: TextStyle(
-                              color: CustomColor.textSecondaryColor,
-                              fontSize: 11),
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(bottom: 15.0),
-                      ),
+                      const SizedBox(height: 20),
                       Form(
                         key: _formKey,
                         child: Column(
@@ -135,33 +119,30 @@ class _LoginPageState extends State<LoginPage> {
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                   vertical: 8,
-                                  horizontal: Constants.mainPadding),
+                                  horizontal: Constants.mainPadding * 2),
                               child: Stack(
                                 children: [
                                   Container(
-                                    height: 60,
-                                    decoration: const BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(14)),
+                                    height: 52,
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(4)),
                                       boxShadow: [
                                         BoxShadow(
-                                            color: Colors.grey,
+                                            color: CustomColor.primaryColor
+                                                .withOpacity(0.2),
                                             blurRadius: 5,
-                                            spreadRadius: 1),
+                                            spreadRadius: 1,
+                                            offset: const Offset(0, 0)),
                                       ],
                                     ),
                                   ),
                                   TextFormField(
                                     controller: _emailController,
-                                    focusNode: _focusEmail,
-                                    keyboardType: TextInputType
-                                        .emailAddress, // Use email input type for emails.
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
-                                      hintText: 'you@example.com',
-                                      labelText: 'Email',
+                                      hintText: 'Enter your email',
                                     ),
-                                    // The validator receives the text that the user has entered.
                                     validator: (value) {
                                       return _validateEmail(value!);
                                     },
@@ -171,33 +152,33 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(
-                                  Constants.mainPadding,
+                                  Constants.mainPadding * 2,
                                   8,
-                                  Constants.mainPadding,
+                                  Constants.mainPadding * 2,
                                   0),
                               child: Stack(
                                 children: [
                                   Container(
-                                    height: 60,
-                                    decoration: const BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(14)),
+                                    height: 52,
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(4)),
                                       boxShadow: [
                                         BoxShadow(
-                                            color: Colors.grey,
+                                            color: CustomColor.primaryColor
+                                                .withOpacity(0.2),
                                             blurRadius: 5,
-                                            spreadRadius: 1),
+                                            spreadRadius: 1,
+                                            offset: const Offset(0, 0)),
                                       ],
                                     ),
                                   ),
                                   TextFormField(
                                     controller: _passController,
-                                    focusNode: _focusPass,
-                                    obscureText:
-                                        _obscureText, // Use secure text for passwords.
+                                    obscureText: _obscureText,
                                     decoration: InputDecoration(
                                         border: const OutlineInputBorder(),
-                                        labelText: 'Passwords',
+                                        hintText: 'Password',
                                         suffixIconConstraints:
                                             const BoxConstraints(
                                           minWidth: 50,
@@ -214,7 +195,6 @@ class _LoginPageState extends State<LoginPage> {
                                                 color: CustomColor
                                                     .textSecondaryColor,
                                                 size: 24))),
-                                    // The validator receives the text that the user has entered.
                                     validator: (value) {
                                       return _validatePassword(value!);
                                     },
@@ -225,17 +205,26 @@ class _LoginPageState extends State<LoginPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: const Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: Constants.mainPadding,
-                                        vertical: 2),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: Constants.mainPadding * 2,
+                                      vertical: 2),
+                                  child: InkWell(
+                                    onHover: (value) {
+                                      setState(() {
+                                        value
+                                            ? _isHovering[1] = true
+                                            : _isHovering[1] = false;
+                                      });
+                                    },
+                                    onTap: () {},
                                     child: Text(
-                                      'Util.loginForgotPassword',
+                                      'Forgot Password?',
                                       style: TextStyle(
-                                          color: CustomColor.textSecondaryColor,
-                                          fontSize: 11),
+                                        color: _isHovering[1]
+                                            ? CustomColor.activeColor
+                                            : CustomColor.textSecondaryColor,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -243,29 +232,24 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(
-                                  vertical: 20.0,
-                                  horizontal: Constants.mainPadding),
+                                  vertical: 10,
+                                  horizontal: Constants.mainPadding * 2),
                               child: SizedBox(
-                                  height: 50, //height of button
-                                  width: MediaQuery.of(context)
-                                      .size
-                                      .width, //width of button
+                                  height: 40,
+                                  width: screenSize.width,
                                   child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                        elevation: 10, //elevation of button
+                                        backgroundColor:
+                                            CustomColor.primaryColor,
+                                        elevation: 3,
                                         shape: RoundedRectangleBorder(
-                                            //to set border radius to button
                                             borderRadius:
-                                                BorderRadius.circular(10)),
-                                        shadowColor: CustomColor.primaryColor,
-                                        padding: const EdgeInsets.all(
-                                            5) //content padding inside button
-                                        ),
+                                                BorderRadius.circular(4)),
+                                        shadowColor: CustomColor.primaryColor
+                                            .withOpacity(0.5),
+                                        padding: const EdgeInsets.all(5)),
                                     onPressed: () {
-                                      // Validate returns true if the form is valid, or false otherwise.
                                       if (_formKey.currentState!.validate()) {
-                                        // If the form is valid, display a snackbar. In the real world,
-                                        // you'd often call a server or save the information in a database.
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           const SnackBar(
@@ -274,54 +258,214 @@ class _LoginPageState extends State<LoginPage> {
                                       }
                                     },
                                     child: const Text(
-                                      'Util.buttonLogin',
+                                      'Continue',
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 16.0),
+                                          fontSize: 16.0,
+                                          letterSpacing: 1),
                                     ),
                                   )),
                             ),
                           ],
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8.0),
-                            child: Image.asset(Constants.IMG_GOOGLE),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8.0),
-                            child: Image.asset(Constants.IMG_FACEBOOK),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8.0),
-                            child: Image.asset(Constants.IMG_APPLE),
-                          ),
-                        ],
+                      Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: Constants.mainPadding),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15),
+                                  child: Container(
+                                      width: screenSize.width < 1100
+                                          ? 80
+                                          : screenSize.width * 0.1,
+                                      height: 1,
+                                      color: CustomColor.textPrimaryColor),
+                                ),
+                                const Text('OR',
+                                    style: TextStyle(fontSize: 12)),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15),
+                                  child: Container(
+                                      width: screenSize.width < 1100
+                                          ? 80
+                                          : screenSize.width * 0.1,
+                                      height: 1,
+                                      color: CustomColor.textPrimaryColor),
+                                ),
+                              ])),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: Constants.mainPadding * 2),
+                        child: SizedBox(
+                            height: 40,
+                            width: screenSize.width,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  elevation: 3,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4)),
+                                  shadowColor:
+                                      CustomColor.primaryColor.withOpacity(0.5),
+                                  padding: const EdgeInsets.all(5)),
+                              onPressed: () {},
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(Constants.IMG_GOOGLE1),
+                                    const SizedBox(width: 5),
+                                    const Text(
+                                      'Continue With Google',
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16.0),
+                                    ),
+                                  ]),
+                            )),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: Constants.mainPadding * 2),
+                        child: SizedBox(
+                            height: 40,
+                            width: screenSize.width,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  elevation: 3,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4)),
+                                  shadowColor:
+                                      CustomColor.primaryColor.withOpacity(0.5),
+                                  padding: const EdgeInsets.all(5)),
+                              onPressed: () {},
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(Constants.IMG_FACEBOOK1),
+                                    const SizedBox(width: 5),
+                                    Text(
+                                      screenSize.width < 900
+                                          ? 'Continue With Face...'
+                                          : 'Continue With Facebook',
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16.0,
+                                          overflow: TextOverflow.fade),
+                                    ),
+                                  ]),
+                            )),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: Constants.mainPadding * 2),
+                        child: SizedBox(
+                            height: 40,
+                            width: screenSize.width,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  elevation: 3,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4)),
+                                  shadowColor:
+                                      CustomColor.primaryColor.withOpacity(0.5),
+                                  padding: const EdgeInsets.all(5)),
+                              onPressed: () {},
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(Constants.IMG_APPLE1),
+                                    const SizedBox(width: 12),
+                                    const Text(
+                                      'Continue With Apple',
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16.0),
+                                    ),
+                                  ]),
+                            )),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: Constants.mainPadding),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15),
+                                  child: Container(
+                                      width: screenSize.width < 1100
+                                          ? 80
+                                          : screenSize.width * 0.1,
+                                      height: 1,
+                                      color: CustomColor.textPrimaryColor),
+                                ),
+                                const Text('OR',
+                                    style: TextStyle(fontSize: 12)),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15),
+                                  child: Container(
+                                      width: screenSize.width < 1100
+                                          ? 80
+                                          : screenSize.width * 0.1,
+                                      height: 1,
+                                      color: CustomColor.textPrimaryColor),
+                                ),
+                              ])),
+                      const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Text(
+                            'Log in with Best Local Eats app',
+                            style: TextStyle(fontSize: 15),
+                          )),
+                      const SizedBox(height: 10),
                       Align(
                         alignment: Alignment.center,
-                        child: RichText(
-                          text: TextSpan(children: [
-                            TextSpan(
-                              text: 'Util.loginQuestion',
-                            ),
-                            const TextSpan(text: ' '),
-                            TextSpan(
-                                text: 'Util.registerTitle',
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {}),
-                          ]),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: Constants.mainPadding,
+                        child: Row(children: [
+                          Checkbox(
+                            checkColor: Colors.white,
+                            fillColor: MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.disabled)) {
+                                return Colors.black;
+                              }
+                              return Colors.black;
+                            }),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(3)),
+                            value: _isChecked,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isChecked = value!;
+                              });
+                            },
+                          ),
+                          Expanded(
+                              child: RichText(
+                            text: TextSpan(children: [
+                              const TextSpan(
+                                text: 'By Signing up i Agree to the',
+                              ),
+                              const TextSpan(text: ' '),
+                              TextSpan(
+                                  text: 'term and Condition & privacy Police',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {}),
+                            ]),
+                          )),
+                        ]),
                       ),
                     ],
                   )),
