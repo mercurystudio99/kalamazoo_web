@@ -7,20 +7,21 @@ import 'package:bestlocaleats/widgets/responsive.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignupPage> createState() => _SignupPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignupPageState extends State<SignupPage> {
   final List _isHovering = [
     false, // 0: logo
     false, // 1: forgot password
   ];
 
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
 
@@ -64,6 +65,13 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
+  String? _validateName(String value) {
+    if (value.isEmpty) {
+      return "Please enter your name";
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (ResponsiveWidget.isSmallScreen(context)) {
@@ -103,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                         padding: EdgeInsets.symmetric(
                             horizontal: Constants.mainPadding),
                         child: Text(
-                          'Log in',
+                          'Sign Up',
                           style: TextStyle(
                               color: CustomColor.primaryColor,
                               fontWeight: FontWeight.bold,
@@ -116,6 +124,40 @@ class _LoginPageState extends State<LoginPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: Constants.mainPadding * 2),
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    height: 52,
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(4)),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: CustomColor.primaryColor
+                                                .withOpacity(0.2),
+                                            blurRadius: 5,
+                                            spreadRadius: 1,
+                                            offset: const Offset(0, 0)),
+                                      ],
+                                    ),
+                                  ),
+                                  TextFormField(
+                                    controller: _nameController,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      hintText: 'User Name',
+                                    ),
+                                    validator: (value) {
+                                      return _validateName(value!);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                   vertical: 8,
@@ -425,7 +467,7 @@ class _LoginPageState extends State<LoginPage> {
                       const Padding(
                           padding: EdgeInsets.symmetric(vertical: 10),
                           child: Text(
-                            'Log in with Best Local Eats app',
+                            'Sign Up with Best Local Eats app',
                             style: TextStyle(fontSize: 15),
                           )),
                       const SizedBox(height: 10),
@@ -517,7 +559,7 @@ class _LoginPageState extends State<LoginPage> {
                 padding:
                     EdgeInsets.symmetric(horizontal: Constants.mainPadding),
                 child: Text(
-                  'Log in',
+                  'Sign Up',
                   style: TextStyle(
                       color: CustomColor.primaryColor,
                       fontWeight: FontWeight.bold,
@@ -530,6 +572,39 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: Constants.mainPadding * 2),
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 52,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(4)),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: CustomColor.primaryColor
+                                        .withOpacity(0.2),
+                                    blurRadius: 5,
+                                    spreadRadius: 1,
+                                    offset: const Offset(0, 0)),
+                              ],
+                            ),
+                          ),
+                          TextFormField(
+                            controller: _nameController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'User Name',
+                            ),
+                            validator: (value) {
+                              return _validateName(value!);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 8, horizontal: Constants.mainPadding * 2),
@@ -811,7 +886,7 @@ class _LoginPageState extends State<LoginPage> {
               const Padding(
                   padding: EdgeInsets.symmetric(vertical: 10),
                   child: Text(
-                    'Log in with Best Local Eats app',
+                    'Sign Up with Best Local Eats app',
                     style: TextStyle(fontSize: 15),
                   )),
               const SizedBox(height: 10),

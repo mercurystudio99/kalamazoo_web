@@ -192,7 +192,9 @@ class _TopBarContentsState extends State<TopBarContents> {
                           shadowColor:
                               CustomColor.primaryColor.withOpacity(0.5),
                           padding: const EdgeInsets.all(5)),
-                      onPressed: () {},
+                      onPressed: () {
+                        NavigationRouter.switchToSignupPage(context);
+                      },
                       child: const Text(
                         'Sign Up',
                         style: TextStyle(color: Colors.white, fontSize: 12),
