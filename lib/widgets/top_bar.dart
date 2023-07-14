@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:bestlocaleats/utils/constants.dart';
 import 'package:bestlocaleats/utils/colors.dart';
+import 'package:bestlocaleats/utils/router.dart';
 
 class TopBarContents extends StatefulWidget {
   final double opacity;
@@ -46,7 +47,9 @@ class _TopBarContentsState extends State<TopBarContents> {
                       value ? _isHovering[0] = true : _isHovering[0] = false;
                     });
                   },
-                  onTap: () {},
+                  onTap: () {
+                    NavigationRouter.switchToHomePage(context);
+                  },
                   child: Image.asset(
                     Constants.IMG_LOGO,
                   ),
@@ -74,7 +77,9 @@ class _TopBarContentsState extends State<TopBarContents> {
                       value ? _isHovering[0] = true : _isHovering[0] = false;
                     });
                   },
-                  onTap: () {},
+                  onTap: () {
+                    NavigationRouter.switchToHomePage(context);
+                  },
                   child: Image.asset(
                     Constants.IMG_LOGO,
                   ),
@@ -161,7 +166,9 @@ class _TopBarContentsState extends State<TopBarContents> {
                           shadowColor:
                               CustomColor.primaryColor.withOpacity(0.5),
                           padding: const EdgeInsets.all(5)),
-                      onPressed: () {},
+                      onPressed: () {
+                        NavigationRouter.switchToLoginPage(context);
+                      },
                       child: const Text(
                         'Sign in',
                         style: TextStyle(

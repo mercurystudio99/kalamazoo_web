@@ -10,4 +10,6 @@ class Constants {
   static const String IMG_APPLE = "${imagePath}apple.png";
   static const String IMG_GOOGLE = "${imagePath}google.png";
   static const String IMG_FACEBOOK = "${imagePath}facebook.png";
+  static const String IMG_START = "${imagePath}start.png";
+  static const String IMG_ARROW = "${imagePath}arrow.png";
 }
