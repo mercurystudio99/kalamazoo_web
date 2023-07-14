@@ -217,7 +217,10 @@ class _LoginPageState extends State<LoginPage> {
                                             : _isHovering[1] = false;
                                       });
                                     },
-                                    onTap: () {},
+                                    onTap: () {
+                                      NavigationRouter.switchToForgotPage(
+                                          context);
+                                    },
                                     child: Text(
                                       'Forgot Password?',
                                       style: TextStyle(
@@ -626,7 +629,9 @@ class _LoginPageState extends State<LoginPage> {
                                     : _isHovering[1] = false;
                               });
                             },
-                            onTap: () {},
+                            onTap: () {
+                              NavigationRouter.switchToForgotPage(context);
+                            },
                             child: Text(
                               'Forgot Password?',
                               style: TextStyle(
