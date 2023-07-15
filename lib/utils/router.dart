@@ -3,6 +3,7 @@ import 'package:bestlocaleats/pages/homepage.dart';
 import 'package:bestlocaleats/pages/login.dart';
 import 'package:bestlocaleats/pages/signup.dart';
 import 'package:bestlocaleats/pages/forgot.dart';
+import 'package:bestlocaleats/pages/otp.dart';
 
 class NavigationRouter {
   static void back(BuildContext context) {
@@ -27,5 +28,10 @@ class NavigationRouter {
   static void switchToForgotPage(BuildContext context) {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const ForgotPage()));
+  }
+
+  static void switchToOTPPage(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const OTPPage()));
   }
 }

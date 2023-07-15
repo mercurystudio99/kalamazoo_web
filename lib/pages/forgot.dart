@@ -4,7 +4,6 @@ import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/responsive.dart';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPage extends StatefulWidget {
@@ -162,13 +161,14 @@ class _ForgotPageState extends State<ForgotPage> {
                                             .withOpacity(0.5),
                                         padding: const EdgeInsets.all(5)),
                                     onPressed: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                              content: Text('Processing Data')),
-                                        );
-                                      }
+                                      // if (_formKey.currentState!.validate()) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            content: Text('Processing Data')),
+                                      );
+                                      NavigationRouter.switchToOTPPage(context);
+                                      // }
                                     },
                                     child: const Text(
                                       'Get OTP',
@@ -310,12 +310,13 @@ class _ForgotPageState extends State<ForgotPage> {
                                     CustomColor.primaryColor.withOpacity(0.5),
                                 padding: const EdgeInsets.all(5)),
                             onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text('Processing Data')),
-                                );
-                              }
+                              // if (_formKey.currentState!.validate()) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Processing Data')),
+                              );
+                              NavigationRouter.switchToOTPPage(context);
+                              // }
                             },
                             child: const Text(
                               'Get OTP',
