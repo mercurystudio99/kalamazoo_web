@@ -163,6 +163,7 @@ class _OTPPageState extends State<OTPPage> {
                                   padding: const EdgeInsets.all(5)),
                               onPressed: () {
                                 _getOTPcode();
+                                NavigationRouter.switchToResetPage(context);
                               },
                               child: const Text(
                                 'Continue',
@@ -321,6 +322,7 @@ class _OTPPageState extends State<OTPPage> {
                           padding: const EdgeInsets.all(5)),
                       onPressed: () {
                         _getOTPcode();
+                        NavigationRouter.switchToResetPage(context);
                       },
                       child: const Text(
                         'Continue',
