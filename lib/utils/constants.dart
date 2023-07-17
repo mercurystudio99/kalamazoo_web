@@ -17,5 +17,8 @@ class Constants {
   static const String IMG_ARROW = "${imagePath}arrow.png";
   static const String IMG_MOBILE = "${imagePath}mobile.png";
   static const String IMG_PLAYSTORE = "${imagePath}playstore.png";
+  static const String IMG_GROUP = "${imagePath}group.png";
+  static const String IMG_DISH = "${imagePath}dish.png";
+  static const String SVG_DISH = "${imagePath}dish.svg";
   static const String IMG_BRAND1 = "${imagePath}brand1.png";
 }
