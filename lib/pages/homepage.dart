@@ -8,8 +8,17 @@ import 'package:bestlocaleats/widgets/logos.dart';
 import 'package:bestlocaleats/widgets/download.dart';
 import 'package:bestlocaleats/widgets/contact.dart';
 
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+
+const numberOfItems = 8;
+const minItemHeight = 200.0;
+const maxItemHeight = 350.0;
+const scrollDuration = Duration(seconds: 2);
+
+const randomMax = 10000;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,6 +32,23 @@ class _HomePageState extends State<HomePage> {
   static double _scrollPosition = 0;
   static double _opacity = 0;
 
+  /// Controller to scroll or jump to a particular item.
+  final ItemScrollController itemScrollController = ItemScrollController();
+
+  /// Controller to scroll a certain number of pixels relative to the current
+  /// scroll offset.
+  final ScrollOffsetController scrollOffsetController =
+      ScrollOffsetController();
+
+  /// Listener that reports the position of items when the list is scrolled.
+  final ItemPositionsListener itemPositionsListener =
+      ItemPositionsListener.create();
+  late List<double> itemHeights;
+  late List<Color> itemColors;
+
+  /// The alignment to be used next time the user scrolls or jumps to an item.
+  double alignment = 0;
+
   _scrollListener() {
     setState(() {
       _scrollPosition = _scrollController.position.pixels;
@@ -33,6 +59,15 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
+    final heightGenerator = Random(328902348);
+    final colorGenerator = Random(42490823);
+    itemHeights = List<double>.generate(
+        numberOfItems,
+        (int _) =>
+            heightGenerator.nextDouble() * (maxItemHeight - minItemHeight) +
+            minItemHeight);
+    itemColors = List<Color>.generate(numberOfItems,
+        (int _) => Color(colorGenerator.nextInt(randomMax)).withOpacity(1));
     super.initState();
   }
 
@@ -97,6 +132,20 @@ class _HomePageState extends State<HomePage> {
               )
             ],
           ),
+          SizedBox(
+            width: screenSize.width,
+            height: 200,
+            child: OrientationBuilder(
+              builder: (context, orientation) => Column(
+                children: <Widget>[
+                  scrollControlButtons,
+                  Expanded(
+                    child: list(orientation),
+                  )
+                ],
+              ),
+            ),
+          ),
           const ContactSection(),
           Padding(
             padding: const EdgeInsets.symmetric(
@@ -141,6 +190,101 @@ class _HomePageState extends State<HomePage> {
           const LogosSection(),
           const BottomBar(),
         ]),
+      ),
+    );
+  }
+
+  Widget list(Orientation orientation) => ScrollablePositionedList.builder(
+        itemCount: numberOfItems,
+        itemBuilder: (context, index) => item(index, orientation),
+        itemScrollController: itemScrollController,
+        itemPositionsListener: itemPositionsListener,
+        scrollOffsetController: scrollOffsetController,
+        reverse: false,
+        scrollDirection: orientation == Orientation.portrait
+            ? Axis.vertical
+            : Axis.horizontal,
+      );
+
+  Widget get scrollControlButtons => Padding(
+        padding: const EdgeInsets.symmetric(
+            horizontal: Constants.mainPadding, vertical: 40),
+        child: Row(children: [
+          const Text('Categories', style: TextStyle(fontSize: 24)),
+          const Spacer(),
+          scrollItemButton(0, true),
+          scrollItemButton(1, false),
+        ]),
+      );
+
+  ButtonStyle _scrollButtonStyle({required double horizonalPadding}) =>
+      ButtonStyle(
+        padding: MaterialStateProperty.all(
+          EdgeInsets.symmetric(horizontal: horizonalPadding, vertical: 0),
+        ),
+        minimumSize: MaterialStateProperty.all(Size.zero),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      );
+
+  Widget scrollItemButton(int value, bool next) => TextButton(
+        key: ValueKey<String>('Scroll$value'),
+        onPressed: () => scrollTo(value),
+        style: _scrollButtonStyle(horizonalPadding: 10),
+        child: next
+            ? const Icon(Icons.arrow_back,
+                size: 20, color: CustomColor.activeColor)
+            : const Icon(Icons.arrow_forward,
+                size: 20, color: CustomColor.activeColor),
+      );
+
+  void scrollTo(int index) => itemScrollController.scrollTo(
+      index: index,
+      duration: scrollDuration,
+      curve: Curves.easeInOutCubic,
+      alignment: alignment);
+
+  Widget item(int i, Orientation orientation) {
+    return SizedBox(
+      height: orientation == Orientation.portrait ? itemHeights[i] : null,
+      width: orientation == Orientation.landscape ? itemHeights[i] : null,
+      child: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: Constants.mainPadding / 2, vertical: 20),
+          child: SizedBox(
+              width: 140,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    side: const BorderSide(width: 2, color: Colors.black),
+                    backgroundColor: Colors.white,
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4)),
+                    shadowColor: CustomColor.primaryColor.withOpacity(0.5),
+                    padding: const EdgeInsets.all(5)),
+                onPressed: () {},
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 2),
+                    Image.asset(
+                      Constants.IMG_COFFEECUP,
+                      width: 25,
+                    ),
+                    const SizedBox(width: 8),
+                    const Text(
+                      'Coffee',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: CustomColor.textSecondaryColor),
+                    )
+                  ],
+                ),
+              )),
+        ),
       ),
     );
   }

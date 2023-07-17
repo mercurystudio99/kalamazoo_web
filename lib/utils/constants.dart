@@ -21,5 +21,6 @@ class Constants {
   static const String IMG_DISH = "${imagePath}dish.png";
   static const String SVG_DISH = "${imagePath}dish.svg";
   static const String IMG_CONTACT_BG = "${imagePath}contact_background.png";
+  static const String IMG_COFFEECUP = "${imagePath}coffeecup.png";
   static const String IMG_BRAND1 = "${imagePath}brand1.png";
 }
