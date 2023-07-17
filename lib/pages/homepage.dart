@@ -6,6 +6,7 @@ import 'package:bestlocaleats/widgets/bottom_bar.dart';
 import 'package:bestlocaleats/widgets/responsive.dart';
 import 'package:bestlocaleats/widgets/logos.dart';
 import 'package:bestlocaleats/widgets/download.dart';
+import 'package:bestlocaleats/widgets/contact.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -96,6 +97,7 @@ class _HomePageState extends State<HomePage> {
               )
             ],
           ),
+          const ContactSection(),
           Padding(
             padding: const EdgeInsets.symmetric(
                 horizontal: Constants.mainPadding, vertical: 40),
