@@ -3,6 +3,7 @@ import 'package:bestlocaleats/widgets/drawer.dart';
 import 'package:bestlocaleats/widgets/bottom_bar.dart';
 import 'package:bestlocaleats/widgets/responsive.dart';
 import 'package:bestlocaleats/widgets/logos.dart';
+import 'package:bestlocaleats/widgets/download.dart';
 
 import 'package:flutter/material.dart';
 
@@ -97,6 +98,7 @@ class _HomePageState extends State<HomePage> {
             height: screenSize.height,
             color: Colors.blue.shade100,
           ),
+          const DownloadSection(),
           const LogosSection(),
           const BottomBar(),
         ]),
