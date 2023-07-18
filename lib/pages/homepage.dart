@@ -11,7 +11,9 @@ import 'package:bestlocaleats/widgets/contact.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const numberOfItems = 8;
 const minItemHeight = 200.0;
@@ -19,6 +21,34 @@ const maxItemHeight = 350.0;
 const scrollDuration = Duration(seconds: 2);
 
 const randomMax = 10000;
+
+final List<String> imgList = [
+  'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
+  'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
+  'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+  'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
+  'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
+  'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
+];
+
+final List<Widget> imageSliders = imgList
+    .map((item) => Container(
+          margin: const EdgeInsets.fromLTRB(10, 80, 10, 0),
+          padding: const EdgeInsets.all(10),
+          child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+              child: Stack(
+                children: <Widget>[
+                  Image.asset(
+                    Constants.IMG_SLIDER_HAMBURGER,
+                    fit: BoxFit.cover,
+                    width: 220,
+                    height: 220,
+                  ),
+                ],
+              )),
+        ))
+    .toList();
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,6 +58,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int carouselIndicatorCurrent = 0;
   late ScrollController _scrollController;
   static double _scrollPosition = 0;
   static double _opacity = 0;
@@ -107,29 +138,114 @@ class _HomePageState extends State<HomePage> {
           Stack(
             children: [
               Container(
-                // image below the top bar
                 child: SizedBox(
-                  height: screenSize.height * 0.45,
-                  width: screenSize.width,
+                  width: screenSize.width / 2,
                   child: Image.asset(
-                    'assets/images/cover.png',
+                    Constants.IMG_ELLIPSE1,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
-              Center(
-                heightFactor: 1,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    top: screenSize.height * 0.40,
-                    left: screenSize.width / 5,
-                    right: screenSize.width / 5,
+              Row(children: [
+                Expanded(
+                    child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: Constants.mainPadding, vertical: 80),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              RichText(
+                                text: TextSpan(children: [
+                                  TextSpan(
+                                    text: 'Search for your ',
+                                    style: GoogleFonts.oleoScriptSwashCaps(
+                                        fontSize: 60,
+                                        color: CustomColor.activeColor),
+                                  ),
+                                  TextSpan(
+                                      text: 'favorite foods & restaurants',
+                                      style: GoogleFonts.oleoScriptSwashCaps(
+                                          fontSize: 60, color: Colors.white)),
+                                ]),
+                              ),
+                              const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 12),
+                                  child: Text(
+                                    'Explore Top-Rated Attractions, Activities And More',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 14),
+                                  )),
+                              Stack(
+                                children: [
+                                  Container(
+                                    height: 52,
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(4)),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: CustomColor.primaryColor
+                                                .withOpacity(0.2),
+                                            blurRadius: 5,
+                                            spreadRadius: 1,
+                                            offset: const Offset(0, 0)),
+                                      ],
+                                    ),
+                                  ),
+                                  TextFormField(
+                                    decoration: const InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        hintText:
+                                            'Search for your favorite foods & restaurants',
+                                        prefixIcon: Icon(Icons.search,
+                                            color:
+                                                CustomColor.textSecondaryColor,
+                                            size: 24)),
+                                  ),
+                                ],
+                              ),
+                            ]))),
+                Expanded(
+                    child: Column(children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: CarouselSlider(
+                      items: imageSliders,
+                      options: CarouselOptions(
+                          aspectRatio: 2.0,
+                          enlargeCenterPage: true,
+                          enableInfiniteScroll: false,
+                          initialPage: 0,
+                          autoPlay: true,
+                          pageViewKey:
+                              const PageStorageKey<String>('carousel_slider'),
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              carouselIndicatorCurrent = index;
+                            });
+                          }),
+                    ),
                   ),
-                  child: Card(// floating quick access bar
-                      // ...
-                      ),
-                ),
-              )
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: imgList.asMap().entries.map((entry) {
+                      return Container(
+                        width: 10,
+                        height: 10,
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 4.0),
+                        decoration: BoxDecoration(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                            color: (carouselIndicatorCurrent == entry.key
+                                ? Colors.black
+                                : CustomColor.textSecondaryColor
+                                    .withOpacity(0.5))),
+                      );
+                    }).toList(),
+                  ),
+                ]))
+              ]),
             ],
           ),
           SizedBox(
