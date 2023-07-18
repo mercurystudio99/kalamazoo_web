@@ -5,6 +5,7 @@ import 'package:bestlocaleats/pages/signup.dart';
 import 'package:bestlocaleats/pages/forgot.dart';
 import 'package:bestlocaleats/pages/otp.dart';
 import 'package:bestlocaleats/pages/reset.dart';
+import 'package:bestlocaleats/pages/allrestaurantpage.dart';
 
 class NavigationRouter {
   static void back(BuildContext context) {
@@ -39,5 +40,10 @@ class NavigationRouter {
   static void switchToResetPage(BuildContext context) {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const ResetPage()));
+  }
+
+  static void switchToAllRestaurantPage(BuildContext context) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const AllRestaurantPage()));
   }
 }

@@ -122,7 +122,9 @@ class _TopBarContentsState extends State<TopBarContents> {
                       value ? _isHovering[2] = true : _isHovering[2] = false;
                     });
                   },
-                  onTap: () {},
+                  onTap: () {
+                    NavigationRouter.switchToAllRestaurantPage(context);
+                  },
                   child: Text(
                     'All Restaurant',
                     style: TextStyle(
