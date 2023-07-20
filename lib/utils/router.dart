@@ -7,6 +7,7 @@ import 'package:bestlocaleats/pages/otp.dart';
 import 'package:bestlocaleats/pages/reset.dart';
 import 'package:bestlocaleats/pages/allrestaurantpage.dart';
 import 'package:bestlocaleats/pages/about.dart';
+import 'package:bestlocaleats/pages/favorite.dart';
 
 class NavigationRouter {
   static void back(BuildContext context) {
@@ -51,5 +52,10 @@ class NavigationRouter {
   static void switchToAboutPage(BuildContext context) {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const AboutPage()));
+  }
+
+  static void switchToFavoritePage(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const FavoritePage()));
   }
 }

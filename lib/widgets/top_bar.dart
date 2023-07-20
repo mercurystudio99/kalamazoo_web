@@ -306,7 +306,9 @@ class _TopBarContentsState extends State<TopBarContents> {
                         value ? _isHovering[4] = true : _isHovering[4] = false;
                       });
                     },
-                    onTap: () {},
+                    onTap: () {
+                      NavigationRouter.switchToFavoritePage(context);
+                    },
                     child: _isHovering[4]
                         ? const Icon(Icons.bookmark,
                             size: 20, color: CustomColor.activeColor)
