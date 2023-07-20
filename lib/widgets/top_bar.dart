@@ -103,7 +103,9 @@ class _TopBarContentsState extends State<TopBarContents> {
                       value ? _isHovering[1] = true : _isHovering[1] = false;
                     });
                   },
-                  onTap: () {},
+                  onTap: () {
+                    NavigationRouter.switchToHomePage(context);
+                  },
                   child: Text(
                     'Home',
                     style: TextStyle(
@@ -143,7 +145,9 @@ class _TopBarContentsState extends State<TopBarContents> {
                       value ? _isHovering[3] = true : _isHovering[3] = false;
                     });
                   },
-                  onTap: () {},
+                  onTap: () {
+                    NavigationRouter.switchToContactPage(context);
+                  },
                   child: Text(
                     'Contact us',
                     style: TextStyle(
@@ -225,7 +229,9 @@ class _TopBarContentsState extends State<TopBarContents> {
                       value ? _isHovering[0] = true : _isHovering[0] = false;
                     });
                   },
-                  onTap: () {},
+                  onTap: () {
+                    NavigationRouter.switchToHomePage(context);
+                  },
                   child: Image.asset(
                     Constants.IMG_LOGO,
                   ),
@@ -249,7 +255,9 @@ class _TopBarContentsState extends State<TopBarContents> {
                       value ? _isHovering[1] = true : _isHovering[1] = false;
                     });
                   },
-                  onTap: () {},
+                  onTap: () {
+                    NavigationRouter.switchToHomePage(context);
+                  },
                   child: Text(
                     'Home',
                     style: TextStyle(
@@ -268,7 +276,9 @@ class _TopBarContentsState extends State<TopBarContents> {
                       value ? _isHovering[2] = true : _isHovering[2] = false;
                     });
                   },
-                  onTap: () {},
+                  onTap: () {
+                    NavigationRouter.switchToAllRestaurantPage(context);
+                  },
                   child: Text(
                     'All Restaurant',
                     style: TextStyle(
@@ -287,7 +297,9 @@ class _TopBarContentsState extends State<TopBarContents> {
                       value ? _isHovering[3] = true : _isHovering[3] = false;
                     });
                   },
-                  onTap: () {},
+                  onTap: () {
+                    NavigationRouter.switchToContactPage(context);
+                  },
                   child: Text(
                     'Contact us',
                     style: TextStyle(

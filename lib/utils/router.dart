@@ -9,6 +9,7 @@ import 'package:bestlocaleats/pages/allrestaurantpage.dart';
 import 'package:bestlocaleats/pages/about.dart';
 import 'package:bestlocaleats/pages/favorite.dart';
 import 'package:bestlocaleats/pages/notification.dart';
+import 'package:bestlocaleats/pages/contact.dart';
 
 class NavigationRouter {
   static void back(BuildContext context) {
@@ -63,5 +64,10 @@ class NavigationRouter {
   static void switchToNotificationPage(BuildContext context) {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => const NotificationPage()));
+  }
+
+  static void switchToContactPage(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const ContactPage()));
   }
 }
