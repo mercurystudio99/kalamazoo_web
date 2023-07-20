@@ -324,7 +324,9 @@ class _TopBarContentsState extends State<TopBarContents> {
                       value ? _isHovering[5] = true : _isHovering[5] = false;
                     });
                   },
-                  onTap: () {},
+                  onTap: () {
+                    NavigationRouter.switchToNotificationPage(context);
+                  },
                   child: badges.Badge(
                     badgeContent: const Text(
                       '1',
