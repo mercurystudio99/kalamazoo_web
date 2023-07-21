@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bestlocaleats/utils/colors.dart';
+import 'package:bestlocaleats/utils/router.dart';
 
 class BottomBarColumn extends StatefulWidget {
   final String heading;
@@ -46,7 +47,9 @@ class _BottomBarColumnState extends State<BottomBarColumn> {
               value ? _isHovering[0] = true : _isHovering[0] = false;
             });
           },
-          onTap: () {},
+          onTap: () {
+            NavigationRouter.switchToHomePage(context);
+          },
           child: Text(
             widget.s1,
             style: TextStyle(
@@ -62,7 +65,9 @@ class _BottomBarColumnState extends State<BottomBarColumn> {
               value ? _isHovering[1] = true : _isHovering[1] = false;
             });
           },
-          onTap: () {},
+          onTap: () {
+            NavigationRouter.switchToAllRestaurantPage(context);
+          },
           child: Text(
             widget.s2,
             style: TextStyle(
@@ -78,7 +83,9 @@ class _BottomBarColumnState extends State<BottomBarColumn> {
               value ? _isHovering[2] = true : _isHovering[2] = false;
             });
           },
-          onTap: () {},
+          onTap: () {
+            NavigationRouter.switchToContactPage(context);
+          },
           child: Text(
             widget.s3,
             style: TextStyle(
@@ -94,7 +101,9 @@ class _BottomBarColumnState extends State<BottomBarColumn> {
               value ? _isHovering[3] = true : _isHovering[3] = false;
             });
           },
-          onTap: () {},
+          onTap: () {
+            NavigationRouter.switchToFavoritePage(context);
+          },
           child: Text(
             widget.s4,
             style: TextStyle(
