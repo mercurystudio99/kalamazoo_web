@@ -41,6 +41,9 @@ class _NotificationPageState extends State<NotificationPage> {
 
   Widget _desktop() {
     Size screenSize = MediaQuery.of(context).size;
+    double mainPadding = ResponsiveWidget.isLargeScreen(context)
+        ? Constants.mainPadding * 2
+        : Constants.mainPadding;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(screenSize.width, 1000),
@@ -51,8 +54,8 @@ class _NotificationPageState extends State<NotificationPage> {
         physics: const ClampingScrollPhysics(),
         child: Column(children: [
           Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: Constants.mainPadding, vertical: 20),
+              padding:
+                  EdgeInsets.symmetric(horizontal: mainPadding, vertical: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -205,7 +208,8 @@ class _NotificationPageState extends State<NotificationPage> {
                 )),
             const SizedBox(height: 20),
             const Padding(
-              padding: EdgeInsets.symmetric(horizontal: Constants.mainPadding),
+              padding:
+                  EdgeInsets.symmetric(horizontal: Constants.mainPadding * 2),
               child: Text(
                 'Notifications',
                 style: TextStyle(
@@ -216,8 +220,8 @@ class _NotificationPageState extends State<NotificationPage> {
             ),
             const SizedBox(height: 20),
             Container(
-              margin:
-                  const EdgeInsets.symmetric(horizontal: Constants.mainPadding),
+              margin: const EdgeInsets.symmetric(
+                  horizontal: Constants.mainPadding * 2),
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(5),
@@ -256,8 +260,8 @@ class _NotificationPageState extends State<NotificationPage> {
             ),
             const SizedBox(height: 20),
             Container(
-              margin:
-                  const EdgeInsets.symmetric(horizontal: Constants.mainPadding),
+              margin: const EdgeInsets.symmetric(
+                  horizontal: Constants.mainPadding * 2),
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(5),
