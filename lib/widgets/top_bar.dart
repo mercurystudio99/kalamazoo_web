@@ -373,7 +373,9 @@ class _TopBarContentsState extends State<TopBarContents> {
                           shadowColor:
                               CustomColor.primaryColor.withOpacity(0.5),
                           padding: const EdgeInsets.all(5)),
-                      onPressed: () {},
+                      onPressed: () {
+                        NavigationRouter.switchToProfilePage(context);
+                      },
                       child: Row(
                         children: [
                           const SizedBox(width: 2),
