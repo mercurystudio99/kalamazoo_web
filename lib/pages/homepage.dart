@@ -15,7 +15,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const numberOfItems = 8;
+const numberOfItems = 20;
 const minItemHeight = 200.0;
 const maxItemHeight = 350.0;
 const scrollDuration = Duration(seconds: 2);
@@ -35,6 +35,7 @@ final List<Widget> imageSliders = imgList
     .map((item) => Container(
           margin: const EdgeInsets.fromLTRB(10, 80, 10, 0),
           padding: const EdgeInsets.all(10),
+          color: Colors.white,
           child: ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(5.0)),
               child: Stack(
@@ -42,8 +43,6 @@ final List<Widget> imageSliders = imgList
                   Image.asset(
                     Constants.IMG_SLIDER_HAMBURGER,
                     fit: BoxFit.cover,
-                    width: 220,
-                    height: 220,
                   ),
                 ],
               )),
@@ -77,8 +76,7 @@ class _HomePageState extends State<HomePage> {
   late List<double> itemHeights;
   late List<Color> itemColors;
 
-  /// The alignment to be used next time the user scrolls or jumps to an item.
-  double alignment = 0;
+  late int categoryItemIndex = 0;
 
   _scrollListener() {
     setState(() {
@@ -104,9 +102,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
+    Size screenSize = MediaQuery.of(context).size;
     _opacity = _scrollPosition == 0 ? 0 : 1;
-
+    double bannerTitleSize = 0;
+    if (screenSize.width > 0) bannerTitleSize = 30;
+    if (screenSize.width > 800) bannerTitleSize = 40;
+    if (screenSize.width > 1040) bannerTitleSize = 50;
+    if (screenSize.width > 1210) bannerTitleSize = 60;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: ResponsiveWidget.isSmallScreen(context)
@@ -130,24 +132,25 @@ class _HomePageState extends State<HomePage> {
               preferredSize: Size(screenSize.width, 1000),
               child: TopBarContents(_opacity, 2),
             ),
-      drawer: MobileDrawer(),
+      drawer: const MobileDrawer(),
       body: SingleChildScrollView(
         controller: _scrollController,
-        physics: ClampingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         child: Column(children: [
           Stack(
             children: [
-              Container(
-                child: SizedBox(
+              if (!ResponsiveWidget.isSmallScreen(context))
+                SizedBox(
                   width: screenSize.width / 2,
                   child: Image.asset(
                     Constants.IMG_ELLIPSE1,
                     fit: BoxFit.cover,
                   ),
                 ),
-              ),
               Row(children: [
-                Expanded(
+                if (!ResponsiveWidget.isSmallScreen(context))
+                  SizedBox(
+                    width: screenSize.width / 2,
                     child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: Constants.mainPadding, vertical: 80),
@@ -159,17 +162,18 @@ class _HomePageState extends State<HomePage> {
                                   TextSpan(
                                     text: 'Search for your ',
                                     style: GoogleFonts.oleoScriptSwashCaps(
-                                        fontSize: 60,
+                                        fontSize: bannerTitleSize,
                                         color: CustomColor.activeColor),
                                   ),
                                   TextSpan(
                                       text: 'favorite foods & restaurants',
                                       style: GoogleFonts.oleoScriptSwashCaps(
-                                          fontSize: 60, color: Colors.white)),
+                                          fontSize: bannerTitleSize,
+                                          color: Colors.white)),
                                 ]),
                               ),
                               const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 12),
+                                  padding: EdgeInsets.symmetric(vertical: 18),
                                   child: Text(
                                     'Explore Top-Rated Attractions, Activities And More',
                                     style: TextStyle(
@@ -204,53 +208,57 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ],
                               ),
-                            ]))),
-                Expanded(
+                            ])),
+                  ),
+                SizedBox(
+                    width: ResponsiveWidget.isSmallScreen(context)
+                        ? screenSize.width
+                        : screenSize.width / 2,
                     child: Column(children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
-                    child: CarouselSlider(
-                      items: imageSliders,
-                      options: CarouselOptions(
-                          aspectRatio: 2.0,
-                          enlargeCenterPage: true,
-                          enableInfiniteScroll: false,
-                          initialPage: 0,
-                          autoPlay: true,
-                          pageViewKey:
-                              const PageStorageKey<String>('carousel_slider'),
-                          onPageChanged: (index, reason) {
-                            setState(() {
-                              carouselIndicatorCurrent = index;
-                            });
-                          }),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: imgList.asMap().entries.map((entry) {
-                      return Container(
-                        width: 10,
-                        height: 10,
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 4.0),
-                        decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
-                            color: (carouselIndicatorCurrent == entry.key
-                                ? Colors.black
-                                : CustomColor.textSecondaryColor
-                                    .withOpacity(0.5))),
-                      );
-                    }).toList(),
-                  ),
-                ]))
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: CarouselSlider(
+                          items: imageSliders,
+                          options: CarouselOptions(
+                              aspectRatio: 2.0,
+                              enlargeCenterPage: true,
+                              enableInfiniteScroll: false,
+                              initialPage: 0,
+                              autoPlay: true,
+                              pageViewKey: const PageStorageKey<String>(
+                                  'carousel_slider'),
+                              onPageChanged: (index, reason) {
+                                setState(() {
+                                  carouselIndicatorCurrent = index;
+                                });
+                              }),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: imgList.asMap().entries.map((entry) {
+                          return Container(
+                            width: 10,
+                            height: 10,
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 4.0),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(10)),
+                                color: (carouselIndicatorCurrent == entry.key
+                                    ? Colors.black
+                                    : CustomColor.textSecondaryColor
+                                        .withOpacity(0.5))),
+                          );
+                        }).toList(),
+                      ),
+                    ]))
               ]),
             ],
           ),
           SizedBox(
             width: screenSize.width,
-            height: 200,
+            height: 120,
             child: OrientationBuilder(
               builder: (context, orientation) => Column(
                 children: <Widget>[
@@ -262,6 +270,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+          const SizedBox(height: 40),
           const ContactSection(),
           Padding(
             padding: const EdgeInsets.symmetric(
@@ -326,13 +335,13 @@ class _HomePageState extends State<HomePage> {
 
   Widget get scrollControlButtons => Padding(
         padding: const EdgeInsets.symmetric(
-            horizontal: Constants.mainPadding, vertical: 40),
+            horizontal: Constants.mainPadding, vertical: 10),
         child: Row(children: [
           const Text('Categories',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           const Spacer(),
-          scrollItemButton(0, true),
-          scrollItemButton(1, false),
+          scrollItemButton(categoryItemIndex - 1, true),
+          scrollItemButton(categoryItemIndex + 1, false),
         ]),
       );
 
@@ -345,11 +354,25 @@ class _HomePageState extends State<HomePage> {
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       );
 
-  Widget scrollItemButton(int value, bool next) => TextButton(
+  Widget scrollItemButton(int value, bool back) => TextButton(
         key: ValueKey<String>('Scroll$value'),
-        onPressed: () => scrollTo(value),
+        onPressed: () {
+          if (back && value < 0) return;
+          if (!back && value > numberOfItems - 1) return;
+          if (back && value > 0) {
+            setState(() {
+              categoryItemIndex = categoryItemIndex - 1;
+            });
+          }
+          if (!back && value < numberOfItems - 1) {
+            setState(() {
+              categoryItemIndex = categoryItemIndex + 1;
+            });
+          }
+          scrollTo(value);
+        },
         style: _scrollButtonStyle(horizonalPadding: 10),
-        child: next
+        child: back
             ? const Icon(Icons.arrow_back,
                 size: 20, color: CustomColor.activeColor)
             : const Icon(Icons.arrow_forward,
@@ -360,19 +383,25 @@ class _HomePageState extends State<HomePage> {
       index: index,
       duration: scrollDuration,
       curve: Curves.easeInOutCubic,
-      alignment: alignment);
+      alignment: 0);
 
   Widget item(int i, Orientation orientation) {
+    double itemWidth = 0;
+    Size screenSize = MediaQuery.of(context).size;
+    if (screenSize.width > 0) itemWidth = screenSize.width / 2;
+    if (screenSize.width > 500) itemWidth = screenSize.width / 3;
+    if (screenSize.width > 700) itemWidth = screenSize.width / 4;
+    if (screenSize.width > 900) itemWidth = screenSize.width / 5;
+    if (screenSize.width > 1100) itemWidth = screenSize.width / 6;
     return SizedBox(
       height: orientation == Orientation.portrait ? itemHeights[i] : null,
-      width: orientation == Orientation.landscape ? itemHeights[i] : null,
+      width: orientation == Orientation.landscape ? itemWidth : null,
       child: Container(
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.symmetric(
-              horizontal: Constants.mainPadding / 2, vertical: 20),
+              horizontal: Constants.mainPadding, vertical: 10),
           child: SizedBox(
-              width: 140,
               height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -380,7 +409,7 @@ class _HomePageState extends State<HomePage> {
                     backgroundColor: Colors.white,
                     elevation: 3,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4)),
+                        borderRadius: BorderRadius.circular(8)),
                     shadowColor: CustomColor.primaryColor.withOpacity(0.5),
                     padding: const EdgeInsets.all(5)),
                 onPressed: () {},
@@ -392,6 +421,8 @@ class _HomePageState extends State<HomePage> {
                       Constants.IMG_COFFEECUP,
                       width: 25,
                     ),
+                    const SizedBox(width: 8),
+                    Container(width: 1, height: 40, color: Colors.black),
                     const SizedBox(width: 8),
                     const Text(
                       'Coffee',

@@ -1,5 +1,6 @@
 import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/utils/constants.dart';
+import 'package:bestlocaleats/widgets/responsive.dart';
 import 'package:flutter/material.dart';
 
 class ContactSection extends StatefulWidget {
@@ -13,12 +14,16 @@ class _ContactSectionState extends State<ContactSection> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
+    double contactBgwidth = screenSize.width > 1100
+        ? screenSize.width * 0.6
+        : screenSize.width * 0.45;
     return SizedBox(
         width: screenSize.width,
         height: 260,
         child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Image.asset(Constants.IMG_CONTACT_BG,
-              width: screenSize.width * 0.6, height: 260, fit: BoxFit.cover),
+          if (!ResponsiveWidget.isSmallScreen(context))
+            Image.asset(Constants.IMG_CONTACT_BG,
+                width: contactBgwidth, height: 260, fit: BoxFit.cover),
           Expanded(
               child: Container(
                   color: CustomColor.activeColor,
@@ -70,7 +75,9 @@ class _ContactSectionState extends State<ContactSection> {
                                               CustomColor.textSecondaryColor),
                                     ),
                                   ]),
-                              const Spacer(),
+                              ResponsiveWidget.isSmallScreen(context)
+                                  ? const SizedBox(width: 80)
+                                  : const Spacer(),
                               Container(
                                 alignment: const Alignment(0, 0),
                                 padding: const EdgeInsets.all(10),
