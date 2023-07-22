@@ -267,7 +267,8 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.symmetric(
                 horizontal: Constants.mainPadding, vertical: 40),
             child: Row(children: [
-              const Text('Top Brands Near You', style: TextStyle(fontSize: 24)),
+              const Text('Top Brands Near You',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               const Spacer(),
               InkWell(
                   onHover: (value) {},
@@ -286,7 +287,8 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.symmetric(
                 horizontal: Constants.mainPadding, vertical: 40),
             child: Row(children: [
-              const Text('Best offers for you', style: TextStyle(fontSize: 24)),
+              const Text('Best offers for you',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               const Spacer(),
               InkWell(
                   onHover: (value) {},
@@ -326,7 +328,8 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.symmetric(
             horizontal: Constants.mainPadding, vertical: 40),
         child: Row(children: [
-          const Text('Categories', style: TextStyle(fontSize: 24)),
+          const Text('Categories',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           const Spacer(),
           scrollItemButton(0, true),
           scrollItemButton(1, false),
@@ -406,26 +409,48 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _topBrands() {
+    double cardWidth = 0;
+    if (MediaQuery.of(context).size.width < 800) {
+      cardWidth = 400;
+    } else if (MediaQuery.of(context).size.width < 1100) {
+      cardWidth =
+          (MediaQuery.of(context).size.width - Constants.mainPadding * 3) / 2;
+    } else {
+      cardWidth =
+          (MediaQuery.of(context).size.width - Constants.mainPadding * 4) / 3;
+    }
+
+    List<Widget> widgetList = [
+      brandBox('Mc Donald\'S', 0, cardWidth),
+      brandBox('Mc Donald\'S', 0, cardWidth),
+      brandBox('Mc Donald\'S', 0, cardWidth)
+    ];
+    List<Widget> displayList;
+    if (MediaQuery.of(context).size.width < 800) {
+      displayList = widgetList.sublist(0, widgetList.length - 2);
+    } else if (MediaQuery.of(context).size.width < 1100) {
+      displayList = widgetList.sublist(0, widgetList.length - 1);
+    } else {
+      displayList = widgetList.sublist(0, widgetList.length);
+    }
+
     return SizedBox(
       height: 130,
       child: Padding(
           padding:
               const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
-          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            brandBox('Mc Donald\'S', 0),
-            brandBox('Mc Donald\'S', 0),
-            brandBox('Mc Donald\'S', 0),
-          ])),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: displayList)),
     );
   }
 
-  Widget brandBox(String title, int index) {
-    return Expanded(
-        child: Container(
+  Widget brandBox(String title, int index, double cardWidth) {
+    return Container(
       margin: const EdgeInsets.symmetric(
           horizontal: Constants.mainPadding / 2, vertical: 12),
-      padding: const EdgeInsets.all(4),
-      width: MediaQuery.of(context).size.width / 4,
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+      width: cardWidth,
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: <BoxShadow>[
@@ -435,7 +460,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         border: Border.all(color: Colors.white),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(15),
       ),
       alignment: Alignment.center,
       child: Row(
@@ -453,15 +478,19 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Text('Mc Donald\'S'),
+              const Text(
+                'Mc Donald\'S',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SvgPicture.asset(Constants.SVG_DISH),
+                  const SizedBox(width: 5),
                   const Text(
                     'Burger',
                     style: TextStyle(
-                      fontSize: 12.0,
+                      fontSize: 14.0,
                       color: CustomColor.textSecondaryColor,
                     ),
                   ),
@@ -471,12 +500,12 @@ class _HomePageState extends State<HomePage> {
                   const Icon(
                     Icons.location_on,
                     color: CustomColor.activeColor,
-                    size: 12,
+                    size: 16,
                   ),
                   const Text(
                     '1.2km',
                     style: TextStyle(
-                      fontSize: 12.0,
+                      fontSize: 14.0,
                       color: CustomColor.textSecondaryColor,
                     ),
                   ),
@@ -486,37 +515,39 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
                       color: CustomColor.activeColor,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(100),
                     ),
                     child: Row(
                       children: const [
                         Text(
-                          '5.3',
-                          style: TextStyle(color: Colors.white, fontSize: 12),
+                          '4.8',
+                          style: TextStyle(color: Colors.white, fontSize: 14),
                         ),
                         Icon(
                           Icons.star,
                           color: Colors.white,
-                          size: 12,
+                          size: 14,
                         )
                       ],
                     ),
                   ),
                   const SizedBox(
-                    width: 10.0,
+                    width: 30.0,
                   ),
                   const Icon(
                     Icons.access_time,
-                    size: 12,
+                    size: 15,
                   ),
+                  const SizedBox(width: 5),
                   const Text(
                     '10min',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontSize: 12.0,
+                      fontSize: 14.0,
                       color: CustomColor.textSecondaryColor,
                     ),
                   ),
@@ -531,16 +562,31 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-    ));
+    );
   }
 
   Widget _bestOffers() {
-    Widget widget = SizedBox(
-      width: MediaQuery.of(context).size.width * 0.4,
+    double cardWidth = 0;
+    if (MediaQuery.of(context).size.width < 600) {
+      cardWidth = 300;
+    } else if (MediaQuery.of(context).size.width < 900) {
+      cardWidth =
+          (MediaQuery.of(context).size.width - Constants.mainPadding * 3) / 2;
+    } else if (MediaQuery.of(context).size.width < 1200) {
+      cardWidth =
+          (MediaQuery.of(context).size.width - Constants.mainPadding * 4) / 3;
+    } else {
+      cardWidth =
+          (MediaQuery.of(context).size.width - Constants.mainPadding * 5) / 4;
+    }
+
+    Widget widget = Container(
+      width: cardWidth,
+      margin: const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
       child: Stack(children: [
         Card(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           shadowColor: CustomColor.primaryColor.withOpacity(0.2),
           elevation: 8,
           margin: const EdgeInsets.all(4.0),
@@ -548,15 +594,15 @@ class _HomePageState extends State<HomePage> {
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
+                  topLeft: Radius.circular(15),
+                  topRight: Radius.circular(15),
                 ),
                 child: Image.network(
                   'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -564,37 +610,37 @@ class _HomePageState extends State<HomePage> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: const [
                         Text(
                           'Alro Business',
-                          style: const TextStyle(
-                              fontSize: 14.0, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 20.0, fontWeight: FontWeight.bold),
                         ),
                         Text(
                           'demo.restaurant.com',
-                          style: const TextStyle(
-                              fontSize: 10.0,
+                          style: TextStyle(
+                              fontSize: 14.0,
                               color: CustomColor.textSecondaryColor),
                         ),
                       ],
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
                         color: CustomColor.activeColor,
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(100),
                       ),
                       child: Row(
-                        children: [
+                        children: const [
                           Text(
                             '4.5',
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 12),
+                            style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
-                          const Icon(
+                          Icon(
                             Icons.star,
                             color: Colors.white,
-                            size: 12,
+                            size: 14,
                           )
                         ],
                       ),
@@ -603,7 +649,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -611,18 +657,18 @@ class _HomePageState extends State<HomePage> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: const [
                         Text(
                           '50% OFF',
-                          style: const TextStyle(
-                              fontSize: 14.0,
+                          style: TextStyle(
+                              fontSize: 20.0,
                               color: CustomColor.activeColor,
                               fontWeight: FontWeight.bold),
                         ),
                         Text(
                           'UPTO \$100',
-                          style: const TextStyle(
-                              fontSize: 10.0,
+                          style: TextStyle(
+                              fontSize: 18.0,
                               color: CustomColor.textSecondaryColor),
                         ),
                       ],
@@ -634,12 +680,12 @@ class _HomePageState extends State<HomePage> {
                           Icon(
                             Icons.location_on,
                             color: CustomColor.activeColor,
-                            size: 10,
+                            size: 14,
                           ),
                           Text(
                             '1.2km',
                             style: TextStyle(
-                                fontSize: 10.0,
+                                fontSize: 14.0,
                                 color: CustomColor.textSecondaryColor),
                           ),
                           SizedBox(
@@ -647,13 +693,13 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Icon(
                             Icons.access_time,
-                            size: 10,
+                            size: 14,
                             color: CustomColor.textSecondaryColor,
                           ),
                           Text(
                             '10min',
                             style: TextStyle(
-                                fontSize: 10.0,
+                                fontSize: 14.0,
                                 color: CustomColor.textSecondaryColor),
                           ),
                         ],
@@ -662,6 +708,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
+              const SizedBox(height: 30),
             ],
           ),
         ),
@@ -675,14 +722,22 @@ class _HomePageState extends State<HomePage> {
       ]),
     );
 
+    List<Widget> widgetList = [widget, widget, widget, widget];
+    List<Widget> displayList;
+    if (MediaQuery.of(context).size.width < 600) {
+      displayList = widgetList.sublist(0, widgetList.length - 3);
+    } else if (MediaQuery.of(context).size.width < 900) {
+      displayList = widgetList.sublist(0, widgetList.length - 2);
+    } else if (MediaQuery.of(context).size.width < 1200) {
+      displayList = widgetList.sublist(0, widgetList.length - 1);
+    } else {
+      displayList = widgetList.sublist(0, widgetList.length);
+    }
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Constants.mainPadding),
-      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Expanded(child: widget),
-        Expanded(child: widget),
-        Expanded(child: widget),
-        Expanded(child: widget),
-      ]),
+      padding:
+          const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.center, children: displayList),
     );
   }
 }

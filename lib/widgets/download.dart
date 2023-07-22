@@ -13,14 +13,16 @@ class _DownloadSectionState extends State<DownloadSection> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
+    double padding = (screenSize.width > 1000)
+        ? Constants.mainPadding * 4
+        : Constants.mainPadding * 2;
     return Stack(alignment: Alignment.bottomCenter, children: [
       SizedBox(width: screenSize.width, height: 530),
       Container(
         width: screenSize.width,
         color: CustomColor.primaryColor,
         child: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: Constants.mainPadding * 4, vertical: 80),
+            padding: EdgeInsets.symmetric(horizontal: padding, vertical: 80),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const Text('Download Mobile App',
@@ -129,10 +131,11 @@ class _DownloadSectionState extends State<DownloadSection> {
               ])
             ])),
       ),
-      Positioned(
-          bottom: 20,
-          right: Constants.mainPadding * 4,
-          child: Image.asset(Constants.IMG_MOBILE))
+      if (screenSize.width > 1000)
+        Positioned(
+            bottom: 20,
+            right: Constants.mainPadding * 4,
+            child: Image.asset(Constants.IMG_MOBILE))
     ]);
   }
 }
