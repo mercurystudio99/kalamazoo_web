@@ -53,15 +53,12 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-    double brandWidth = 0;
-    if (MediaQuery.of(context).size.width < 800) {
-      brandWidth = 400;
-    } else if (MediaQuery.of(context).size.width < 1100) {
-      brandWidth =
-          (MediaQuery.of(context).size.width - Constants.mainPadding * 3) / 2;
-    } else {
-      brandWidth =
-          (MediaQuery.of(context).size.width - Constants.mainPadding * 4) / 3;
+    double brandWidth = (screenSize.width - Constants.mainPadding * 4) / 3;
+    if (screenSize.width < 1100) {
+      brandWidth = 300;
+    }
+    if (screenSize.width < 650) {
+      brandWidth = screenSize.width / 2;
     }
 
     return Scaffold(
@@ -143,8 +140,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                     style:
                         TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               ),
-              const SizedBox(
-                width: 500,
+              const Expanded(
                 child: Text('Best offers for you',
                     style:
                         TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
@@ -301,11 +297,32 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
   }
 
   Widget brandBox(String title, int index) {
+    List<double> sizes = [
+      Constants.mainPadding / 2,
+      12,
+      12,
+      12,
+      130,
+      100,
+      30,
+      18,
+      16,
+      14
+    ];
+    Size screenSize = MediaQuery.of(context).size;
+    if (screenSize.width < 1300) {
+      sizes = [Constants.mainPadding / 2, 12, 12, 12, 110, 80, 20, 16, 14, 12];
+    }
+    if (screenSize.width < 1140) {
+      sizes = [Constants.mainPadding / 2, 12, 12, 12, 90, 70, 10, 14, 12, 10];
+    }
+    if (screenSize.width < 650) {
+      sizes = [Constants.mainPadding / 2, 12, 8, 8, 90, 0, 10, 14, 12, 10];
+    }
     return Container(
-      margin: const EdgeInsets.symmetric(
-          horizontal: Constants.mainPadding / 2, vertical: 12),
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-      height: 130,
+      margin: EdgeInsets.symmetric(horizontal: sizes[0], vertical: sizes[1]),
+      padding: EdgeInsets.symmetric(vertical: sizes[2], horizontal: sizes[3]),
+      height: sizes[4],
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: <BoxShadow>[
@@ -323,42 +340,43 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-              width: 100,
+              width: sizes[5],
               child: Image.asset(
                 Constants.IMG_GROUP,
                 fit: BoxFit.cover,
               )),
-          const SizedBox(width: 30),
+          SizedBox(width: sizes[6]),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Text('Mc Donald\'S',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+              Text('Mc Donald\'S',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: sizes[7])),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SvgPicture.asset(Constants.SVG_DISH),
                   const SizedBox(width: 5),
-                  const Text(
+                  Text(
                     'Burger',
                     style: TextStyle(
-                      fontSize: 14.0,
+                      fontSize: sizes[9],
                       color: CustomColor.textSecondaryColor,
                     ),
                   ),
                   const SizedBox(
                     width: 5,
                   ),
-                  const Icon(
+                  Icon(
                     Icons.location_on,
                     color: CustomColor.activeColor,
-                    size: 16,
+                    size: sizes[8],
                   ),
-                  const Text(
+                  Text(
                     '1.2km',
                     style: TextStyle(
-                      fontSize: 14.0,
+                      fontSize: sizes[9],
                       color: CustomColor.textSecondaryColor,
                     ),
                   ),
@@ -375,32 +393,33 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                       borderRadius: BorderRadius.circular(100),
                     ),
                     child: Row(
-                      children: const [
+                      children: [
                         Text(
                           '4.8',
-                          style: TextStyle(color: Colors.white, fontSize: 14),
+                          style: TextStyle(
+                              color: Colors.white, fontSize: sizes[9]),
                         ),
                         Icon(
                           Icons.star,
                           color: Colors.white,
-                          size: 14,
+                          size: sizes[9],
                         )
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    width: 30.0,
+                  SizedBox(
+                    width: sizes[6],
                   ),
-                  const Icon(
+                  Icon(
                     Icons.access_time,
-                    size: 15,
+                    size: sizes[8],
                   ),
                   const SizedBox(width: 5),
-                  const Text(
+                  Text(
                     '10min',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontSize: 14.0,
+                      fontSize: sizes[9],
                       color: CustomColor.textSecondaryColor,
                     ),
                   ),
@@ -420,15 +439,20 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
 
   Widget _bestOffers() {
     Size screenSize = MediaQuery.of(context).size;
-    double cardWidth = 0;
-    if (screenSize.width < 600) {
-      cardWidth = 300;
-    } else if (screenSize.width < 900) {
-      cardWidth = (screenSize.width - Constants.mainPadding * 3) / 2;
-    } else if (screenSize.width < 1200) {
-      cardWidth = (screenSize.width - Constants.mainPadding * 4) / 3;
-    } else {
-      cardWidth = (screenSize.width - Constants.mainPadding * 5) / 4;
+    double cardWidth = (screenSize.width - Constants.mainPadding * 5) / 4;
+    if (screenSize.width < 1200) {
+      cardWidth = screenSize.width * 0.28;
+    }
+    if (screenSize.width < 920) {
+      cardWidth = screenSize.width * 0.2;
+    }
+
+    List<double> sizes = [20, 18, 14];
+    if (screenSize.width < 650) {
+      sizes = [16, 14, 12];
+    }
+    if (screenSize.width < 550) {
+      sizes = [14, 12, 10];
     }
 
     Widget widget = Container(
@@ -436,6 +460,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
       margin: const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
       child: Stack(children: [
         InkWell(
+          hoverColor: Colors.transparent,
           onTap: () {
             NavigationRouter.switchToAboutPage(context);
           },
@@ -466,16 +491,17 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
                             'Alro Business',
                             style: TextStyle(
-                                fontSize: 20.0, fontWeight: FontWeight.bold),
+                                fontSize: sizes[0],
+                                fontWeight: FontWeight.bold),
                           ),
                           Text(
                             'demo.restaurant.com',
                             style: TextStyle(
-                                fontSize: 14.0,
+                                fontSize: sizes[2],
                                 color: CustomColor.textSecondaryColor),
                           ),
                         ],
@@ -488,16 +514,16 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                           borderRadius: BorderRadius.circular(100),
                         ),
                         child: Row(
-                          children: const [
+                          children: [
                             Text(
                               '4.5',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 14),
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: sizes[2]),
                             ),
                             Icon(
                               Icons.star,
                               color: Colors.white,
-                              size: 14,
+                              size: sizes[2],
                             )
                           ],
                         ),
@@ -514,18 +540,18 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
                             '50% OFF',
                             style: TextStyle(
-                                fontSize: 20.0,
+                                fontSize: sizes[0],
                                 color: CustomColor.activeColor,
                                 fontWeight: FontWeight.bold),
                           ),
                           Text(
                             'UPTO \$100',
                             style: TextStyle(
-                                fontSize: 18.0,
+                                fontSize: sizes[1],
                                 color: CustomColor.textSecondaryColor),
                           ),
                         ],
@@ -533,30 +559,30 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 8),
                         child: Row(
-                          children: const [
+                          children: [
                             Icon(
                               Icons.location_on,
                               color: CustomColor.activeColor,
-                              size: 14,
+                              size: sizes[2],
                             ),
                             Text(
                               '1.2km',
                               style: TextStyle(
-                                  fontSize: 14.0,
+                                  fontSize: sizes[2],
                                   color: CustomColor.textSecondaryColor),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 4,
                             ),
                             Icon(
                               Icons.access_time,
-                              size: 14,
+                              size: sizes[2],
                               color: CustomColor.textSecondaryColor,
                             ),
                             Text(
                               '10min',
                               style: TextStyle(
-                                  fontSize: 14.0,
+                                  fontSize: sizes[2],
                                   color: CustomColor.textSecondaryColor),
                             ),
                           ],
@@ -580,22 +606,22 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
     );
 
     List<Widget> list = [];
-    if (screenSize.width > 1100) {
-      for (var i = 0; i < 10; i++) {
+    if (screenSize.width < 920) {
+      for (var i = 0; i < 20; i++) {
         list.add(Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [widget, widget]),
+          padding: const EdgeInsets.symmetric(
+              horizontal: Constants.mainPadding / 2, vertical: 14),
+          child: widget,
         ));
       }
     } else {
-      for (var i = 0; i < 20; i++) {
+      for (var i = 0; i < 10; i++) {
         list.add(Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
-          child: widget,
+          padding: const EdgeInsets.symmetric(
+              horizontal: Constants.mainPadding / 2, vertical: 20),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [widget, widget]),
         ));
       }
     }
