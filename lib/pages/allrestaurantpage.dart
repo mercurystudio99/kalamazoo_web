@@ -11,12 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-const numberOfItems = 8;
+const numberOfItems = 20;
 const minItemHeight = 200.0;
 const maxItemHeight = 350.0;
 const scrollDuration = Duration(seconds: 2);
-
-const randomMax = 10000;
 
 class AllRestaurantPage extends StatefulWidget {
   const AllRestaurantPage({super.key});
@@ -38,28 +36,34 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
   final ItemPositionsListener itemPositionsListener =
       ItemPositionsListener.create();
   late List<double> itemHeights;
-  late List<Color> itemColors;
 
-  /// The alignment to be used next time the user scrolls or jumps to an item.
-  double alignment = 0;
+  late int categoryItemIndex = 0;
 
   @override
   void initState() {
     final heightGenerator = Random(328902348);
-    final colorGenerator = Random(42490823);
     itemHeights = List<double>.generate(
         numberOfItems,
         (int _) =>
             heightGenerator.nextDouble() * (maxItemHeight - minItemHeight) +
             minItemHeight);
-    itemColors = List<Color>.generate(numberOfItems,
-        (int _) => Color(colorGenerator.nextInt(randomMax)).withOpacity(1));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
+    double brandWidth = 0;
+    if (MediaQuery.of(context).size.width < 800) {
+      brandWidth = 400;
+    } else if (MediaQuery.of(context).size.width < 1100) {
+      brandWidth =
+          (MediaQuery.of(context).size.width - Constants.mainPadding * 3) / 2;
+    } else {
+      brandWidth =
+          (MediaQuery.of(context).size.width - Constants.mainPadding * 4) / 3;
+    }
+
     return Scaffold(
       appBar: ResponsiveWidget.isSmallScreen(context)
           ? AppBar(
@@ -116,7 +120,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
               )),
           SizedBox(
             width: screenSize.width,
-            height: 200,
+            height: 120,
             child: OrientationBuilder(
               builder: (context, orientation) => Column(
                 children: <Widget>[
@@ -129,11 +133,35 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
             ),
           ),
           const SizedBox(height: 40),
-          Container(
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: Constants.mainPadding, vertical: 10),
+            child: Row(children: [
+              SizedBox(
+                width: brandWidth,
+                child: const Text('Top Brands',
+                    style:
+                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(
+                width: 500,
+                child: Text('Best offers for you',
+                    style:
+                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              ),
+            ]),
+          ),
+          SizedBox(
               width: screenSize.width,
               height: screenSize.height,
               child: Row(children: [
-                Expanded(child: _topBrands()),
+                SizedBox(
+                  width: brandWidth,
+                  child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: Constants.mainPadding / 2),
+                      child: _topBrands()),
+                ),
                 Container(
                   width: 1,
                   color: Colors.black,
@@ -160,13 +188,13 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
 
   Widget get scrollControlButtons => Padding(
         padding: const EdgeInsets.symmetric(
-            horizontal: Constants.mainPadding, vertical: 40),
+            horizontal: Constants.mainPadding, vertical: 10),
         child: Row(children: [
           const Text('Categories',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           const Spacer(),
-          scrollItemButton(0, true),
-          scrollItemButton(1, false),
+          scrollItemButton(categoryItemIndex - 1, true),
+          scrollItemButton(categoryItemIndex + 1, false),
         ]),
       );
 
@@ -179,11 +207,25 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       );
 
-  Widget scrollItemButton(int value, bool next) => TextButton(
+  Widget scrollItemButton(int value, bool back) => TextButton(
         key: ValueKey<String>('Scroll$value'),
-        onPressed: () => scrollTo(value),
+        onPressed: () {
+          if (back && value < 0) return;
+          if (!back && value > numberOfItems - 1) return;
+          if (back && value > 0) {
+            setState(() {
+              categoryItemIndex = categoryItemIndex - 1;
+            });
+          }
+          if (!back && value < numberOfItems - 1) {
+            setState(() {
+              categoryItemIndex = categoryItemIndex + 1;
+            });
+          }
+          scrollTo(value);
+        },
         style: _scrollButtonStyle(horizonalPadding: 10),
-        child: next
+        child: back
             ? const Icon(Icons.arrow_back,
                 size: 20, color: CustomColor.activeColor)
             : const Icon(Icons.arrow_forward,
@@ -194,19 +236,25 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
       index: index,
       duration: scrollDuration,
       curve: Curves.easeInOutCubic,
-      alignment: alignment);
+      alignment: 0);
 
   Widget item(int i, Orientation orientation) {
+    double itemWidth = 0;
+    Size screenSize = MediaQuery.of(context).size;
+    if (screenSize.width > 0) itemWidth = screenSize.width / 2;
+    if (screenSize.width > 500) itemWidth = screenSize.width / 3;
+    if (screenSize.width > 700) itemWidth = screenSize.width / 4;
+    if (screenSize.width > 900) itemWidth = screenSize.width / 5;
+    if (screenSize.width > 1100) itemWidth = screenSize.width / 6;
     return SizedBox(
       height: orientation == Orientation.portrait ? itemHeights[i] : null,
-      width: orientation == Orientation.landscape ? itemHeights[i] : null,
+      width: orientation == Orientation.landscape ? itemWidth : null,
       child: Container(
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.symmetric(
-              horizontal: Constants.mainPadding / 2, vertical: 20),
+              horizontal: Constants.mainPadding, vertical: 10),
           child: SizedBox(
-              width: 140,
               height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -214,7 +262,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                     backgroundColor: Colors.white,
                     elevation: 3,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4)),
+                        borderRadius: BorderRadius.circular(8)),
                     shadowColor: CustomColor.primaryColor.withOpacity(0.5),
                     padding: const EdgeInsets.all(5)),
                 onPressed: () {},
@@ -226,6 +274,8 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                       Constants.IMG_COFFEECUP,
                       width: 25,
                     ),
+                    const SizedBox(width: 8),
+                    Container(width: 1, height: 40, color: Colors.black),
                     const SizedBox(width: 8),
                     const Text(
                       'Coffee',
@@ -254,8 +304,8 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
     return Container(
       margin: const EdgeInsets.symmetric(
           horizontal: Constants.mainPadding / 2, vertical: 12),
-      padding: const EdgeInsets.all(4),
-      width: MediaQuery.of(context).size.width / 4,
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+      height: 130,
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: <BoxShadow>[
@@ -265,7 +315,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
           ),
         ],
         border: Border.all(color: Colors.white),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(15),
       ),
       alignment: Alignment.center,
       child: Row(
@@ -283,15 +333,17 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Text('Mc Donald\'S'),
+              const Text('Mc Donald\'S',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SvgPicture.asset(Constants.SVG_DISH),
+                  const SizedBox(width: 5),
                   const Text(
                     'Burger',
                     style: TextStyle(
-                      fontSize: 12.0,
+                      fontSize: 14.0,
                       color: CustomColor.textSecondaryColor,
                     ),
                   ),
@@ -301,12 +353,12 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                   const Icon(
                     Icons.location_on,
                     color: CustomColor.activeColor,
-                    size: 12,
+                    size: 16,
                   ),
                   const Text(
                     '1.2km',
                     style: TextStyle(
-                      fontSize: 12.0,
+                      fontSize: 14.0,
                       color: CustomColor.textSecondaryColor,
                     ),
                   ),
@@ -316,37 +368,39 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
                       color: CustomColor.activeColor,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(100),
                     ),
                     child: Row(
                       children: const [
                         Text(
-                          '5.3',
-                          style: TextStyle(color: Colors.white, fontSize: 12),
+                          '4.8',
+                          style: TextStyle(color: Colors.white, fontSize: 14),
                         ),
                         Icon(
                           Icons.star,
                           color: Colors.white,
-                          size: 12,
+                          size: 14,
                         )
                       ],
                     ),
                   ),
                   const SizedBox(
-                    width: 10.0,
+                    width: 30.0,
                   ),
                   const Icon(
                     Icons.access_time,
-                    size: 12,
+                    size: 15,
                   ),
+                  const SizedBox(width: 5),
                   const Text(
                     '10min',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontSize: 12.0,
+                      fontSize: 14.0,
                       color: CustomColor.textSecondaryColor,
                     ),
                   ),
@@ -365,8 +419,21 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
   }
 
   Widget _bestOffers() {
-    Widget widget = SizedBox(
-      width: MediaQuery.of(context).size.width * 0.4,
+    Size screenSize = MediaQuery.of(context).size;
+    double cardWidth = 0;
+    if (screenSize.width < 600) {
+      cardWidth = 300;
+    } else if (screenSize.width < 900) {
+      cardWidth = (screenSize.width - Constants.mainPadding * 3) / 2;
+    } else if (screenSize.width < 1200) {
+      cardWidth = (screenSize.width - Constants.mainPadding * 4) / 3;
+    } else {
+      cardWidth = (screenSize.width - Constants.mainPadding * 5) / 4;
+    }
+
+    Widget widget = Container(
+      width: cardWidth,
+      margin: const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
       child: Stack(children: [
         InkWell(
           onTap: () {
@@ -375,7 +442,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
           onHover: (value) {},
           child: Card(
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             shadowColor: CustomColor.primaryColor.withOpacity(0.2),
             elevation: 8,
             margin: const EdgeInsets.all(4.0),
@@ -383,15 +450,15 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
                   ),
                   child: Image.network(
                     'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -399,37 +466,38 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                        children: const [
                           Text(
                             'Alro Business',
-                            style: const TextStyle(
-                                fontSize: 14.0, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 20.0, fontWeight: FontWeight.bold),
                           ),
                           Text(
                             'demo.restaurant.com',
-                            style: const TextStyle(
-                                fontSize: 10.0,
+                            style: TextStyle(
+                                fontSize: 14.0,
                                 color: CustomColor.textSecondaryColor),
                           ),
                         ],
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
                           color: CustomColor.activeColor,
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(100),
                         ),
                         child: Row(
-                          children: [
+                          children: const [
                             Text(
                               '4.5',
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 12),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 14),
                             ),
-                            const Icon(
+                            Icon(
                               Icons.star,
                               color: Colors.white,
-                              size: 12,
+                              size: 14,
                             )
                           ],
                         ),
@@ -438,7 +506,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -446,18 +514,18 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                        children: const [
                           Text(
                             '50% OFF',
-                            style: const TextStyle(
-                                fontSize: 14.0,
+                            style: TextStyle(
+                                fontSize: 20.0,
                                 color: CustomColor.activeColor,
                                 fontWeight: FontWeight.bold),
                           ),
                           Text(
                             'UPTO \$100',
-                            style: const TextStyle(
-                                fontSize: 10.0,
+                            style: TextStyle(
+                                fontSize: 18.0,
                                 color: CustomColor.textSecondaryColor),
                           ),
                         ],
@@ -469,12 +537,12 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                             Icon(
                               Icons.location_on,
                               color: CustomColor.activeColor,
-                              size: 10,
+                              size: 14,
                             ),
                             Text(
                               '1.2km',
                               style: TextStyle(
-                                  fontSize: 10.0,
+                                  fontSize: 14.0,
                                   color: CustomColor.textSecondaryColor),
                             ),
                             SizedBox(
@@ -482,13 +550,13 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                             ),
                             Icon(
                               Icons.access_time,
-                              size: 10,
+                              size: 14,
                               color: CustomColor.textSecondaryColor,
                             ),
                             Text(
                               '10min',
                               style: TextStyle(
-                                  fontSize: 10.0,
+                                  fontSize: 14.0,
                                   color: CustomColor.textSecondaryColor),
                             ),
                           ],
@@ -512,15 +580,26 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
     );
 
     List<Widget> list = [];
-    for (var i = 0; i < 10; i++) {
-      list.add(Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Constants.mainPadding),
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Expanded(child: widget),
-          Expanded(child: widget),
-        ]),
-      ));
+    if (screenSize.width > 1100) {
+      for (var i = 0; i < 10; i++) {
+        list.add(Padding(
+          padding:
+              const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [widget, widget]),
+        ));
+      }
+    } else {
+      for (var i = 0; i < 20; i++) {
+        list.add(Padding(
+          padding:
+              const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
+          child: widget,
+        ));
+      }
     }
+
     return ListView(children: list);
   }
 }

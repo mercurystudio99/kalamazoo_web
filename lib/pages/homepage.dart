@@ -20,8 +20,6 @@ const minItemHeight = 200.0;
 const maxItemHeight = 350.0;
 const scrollDuration = Duration(seconds: 2);
 
-const randomMax = 10000;
-
 final List<String> imgList = [
   'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
   'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
@@ -74,7 +72,6 @@ class _HomePageState extends State<HomePage> {
   final ItemPositionsListener itemPositionsListener =
       ItemPositionsListener.create();
   late List<double> itemHeights;
-  late List<Color> itemColors;
 
   late int categoryItemIndex = 0;
 
@@ -89,14 +86,11 @@ class _HomePageState extends State<HomePage> {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
     final heightGenerator = Random(328902348);
-    final colorGenerator = Random(42490823);
     itemHeights = List<double>.generate(
         numberOfItems,
         (int _) =>
             heightGenerator.nextDouble() * (maxItemHeight - minItemHeight) +
             minItemHeight);
-    itemColors = List<Color>.generate(numberOfItems,
-        (int _) => Color(colorGenerator.nextInt(randomMax)).withOpacity(1));
     super.initState();
   }
 
