@@ -20,6 +20,7 @@ class Constants {
   static const String IMG_SLIDER_HAMBURGER = "${imagePath}slider_hamburger.png";
   static const String IMG_ELLIPSE1 = "${imagePath}ellipse1.png";
   static const String IMG_ABOUT_BANNER = "${imagePath}about_banner.png";
+  static const String IMG_ABOUT = "${imagePath}about.png";
   static const String IMG_GROUP = "${imagePath}group.png";
   static const String IMG_DISH = "${imagePath}dish.png";
   static const String SVG_DISH = "${imagePath}dish.svg";

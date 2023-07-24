@@ -15,6 +15,14 @@ class Accordion extends StatefulWidget {
 class _AccordionState extends State<Accordion> {
   // Show or hide the content
   bool _showContent = false;
+  final List _isHovering = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +31,16 @@ class _AccordionState extends State<Accordion> {
       child: Column(children: [
         // The title
         ListTile(
-          title: Text(widget.title),
+          title: Text(
+            widget.title,
+            style: const TextStyle(
+                color: CustomColor.textPrimaryColor,
+                fontWeight: FontWeight.bold),
+          ),
           trailing: IconButton(
-            icon: Icon(
-                _showContent ? Icons.arrow_drop_up : Icons.arrow_drop_down),
+            icon: Icon(_showContent
+                ? Icons.keyboard_arrow_down
+                : Icons.keyboard_arrow_right),
             onPressed: () {
               setState(() {
                 _showContent = !_showContent;
@@ -39,7 +53,48 @@ class _AccordionState extends State<Accordion> {
             ? Container(
                 padding:
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                child: Text(widget.content),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: InkWell(
+                              onHover: (value) {
+                                setState(() {
+                                  value
+                                      ? _isHovering[0] = true
+                                      : _isHovering[0] = false;
+                                });
+                              },
+                              onTap: () {},
+                              child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(widget.content,
+                                      style: TextStyle(
+                                        color: _isHovering[0]
+                                            ? CustomColor.activeColor
+                                            : CustomColor.textPrimaryColor,
+                                      ))))),
+                      Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: InkWell(
+                              onHover: (value) {
+                                setState(() {
+                                  value
+                                      ? _isHovering[1] = true
+                                      : _isHovering[1] = false;
+                                });
+                              },
+                              onTap: () {},
+                              child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(widget.content,
+                                      style: TextStyle(
+                                        color: _isHovering[1]
+                                            ? CustomColor.activeColor
+                                            : CustomColor.textPrimaryColor,
+                                      ))))),
+                    ]),
               )
             : Container()
       ]),
