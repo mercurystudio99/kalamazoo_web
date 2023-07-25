@@ -385,7 +385,7 @@ class OtpInput extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-            height: screenSize.width < 1000 ? 40 : 52,
+            height: screenSize.width < 1000 ? 40 : 56,
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(4)),
               boxShadow: [

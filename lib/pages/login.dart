@@ -123,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: Stack(
                                 children: [
                                   Container(
-                                    height: 52,
+                                    height: 56,
                                     decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(4)),
@@ -159,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: Stack(
                                 children: [
                                   Container(
-                                    height: 52,
+                                    height: 56,
                                     decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(4)),
@@ -324,9 +324,11 @@ class _LoginPageState extends State<LoginPage> {
                                   children: [
                                     Image.asset(Constants.IMG_GOOGLE1),
                                     const SizedBox(width: 5),
-                                    const Text(
-                                      'Continue With Google',
-                                      style: TextStyle(
+                                    Text(
+                                      screenSize.width < 900
+                                          ? 'Continue'
+                                          : 'Continue With Google',
+                                      style: const TextStyle(
                                           color: Colors.black, fontSize: 16.0),
                                     ),
                                   ]),
@@ -356,7 +358,7 @@ class _LoginPageState extends State<LoginPage> {
                                     const SizedBox(width: 5),
                                     Text(
                                       screenSize.width < 900
-                                          ? 'Continue With Face...'
+                                          ? 'Continue'
                                           : 'Continue With Facebook',
                                       style: const TextStyle(
                                           color: Colors.black,
@@ -388,9 +390,11 @@ class _LoginPageState extends State<LoginPage> {
                                   children: [
                                     Image.asset(Constants.IMG_APPLE1),
                                     const SizedBox(width: 12),
-                                    const Text(
-                                      'Continue With Apple',
-                                      style: TextStyle(
+                                    Text(
+                                      screenSize.width < 900
+                                          ? 'Continue'
+                                          : 'Continue With Apple',
+                                      style: const TextStyle(
                                           color: Colors.black, fontSize: 16.0),
                                     ),
                                   ]),
@@ -539,7 +543,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Stack(
                         children: [
                           Container(
-                            height: 52,
+                            height: 56,
                             decoration: BoxDecoration(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(4)),
@@ -575,7 +579,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Stack(
                         children: [
                           Container(
-                            height: 52,
+                            height: 56,
                             decoration: BoxDecoration(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(4)),

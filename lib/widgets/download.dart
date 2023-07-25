@@ -76,7 +76,7 @@ class _DownloadSectionState extends State<DownloadSection> {
                                 Text(
                                   'App Store',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black),
                                 ),
@@ -120,7 +120,7 @@ class _DownloadSectionState extends State<DownloadSection> {
                                 Text(
                                   'Google Play',
                                   style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black),
                                 ),
@@ -131,7 +131,7 @@ class _DownloadSectionState extends State<DownloadSection> {
               ])
             ])),
       ),
-      if (screenSize.width > 1000)
+      if (screenSize.width > 1100)
         Positioned(
             bottom: 20,
             right: Constants.mainPadding * 4,

@@ -93,7 +93,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
               child: Stack(
                 children: [
                   Container(
-                    height: 52,
+                    height: 56,
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(4)),
                       boxShadow: [
@@ -386,8 +386,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
                     decoration: BoxDecoration(
                       color: CustomColor.activeColor,
                       borderRadius: BorderRadius.circular(100),
@@ -508,7 +507,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 4),
+                            horizontal: 4, vertical: 1),
                         decoration: BoxDecoration(
                           color: CustomColor.activeColor,
                           borderRadius: BorderRadius.circular(100),

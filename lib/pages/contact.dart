@@ -205,7 +205,7 @@ class _ContactPageState extends State<ContactPage> {
                               child: Stack(
                                 children: [
                                   Container(
-                                    height: 52,
+                                    height: 56,
                                     decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(4)),
@@ -248,7 +248,7 @@ class _ContactPageState extends State<ContactPage> {
                               child: Stack(
                                 children: [
                                   Container(
-                                    height: 52,
+                                    height: 56,
                                     decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(4)),
@@ -293,7 +293,7 @@ class _ContactPageState extends State<ContactPage> {
                               child: Stack(
                                 children: [
                                   Container(
-                                    height: 90,
+                                    height: 98,
                                     decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(4)),
@@ -505,7 +505,7 @@ class _ContactPageState extends State<ContactPage> {
                     child: Stack(
                       children: [
                         Container(
-                          height: 52,
+                          height: 56,
                           decoration: BoxDecoration(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(4)),
@@ -546,7 +546,7 @@ class _ContactPageState extends State<ContactPage> {
                     child: Stack(
                       children: [
                         Container(
-                          height: 52,
+                          height: 56,
                           decoration: BoxDecoration(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(4)),
@@ -590,7 +590,7 @@ class _ContactPageState extends State<ContactPage> {
                     child: Stack(
                       children: [
                         Container(
-                          height: 90,
+                          height: 98,
                           decoration: BoxDecoration(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(4)),

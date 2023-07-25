@@ -176,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                               Stack(
                                 children: [
                                   Container(
-                                    height: 52,
+                                    height: 56,
                                     decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(4)),
@@ -541,7 +541,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Container(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
                     decoration: BoxDecoration(
                       color: CustomColor.activeColor,
                       borderRadius: BorderRadius.circular(100),
@@ -651,7 +651,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
+                          horizontal: 4, vertical: 1),
                       decoration: BoxDecoration(
                         color: CustomColor.activeColor,
                         borderRadius: BorderRadius.circular(100),

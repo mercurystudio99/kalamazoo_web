@@ -147,7 +147,7 @@ class _ContactSectionState extends State<ContactSection> {
                                   ]),
                               const SizedBox(width: 40),
                               SizedBox(
-                                  width: 80,
+                                  width: 88,
                                   height: 30,
                                   child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(

@@ -56,7 +56,7 @@ class _FavoritePageState extends State<FavoritePage> {
               child: Stack(
                 children: [
                   Container(
-                    height: 52,
+                    height: 56,
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(4)),
                       boxShadow: [

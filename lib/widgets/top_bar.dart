@@ -84,7 +84,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                     Constants.IMG_LOGO,
                   ),
                 ),
-                if (screenSize.width > 1000)
+                if (screenSize.width > 1040)
                   Expanded(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -236,7 +236,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                     Constants.IMG_LOGO,
                   ),
                 ),
-                if (screenSize.width > 1100)
+                if (screenSize.width > 1140)
                   Expanded(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,

@@ -219,7 +219,7 @@ class _AboutPageState extends State<AboutPage> {
                               ]),
                           const SizedBox(width: 40),
                           SizedBox(
-                              width: 80,
+                              width: 88,
                               height: 30,
                               child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
@@ -303,7 +303,7 @@ class _AboutPageState extends State<AboutPage> {
       cardWidth = screenSize.width * 0.1;
     }
 
-    List<double> sizes = [20, 18, 14, 150, 15, 5];
+    List<double> sizes = [20, 14, 14, 150, 15, 5];
     if (screenSize.width < 1200) {
       sizes = [16, 14, 12, 150, 12, 4];
     }
@@ -405,7 +405,7 @@ class _AboutPageState extends State<AboutPage> {
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
+                          horizontal: 4, vertical: 1),
                       decoration: BoxDecoration(
                         color: CustomColor.activeColor,
                         borderRadius: BorderRadius.circular(15),
