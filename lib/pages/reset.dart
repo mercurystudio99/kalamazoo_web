@@ -1,3 +1,4 @@
+import 'package:bestlocaleats/models/app_model.dart';
 import 'package:bestlocaleats/utils/constants.dart';
 import 'package:bestlocaleats/utils/router.dart';
 import 'package:bestlocaleats/utils/colors.dart';
@@ -243,7 +244,30 @@ class _ResetPageState extends State<ResetPage> {
                                         shadowColor: CustomColor.primaryColor
                                             .withOpacity(0.5),
                                         padding: const EdgeInsets.all(5)),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      if (_formKey.currentState!.validate()) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text('Processing Data')),
+                                        );
+                                        AppModel().userResetPassword(
+                                            newPass: _newController.text.trim(),
+                                            confirmPass:
+                                                _confirmController.text.trim(),
+                                            onSuccess: () {
+                                              NavigationRouter.switchToHomePage(
+                                                  context);
+                                            },
+                                            onError: (String text) {
+                                              // Show error message
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(content: Text(text)),
+                                              );
+                                            });
+                                      }
+                                    },
                                     child: const Text(
                                       'Submit',
                                       style: TextStyle(
@@ -440,7 +464,28 @@ class _ResetPageState extends State<ResetPage> {
                                 shadowColor:
                                     CustomColor.primaryColor.withOpacity(0.5),
                                 padding: const EdgeInsets.all(5)),
-                            onPressed: () {},
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Processing Data')),
+                                );
+                                AppModel().userResetPassword(
+                                    newPass: _newController.text.trim(),
+                                    confirmPass: _confirmController.text.trim(),
+                                    onSuccess: () {
+                                      NavigationRouter.switchToHomePage(
+                                          context);
+                                    },
+                                    onError: (String text) {
+                                      // Show error message
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(content: Text(text)),
+                                      );
+                                    });
+                              }
+                            },
                             child: const Text(
                               'Submit',
                               style: TextStyle(

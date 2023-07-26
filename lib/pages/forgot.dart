@@ -1,3 +1,4 @@
+import 'package:bestlocaleats/models/app_model.dart';
 import 'package:bestlocaleats/utils/constants.dart';
 import 'package:bestlocaleats/utils/router.dart';
 import 'package:bestlocaleats/utils/colors.dart';
@@ -161,14 +162,24 @@ class _ForgotPageState extends State<ForgotPage> {
                                             .withOpacity(0.5),
                                         padding: const EdgeInsets.all(5)),
                                     onPressed: () {
-                                      // if (_formKey.currentState!.validate()) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                            content: Text('Processing Data')),
-                                      );
-                                      NavigationRouter.switchToOTPPage(context);
-                                      // }
+                                      if (_formKey.currentState!.validate()) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text('Processing Data')),
+                                        );
+                                        // AppModel().userExist(
+                                        //     email: _emailController.text.trim(),
+                                        //     onSuccess: () {
+                                        // },
+                                        // onError: (String text) {
+                                        //   // Show error message
+                                        //   ScaffoldMessenger.of(context)
+                                        //       .showSnackBar(
+                                        //     SnackBar(content: Text(text)),
+                                        //   );
+                                        // });
+                                      }
                                     },
                                     child: const Text(
                                       'Get OTP',
@@ -310,13 +321,23 @@ class _ForgotPageState extends State<ForgotPage> {
                                     CustomColor.primaryColor.withOpacity(0.5),
                                 padding: const EdgeInsets.all(5)),
                             onPressed: () {
-                              // if (_formKey.currentState!.validate()) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Processing Data')),
-                              );
-                              NavigationRouter.switchToOTPPage(context);
-                              // }
+                              if (_formKey.currentState!.validate()) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Processing Data')),
+                                );
+                                // AppModel().userExist(
+                                //     email: _emailController.text.trim(),
+                                //     onSuccess: () {
+                                //     },
+                                //     onError: (String text) {
+                                //       // Show error message
+                                //       ScaffoldMessenger.of(context)
+                                //           .showSnackBar(
+                                //         SnackBar(content: Text(text)),
+                                //       );
+                                //     });
+                              }
                             },
                             child: const Text(
                               'Get OTP',

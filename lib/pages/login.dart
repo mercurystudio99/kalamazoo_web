@@ -1,3 +1,4 @@
+import 'package:bestlocaleats/models/app_model.dart';
 import 'package:bestlocaleats/utils/constants.dart';
 import 'package:bestlocaleats/utils/router.dart';
 import 'package:bestlocaleats/utils/colors.dart';
@@ -258,6 +259,23 @@ class _LoginPageState extends State<LoginPage> {
                                           const SnackBar(
                                               content: Text('Processing Data')),
                                         );
+                                        // sign in
+                                        AppModel().userSignIn(
+                                            email: _emailController.text.trim(),
+                                            password:
+                                                _passController.text.trim(),
+                                            onSuccess: () {
+                                              // Go to Home
+                                              NavigationRouter.switchToHomePage(
+                                                  context);
+                                            },
+                                            onError: (String text) {
+                                              // Show error message
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(content: Text(text)),
+                                              );
+                                            });
                                       }
                                     },
                                     child: const Text(
@@ -669,6 +687,22 @@ class _LoginPageState extends State<LoginPage> {
                                   const SnackBar(
                                       content: Text('Processing Data')),
                                 );
+                                // sign in
+                                AppModel().userSignIn(
+                                    email: _emailController.text.trim(),
+                                    password: _passController.text.trim(),
+                                    onSuccess: () {
+                                      // Go to Home
+                                      NavigationRouter.switchToHomePage(
+                                          context);
+                                    },
+                                    onError: (String text) {
+                                      // Show error message
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(content: Text(text)),
+                                      );
+                                    });
                               }
                             },
                             child: const Text(
