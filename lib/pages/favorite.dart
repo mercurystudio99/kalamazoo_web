@@ -110,26 +110,65 @@ class _FavoritePageState extends State<FavoritePage> {
   }
 
   Widget _topBrands() {
-    return SizedBox(
-      height: 130,
-      child: Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
-          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            brandBox('Mc Donald\'S', 0),
-            brandBox('Mc Donald\'S', 0),
-            brandBox('Mc Donald\'S', 0),
-          ])),
-    );
+    Size screenSize = MediaQuery.of(context).size;
+    double cardWidth = 0;
+    if (screenSize.width < 800) {
+      cardWidth = 400;
+    } else if (screenSize.width < 1100) {
+      cardWidth = (screenSize.width - Constants.mainPadding * 3) / 2;
+    } else {
+      cardWidth = (screenSize.width - Constants.mainPadding * 4) / 3;
+    }
+
+    List<Widget> list = [];
+    if (screenSize.width >= 1100) {
+      for (var i = 0; i < 2; i++) {
+        list.add(SizedBox(
+            height: 146,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Constants.mainPadding / 2, vertical: 8),
+              child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                brandBox('Mc Donald\'S', 0, cardWidth),
+                brandBox('Mc Donald\'S', 0, cardWidth),
+                brandBox('Mc Donald\'S', 0, cardWidth)
+              ]),
+            )));
+      }
+    } else if (screenSize.width >= 800 && screenSize.width < 1100) {
+      for (var i = 0; i < 3; i++) {
+        list.add(SizedBox(
+            height: 146,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Constants.mainPadding / 2, vertical: 8),
+              child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                brandBox('Mc Donald\'S', 0, cardWidth),
+                brandBox('Mc Donald\'S', 0, cardWidth)
+              ]),
+            )));
+      }
+    } else {
+      for (var i = 0; i < 6; i++) {
+        list.add(SizedBox(
+            height: 146,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Constants.mainPadding / 2, vertical: 8),
+              child: brandBox('Mc Donald\'S', 0, cardWidth),
+            )));
+      }
+    }
+
+    return Column(children: list);
   }
 
-  Widget brandBox(String title, int index) {
-    return Expanded(
-        child: Container(
+  Widget brandBox(String title, int index, double cardWidth) {
+    return Container(
       margin: const EdgeInsets.symmetric(
           horizontal: Constants.mainPadding / 2, vertical: 12),
-      padding: const EdgeInsets.all(4),
-      width: MediaQuery.of(context).size.width / 4,
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+      width: cardWidth,
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: <BoxShadow>[
@@ -139,7 +178,7 @@ class _FavoritePageState extends State<FavoritePage> {
           ),
         ],
         border: Border.all(color: Colors.white),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(15),
       ),
       alignment: Alignment.center,
       child: Row(
@@ -157,15 +196,19 @@ class _FavoritePageState extends State<FavoritePage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Text('Mc Donald\'S'),
+              const Text(
+                'Mc Donald\'S',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SvgPicture.asset(Constants.SVG_DISH),
+                  const SizedBox(width: 5),
                   const Text(
                     'Burger',
                     style: TextStyle(
-                      fontSize: 12.0,
+                      fontSize: 14.0,
                       color: CustomColor.textSecondaryColor,
                     ),
                   ),
@@ -175,12 +218,12 @@ class _FavoritePageState extends State<FavoritePage> {
                   const Icon(
                     Icons.location_on,
                     color: CustomColor.activeColor,
-                    size: 12,
+                    size: 16,
                   ),
                   const Text(
                     '1.2km',
                     style: TextStyle(
-                      fontSize: 12.0,
+                      fontSize: 14.0,
                       color: CustomColor.textSecondaryColor,
                     ),
                   ),
@@ -190,37 +233,39 @@ class _FavoritePageState extends State<FavoritePage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
                     decoration: BoxDecoration(
                       color: CustomColor.activeColor,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(100),
                     ),
                     child: Row(
                       children: const [
                         Text(
-                          '5.3',
-                          style: TextStyle(color: Colors.white, fontSize: 12),
+                          '4.8',
+                          style: TextStyle(color: Colors.white, fontSize: 14),
                         ),
                         Icon(
                           Icons.star,
                           color: Colors.white,
-                          size: 12,
+                          size: 14,
                         )
                       ],
                     ),
                   ),
                   const SizedBox(
-                    width: 10.0,
+                    width: 30.0,
                   ),
                   const Icon(
                     Icons.access_time,
-                    size: 12,
+                    size: 15,
                   ),
+                  const SizedBox(width: 5),
                   const Text(
                     '10min',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontSize: 12.0,
+                      fontSize: 14.0,
                       color: CustomColor.textSecondaryColor,
                     ),
                   ),
@@ -235,16 +280,37 @@ class _FavoritePageState extends State<FavoritePage> {
           ),
         ],
       ),
-    ));
+    );
   }
 
   Widget _bestOffers() {
-    Widget widget = SizedBox(
-      width: MediaQuery.of(context).size.width * 0.4,
+    Size screenSize = MediaQuery.of(context).size;
+    double cardWidth = (screenSize.width - Constants.mainPadding * 5) / 4;
+    if (screenSize.width < 1300) {
+      cardWidth = (screenSize.width - Constants.mainPadding * 4) / 3;
+    }
+    if (screenSize.width < 800) {
+      cardWidth = (screenSize.width - Constants.mainPadding * 3) / 2;
+    }
+    if (screenSize.width < 600) {
+      cardWidth = screenSize.width / 2;
+    }
+
+    List<double> sizes = [20, 18, 14];
+    if (screenSize.width < 900) {
+      sizes = [18, 16, 12];
+    }
+    if (screenSize.width < 800) {
+      sizes = [20, 18, 14];
+    }
+
+    Widget widget = Container(
+      width: cardWidth,
+      margin: const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
       child: Stack(children: [
         Card(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           shadowColor: CustomColor.primaryColor.withOpacity(0.2),
           elevation: 8,
           margin: const EdgeInsets.all(4.0),
@@ -252,15 +318,15 @@ class _FavoritePageState extends State<FavoritePage> {
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
+                  topLeft: Radius.circular(15),
+                  topRight: Radius.circular(15),
                 ),
                 child: Image.network(
                   'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,34 +337,35 @@ class _FavoritePageState extends State<FavoritePage> {
                       children: [
                         Text(
                           'Alro Business',
-                          style: const TextStyle(
-                              fontSize: 14.0, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: sizes[0], fontWeight: FontWeight.bold),
                         ),
                         Text(
                           'demo.restaurant.com',
-                          style: const TextStyle(
-                              fontSize: 10.0,
+                          style: TextStyle(
+                              fontSize: sizes[2],
                               color: CustomColor.textSecondaryColor),
                         ),
                       ],
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 4, vertical: 1),
                       decoration: BoxDecoration(
                         color: CustomColor.activeColor,
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(100),
                       ),
                       child: Row(
                         children: [
                           Text(
                             '4.5',
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 12),
+                            style: TextStyle(
+                                color: Colors.white, fontSize: sizes[2]),
                           ),
-                          const Icon(
+                          Icon(
                             Icons.star,
                             color: Colors.white,
-                            size: 12,
+                            size: sizes[2],
                           )
                         ],
                       ),
@@ -307,7 +374,7 @@ class _FavoritePageState extends State<FavoritePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -318,15 +385,15 @@ class _FavoritePageState extends State<FavoritePage> {
                       children: [
                         Text(
                           '50% OFF',
-                          style: const TextStyle(
-                              fontSize: 14.0,
+                          style: TextStyle(
+                              fontSize: sizes[0],
                               color: CustomColor.activeColor,
                               fontWeight: FontWeight.bold),
                         ),
                         Text(
                           'UPTO \$100',
-                          style: const TextStyle(
-                              fontSize: 10.0,
+                          style: TextStyle(
+                              fontSize: sizes[1],
                               color: CustomColor.textSecondaryColor),
                         ),
                       ],
@@ -334,30 +401,30 @@ class _FavoritePageState extends State<FavoritePage> {
                     Padding(
                       padding: const EdgeInsets.only(top: 8),
                       child: Row(
-                        children: const [
+                        children: [
                           Icon(
                             Icons.location_on,
                             color: CustomColor.activeColor,
-                            size: 10,
+                            size: sizes[2],
                           ),
                           Text(
                             '1.2km',
                             style: TextStyle(
-                                fontSize: 10.0,
+                                fontSize: sizes[2],
                                 color: CustomColor.textSecondaryColor),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 4,
                           ),
                           Icon(
                             Icons.access_time,
-                            size: 10,
+                            size: sizes[2],
                             color: CustomColor.textSecondaryColor,
                           ),
                           Text(
                             '10min',
                             style: TextStyle(
-                                fontSize: 10.0,
+                                fontSize: sizes[2],
                                 color: CustomColor.textSecondaryColor),
                           ),
                         ],
@@ -366,6 +433,7 @@ class _FavoritePageState extends State<FavoritePage> {
                   ],
                 ),
               ),
+              const SizedBox(height: 30),
             ],
           ),
         ),
@@ -379,24 +447,87 @@ class _FavoritePageState extends State<FavoritePage> {
       ]),
     );
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Constants.mainPadding),
-      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Expanded(child: widget),
-        Expanded(child: widget),
-        Expanded(child: widget),
-        Expanded(child: widget),
-      ]),
-    );
+    List<Widget> list = [];
+    if (screenSize.width >= 1300) {
+      for (var i = 0; i < 3; i++) {
+        list.add(Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: Constants.mainPadding / 2, vertical: 20),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [widget, widget, widget, widget]),
+        ));
+      }
+    } else if (screenSize.width >= 800 && screenSize.width < 1300) {
+      for (var i = 0; i < 4; i++) {
+        list.add(Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: Constants.mainPadding / 2, vertical: 20),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [widget, widget, widget]),
+        ));
+      }
+    } else if (screenSize.width >= 600 && screenSize.width < 800) {
+      for (var i = 0; i < 6; i++) {
+        list.add(Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: Constants.mainPadding / 2, vertical: 20),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [widget, widget]),
+        ));
+      }
+    } else {
+      for (var i = 0; i < 12; i++) {
+        list.add(Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: Constants.mainPadding / 2, vertical: 14),
+          child: widget,
+        ));
+      }
+    }
+
+    return Column(children: list);
   }
 
   Widget _foods() {
-    Widget widget = SizedBox(
-      width: MediaQuery.of(context).size.width * 0.4,
+    Size screenSize = MediaQuery.of(context).size;
+    double cardWidth = (screenSize.width - Constants.mainPadding * 5) / 4;
+    if (screenSize.width < 1300) {
+      cardWidth = (screenSize.width - Constants.mainPadding * 4) / 3;
+    }
+    if (screenSize.width < 800) {
+      cardWidth = (screenSize.width - Constants.mainPadding * 3) / 2;
+    }
+    if (screenSize.width < 600) {
+      cardWidth = screenSize.width / 2;
+    }
+
+    List<double> sizes = [20, 14, 14, 150, 15, 5];
+    if (screenSize.width < 1200) {
+      sizes = [16, 14, 12, 150, 12, 4];
+    }
+    if (screenSize.width < 900) {
+      sizes = [14, 12, 10, 100, 8, 3];
+    }
+    if (screenSize.width < 800) {
+      sizes = [20, 18, 14, 150, 15, 5];
+    }
+    if (screenSize.width < 650) {
+      sizes = [16, 14, 12, 150, 12, 4];
+    }
+    if (screenSize.width < 550) {
+      sizes = [14, 12, 10, 100, 8, 3];
+    }
+
+    Widget widget = Container(
+      width: cardWidth,
+      margin: const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
       child: Stack(children: [
         Card(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           shadowColor: CustomColor.primaryColor.withOpacity(0.2),
           elevation: 8,
           margin: const EdgeInsets.all(4.0),
@@ -406,8 +537,8 @@ class _FavoritePageState extends State<FavoritePage> {
                 children: [
                   ClipRRect(
                     borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
+                      topLeft: Radius.circular(15),
+                      topRight: Radius.circular(15),
                     ),
                     child: Image.asset(
                       Constants.IMG_FOOD_BG,
@@ -417,8 +548,8 @@ class _FavoritePageState extends State<FavoritePage> {
                     margin: const EdgeInsets.only(top: 50),
                     alignment: Alignment.center,
                     child: Container(
-                      width: 200,
-                      height: 200,
+                      width: sizes[3],
+                      height: sizes[3],
                       decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border.all(
@@ -438,83 +569,89 @@ class _FavoritePageState extends State<FavoritePage> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(12),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       'Gyoza',
                       style: TextStyle(
                           color: CustomColor.primaryColor,
-                          fontSize: 20.0,
+                          fontSize: sizes[0],
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
                       '\$100',
                       style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold),
+                          fontSize: sizes[0], fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 0, 12, 20),
                 child: Text(
                   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam bibendum ornare vulputate. Curabitur faucibus condimentum purus quis tristique.',
                   style: TextStyle(
-                      fontSize: 10.0, color: CustomColor.textSecondaryColor),
+                      fontSize: sizes[2],
+                      color: CustomColor.textSecondaryColor),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(12),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 4, vertical: 1),
                       decoration: BoxDecoration(
                         color: CustomColor.activeColor,
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(15),
                       ),
                       child: Row(
-                        children: const [
+                        children: [
                           Text(
                             '4.5',
-                            style: TextStyle(color: Colors.white, fontSize: 12),
+                            style: TextStyle(
+                                color: Colors.white, fontSize: sizes[1]),
                           ),
                           Icon(
                             Icons.star,
                             color: Colors.white,
-                            size: 12,
+                            size: sizes[1],
                           )
                         ],
                       ),
                     ),
-                    const Icon(
+                    const Spacer(),
+                    Icon(
                       Icons.location_on,
                       color: CustomColor.activeColor,
-                      size: 10,
+                      size: sizes[1],
                     ),
-                    const Text(
+                    SizedBox(width: sizes[5]),
+                    Text(
                       '1.2km',
                       style: TextStyle(
-                          fontSize: 10.0,
+                          fontSize: sizes[1],
                           color: CustomColor.textSecondaryColor),
                     ),
-                    const SizedBox(
-                      width: 4,
+                    SizedBox(
+                      width: sizes[4],
                     ),
-                    const Icon(
+                    Icon(
                       Icons.access_time,
-                      size: 10,
+                      size: sizes[1],
                       color: CustomColor.textSecondaryColor,
                     ),
-                    const Text(
+                    SizedBox(width: sizes[5]),
+                    Text(
                       '10min',
                       style: TextStyle(
-                          fontSize: 10.0,
+                          fontSize: sizes[1],
                           color: CustomColor.textSecondaryColor),
                     ),
                   ],
@@ -524,8 +661,8 @@ class _FavoritePageState extends State<FavoritePage> {
           ),
         ),
         const Positioned(
-            right: 10,
-            top: 10,
+            right: 15,
+            top: 15,
             child: Icon(
               Icons.bookmark,
               color: CustomColor.activeColor,
@@ -533,14 +670,47 @@ class _FavoritePageState extends State<FavoritePage> {
       ]),
     );
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Constants.mainPadding),
-      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Expanded(child: widget),
-        Expanded(child: widget),
-        Expanded(child: widget),
-        Expanded(child: widget),
-      ]),
-    );
+    List<Widget> list = [];
+    if (screenSize.width >= 1300) {
+      for (var i = 0; i < 3; i++) {
+        list.add(Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: Constants.mainPadding / 2, vertical: 20),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [widget, widget, widget, widget]),
+        ));
+      }
+    } else if (screenSize.width >= 800 && screenSize.width < 1300) {
+      for (var i = 0; i < 4; i++) {
+        list.add(Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: Constants.mainPadding / 2, vertical: 20),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [widget, widget, widget]),
+        ));
+      }
+    } else if (screenSize.width >= 600 && screenSize.width < 800) {
+      for (var i = 0; i < 6; i++) {
+        list.add(Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: Constants.mainPadding / 2, vertical: 20),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [widget, widget]),
+        ));
+      }
+    } else {
+      for (var i = 0; i < 12; i++) {
+        list.add(Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: Constants.mainPadding / 2, vertical: 14),
+          child: widget,
+        ));
+      }
+    }
+
+    return Column(children: list);
   }
 }
