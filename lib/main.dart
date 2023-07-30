@@ -7,6 +7,7 @@ import 'firebase_options.dart';
 
 import 'package:bestlocaleats/pages/homepage.dart';
 import 'package:bestlocaleats/pages/login.dart';
+import 'package:bestlocaleats/pages/error.dart';
 import 'package:bestlocaleats/utils/colors.dart';
 
 void main() async {
@@ -36,6 +37,7 @@ final GoRouter _router = GoRouter(
       ],
     ),
   ],
+  errorBuilder: (context, state) => const ErrorPage(),
 );
 
 class MyApp extends StatelessWidget {
