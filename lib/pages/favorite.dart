@@ -1,5 +1,6 @@
 import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/utils/constants.dart';
+import 'package:bestlocaleats/utils/router.dart';
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/drawer.dart';
 import 'package:bestlocaleats/widgets/bottom_bar.dart';
@@ -27,20 +28,21 @@ class _FavoritePageState extends State<FavoritePage> {
     return Scaffold(
       appBar: ResponsiveWidget.isSmallScreen(context)
           ? AppBar(
+              iconTheme: const IconThemeData(color: Colors.white),
               // for smaller screen sizes
-              backgroundColor: Colors.blueGrey[900]?.withOpacity(0),
+              backgroundColor: Colors.black.withOpacity(1),
               elevation: 0,
-              title: Text(
-                'EXPLORE',
-                style: TextStyle(
-                  color: Colors.blueGrey.shade100,
-                  fontSize: 20,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 3,
+              title: InkWell(
+                onHover: (value) {},
+                onTap: () {
+                  NavigationRouter.switchToHomePage(context);
+                },
+                child: Image.asset(
+                  Constants.IMG_LOGO,
+                  width: 100,
+                  fit: BoxFit.cover,
                 ),
-              ),
-            )
+              ))
           : PreferredSize(
               // for larger & medium screen sizes
               preferredSize: Size(screenSize.width, 1000),

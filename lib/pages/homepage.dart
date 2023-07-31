@@ -1,5 +1,6 @@
 import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/utils/constants.dart';
+import 'package:bestlocaleats/utils/router.dart';
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/drawer.dart';
 import 'package:bestlocaleats/widgets/bottom_bar.dart';
@@ -107,20 +108,22 @@ class _HomePageState extends State<HomePage> {
       extendBodyBehindAppBar: true,
       appBar: ResponsiveWidget.isSmallScreen(context)
           ? AppBar(
+              iconTheme: IconThemeData(
+                  color: _opacity == 0 ? Colors.black : Colors.white),
               // for smaller screen sizes
-              backgroundColor: Colors.blueGrey[900]?.withOpacity(_opacity),
+              backgroundColor: Colors.black.withOpacity(_opacity),
               elevation: 0,
-              title: Text(
-                'EXPLORE',
-                style: TextStyle(
-                  color: Colors.blueGrey.shade100,
-                  fontSize: 20,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 3,
+              title: InkWell(
+                onHover: (value) {},
+                onTap: () {
+                  NavigationRouter.switchToHomePage(context);
+                },
+                child: Image.asset(
+                  Constants.IMG_LOGO,
+                  width: 100,
+                  fit: BoxFit.cover,
                 ),
-              ),
-            )
+              ))
           : PreferredSize(
               // for larger & medium screen sizes
               preferredSize: Size(screenSize.width, 1000),
