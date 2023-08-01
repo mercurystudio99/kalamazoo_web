@@ -1,11 +1,11 @@
 import 'package:bestlocaleats/models/app_model.dart';
 import 'package:bestlocaleats/utils/constants.dart';
-import 'package:bestlocaleats/utils/router.dart';
 import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/responsive.dart';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ResetPage extends StatefulWidget {
   const ResetPage({super.key});
@@ -256,8 +256,7 @@ class _ResetPageState extends State<ResetPage> {
                                             confirmPass:
                                                 _confirmController.text.trim(),
                                             onSuccess: () {
-                                              NavigationRouter.switchToHomePage(
-                                                  context);
+                                              context.go('/');
                                             },
                                             onError: (String text) {
                                               // Show error message
@@ -304,7 +303,7 @@ class _ResetPageState extends State<ResetPage> {
               });
             },
             onTap: () {
-              NavigationRouter.switchToHomePage(context);
+              context.go('/');
             },
             child: Image.asset(
               Constants.IMG_LOGO,
@@ -474,8 +473,7 @@ class _ResetPageState extends State<ResetPage> {
                                     newPass: _newController.text.trim(),
                                     confirmPass: _confirmController.text.trim(),
                                     onSuccess: () {
-                                      NavigationRouter.switchToHomePage(
-                                          context);
+                                      context.go('/');
                                     },
                                     onError: (String text) {
                                       // Show error message

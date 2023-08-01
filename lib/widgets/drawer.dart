@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bestlocaleats/utils/colors.dart';
-import 'package:bestlocaleats/utils/router.dart';
+import 'package:go_router/go_router.dart';
 
 class MobileDrawer extends StatefulWidget {
   const MobileDrawer({super.key});
@@ -39,7 +39,7 @@ class _DrawerState extends State<MobileDrawer> {
                   });
                 },
                 onTap: () {
-                  NavigationRouter.switchToHomePage(context);
+                  context.go('/');
                 },
                 child: Text(
                   'Home',
@@ -64,7 +64,7 @@ class _DrawerState extends State<MobileDrawer> {
                   });
                 },
                 onTap: () {
-                  NavigationRouter.switchToAllRestaurantPage(context);
+                  context.go('/all');
                 },
                 child: Text(
                   'All Restaurant',
@@ -89,7 +89,7 @@ class _DrawerState extends State<MobileDrawer> {
                   });
                 },
                 onTap: () {
-                  NavigationRouter.switchToContactPage(context);
+                  context.go('/contact');
                 },
                 child: Text(
                   'Contact Us',
@@ -114,7 +114,7 @@ class _DrawerState extends State<MobileDrawer> {
                   });
                 },
                 onTap: () {
-                  NavigationRouter.switchToFavoritePage(context);
+                  context.go('/favorite');
                 },
                 child: Text(
                   'Favorites',
@@ -139,7 +139,7 @@ class _DrawerState extends State<MobileDrawer> {
                   });
                 },
                 onTap: () {
-                  NavigationRouter.switchToNotificationPage(context);
+                  context.go('/notification');
                 },
                 child: Text(
                   'Notification',
@@ -164,7 +164,7 @@ class _DrawerState extends State<MobileDrawer> {
                   });
                 },
                 onTap: () {
-                  NavigationRouter.switchToLoginPage(context);
+                  context.go('/login');
                 },
                 child: Text(
                   'Sign in',
@@ -189,7 +189,7 @@ class _DrawerState extends State<MobileDrawer> {
                   });
                 },
                 onTap: () {
-                  NavigationRouter.switchToSignupPage(context);
+                  context.go('/signup');
                 },
                 child: Text(
                   'Sign Up',
@@ -214,7 +214,7 @@ class _DrawerState extends State<MobileDrawer> {
                   });
                 },
                 onTap: () {
-                  NavigationRouter.switchToProfilePage(context);
+                  context.go('/profile');
                 },
                 child: Text(
                   'Profile',

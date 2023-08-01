@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:bestlocaleats/utils/constants.dart';
 import 'package:bestlocaleats/utils/colors.dart';
-import 'package:bestlocaleats/utils/router.dart';
+import 'package:go_router/go_router.dart';
 
 class TopBarContents extends StatefulWidget {
   final double opacity;
@@ -48,7 +48,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    NavigationRouter.switchToHomePage(context);
+                    context.go('/');
                   },
                   child: Image.asset(
                     Constants.IMG_LOGO,
@@ -78,7 +78,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    NavigationRouter.switchToHomePage(context);
+                    context.go('/');
                   },
                   child: Image.asset(
                     Constants.IMG_LOGO,
@@ -104,7 +104,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    NavigationRouter.switchToHomePage(context);
+                    context.go('/');
                   },
                   child: Text(
                     'Home',
@@ -125,7 +125,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    NavigationRouter.switchToAllRestaurantPage(context);
+                    context.go('/all');
                   },
                   child: Text(
                     'All Restaurant',
@@ -146,7 +146,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    NavigationRouter.switchToContactPage(context);
+                    context.go('/contact');
                   },
                   child: Text(
                     'Contact us',
@@ -173,7 +173,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                               CustomColor.primaryColor.withOpacity(0.5),
                           padding: const EdgeInsets.all(5)),
                       onPressed: () {
-                        NavigationRouter.switchToLoginPage(context);
+                        context.go('/login');
                       },
                       child: const Text(
                         'Sign in',
@@ -199,7 +199,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                               CustomColor.primaryColor.withOpacity(0.5),
                           padding: const EdgeInsets.all(5)),
                       onPressed: () {
-                        NavigationRouter.switchToSignupPage(context);
+                        context.go('/signup');
                       },
                       child: const Text(
                         'Sign Up',
@@ -230,7 +230,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    NavigationRouter.switchToHomePage(context);
+                    context.go('/');
                   },
                   child: Image.asset(
                     Constants.IMG_LOGO,
@@ -256,7 +256,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    NavigationRouter.switchToHomePage(context);
+                    context.go('/');
                   },
                   child: Text(
                     'Home',
@@ -277,7 +277,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    NavigationRouter.switchToAllRestaurantPage(context);
+                    context.go('/all');
                   },
                   child: Text(
                     'All Restaurant',
@@ -298,7 +298,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    NavigationRouter.switchToContactPage(context);
+                    context.go('/contact');
                   },
                   child: Text(
                     'Contact us',
@@ -319,7 +319,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                       });
                     },
                     onTap: () {
-                      NavigationRouter.switchToFavoritePage(context);
+                      context.go('/favorite');
                     },
                     child: _isHovering[4]
                         ? const Icon(Icons.bookmark,
@@ -337,7 +337,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    NavigationRouter.switchToNotificationPage(context);
+                    context.go('/notification');
                   },
                   child: badges.Badge(
                     badgeContent: const Text(
@@ -374,7 +374,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                               CustomColor.primaryColor.withOpacity(0.5),
                           padding: const EdgeInsets.all(5)),
                       onPressed: () {
-                        NavigationRouter.switchToProfilePage(context);
+                        context.go('/profile');
                       },
                       child: Row(
                         children: [

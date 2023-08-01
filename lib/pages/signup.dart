@@ -1,12 +1,12 @@
 import 'package:bestlocaleats/models/app_model.dart';
 import 'package:bestlocaleats/utils/constants.dart';
-import 'package:bestlocaleats/utils/router.dart';
 import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/responsive.dart';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -261,8 +261,7 @@ class _SignupPageState extends State<SignupPage> {
                                       });
                                     },
                                     onTap: () {
-                                      NavigationRouter.switchToForgotPage(
-                                          context);
+                                      context.go('/forgot');
                                     },
                                     child: Text(
                                       'Forgot Password?',
@@ -318,9 +317,7 @@ class _SignupPageState extends State<SignupPage> {
                                                       .trim(),
                                                   onSuccess: () {
                                                     // Go to Home
-                                                    NavigationRouter
-                                                        .switchToHomePage(
-                                                            context);
+                                                    context.go('/');
                                                   },
                                                   onError: (String text) {
                                                     // Show error message
@@ -571,7 +568,7 @@ class _SignupPageState extends State<SignupPage> {
               });
             },
             onTap: () {
-              NavigationRouter.switchToHomePage(context);
+              context.go('/');
             },
             child: Image.asset(
               Constants.IMG_LOGO,
@@ -741,7 +738,7 @@ class _SignupPageState extends State<SignupPage> {
                               });
                             },
                             onTap: () {
-                              NavigationRouter.switchToForgotPage(context);
+                              context.go('/forgot');
                             },
                             child: Text(
                               'Forgot Password?',
@@ -791,8 +788,7 @@ class _SignupPageState extends State<SignupPage> {
                                           password: _passController.text.trim(),
                                           onSuccess: () {
                                             // Go to Home
-                                            NavigationRouter.switchToHomePage(
-                                                context);
+                                            context.go('/');
                                           },
                                           onError: (String text) {
                                             // Show error message

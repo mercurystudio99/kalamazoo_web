@@ -2,8 +2,8 @@ import 'package:bestlocaleats/widgets/responsive.dart';
 import 'package:bestlocaleats/widgets/bottom_bar_column.dart';
 import 'package:bestlocaleats/utils/constants.dart';
 import 'package:bestlocaleats/utils/colors.dart';
-import 'package:bestlocaleats/utils/router.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});
@@ -42,7 +42,7 @@ class _BottomBarState extends State<BottomBar> {
                   InkWell(
                     onHover: (value) {},
                     onTap: () {
-                      NavigationRouter.switchToHomePage(context);
+                      context.go('/');
                     },
                     child: Image.asset(
                       Constants.IMG_LOGO,
@@ -175,7 +175,7 @@ class _BottomBarState extends State<BottomBar> {
               InkWell(
                 onHover: (value) {},
                 onTap: () {
-                  NavigationRouter.switchToHomePage(context);
+                  context.go('/');
                 },
                 child: Image.asset(
                   Constants.IMG_LOGO,

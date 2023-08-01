@@ -1,11 +1,10 @@
-import 'package:bestlocaleats/models/app_model.dart';
 import 'package:bestlocaleats/utils/constants.dart';
-import 'package:bestlocaleats/utils/router.dart';
 import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/responsive.dart';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class OTPPage extends StatefulWidget {
   const OTPPage({super.key});
@@ -164,7 +163,7 @@ class _OTPPageState extends State<OTPPage> {
                                   padding: const EdgeInsets.all(5)),
                               onPressed: () {
                                 _getOTPcode();
-                                NavigationRouter.switchToResetPage(context);
+                                context.go('/reset');
                               },
                               child: const Text(
                                 'Continue',
@@ -227,7 +226,7 @@ class _OTPPageState extends State<OTPPage> {
               });
             },
             onTap: () {
-              NavigationRouter.switchToHomePage(context);
+              context.go('/');
             },
             child: Image.asset(
               Constants.IMG_LOGO,
@@ -323,7 +322,7 @@ class _OTPPageState extends State<OTPPage> {
                           padding: const EdgeInsets.all(5)),
                       onPressed: () {
                         _getOTPcode();
-                        NavigationRouter.switchToResetPage(context);
+                        context.go('/reset');
                       },
                       child: const Text(
                         'Continue',

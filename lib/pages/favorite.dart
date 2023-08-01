@@ -1,6 +1,5 @@
 import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/utils/constants.dart';
-import 'package:bestlocaleats/utils/router.dart';
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/drawer.dart';
 import 'package:bestlocaleats/widgets/bottom_bar.dart';
@@ -8,6 +7,7 @@ import 'package:bestlocaleats/widgets/responsive.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 class FavoritePage extends StatefulWidget {
   const FavoritePage({super.key});
@@ -35,7 +35,7 @@ class _FavoritePageState extends State<FavoritePage> {
               title: InkWell(
                 onHover: (value) {},
                 onTap: () {
-                  NavigationRouter.switchToHomePage(context);
+                  context.go('/');
                 },
                 child: Image.asset(
                   Constants.IMG_LOGO,

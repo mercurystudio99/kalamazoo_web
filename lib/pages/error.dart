@@ -1,9 +1,9 @@
 import 'package:bestlocaleats/utils/constants.dart';
-import 'package:bestlocaleats/utils/router.dart';
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/responsive.dart';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ErrorPage extends StatefulWidget {
   const ErrorPage({super.key});
@@ -55,7 +55,7 @@ class _ErrorPageState extends State<ErrorPage> {
               });
             },
             onTap: () {
-              NavigationRouter.switchToHomePage(context);
+              context.go('/');
             },
             child: Image.asset(
               Constants.IMG_LOGO,

@@ -1,5 +1,4 @@
 import 'package:bestlocaleats/utils/constants.dart';
-import 'package:bestlocaleats/utils/router.dart';
 import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/responsive.dart';
@@ -8,6 +7,7 @@ import 'package:bestlocaleats/widgets/bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -778,7 +778,7 @@ class _ProfilePageState extends State<ProfilePage> {
               });
             },
             onTap: () {
-              NavigationRouter.switchToHomePage(context);
+              context.go('/');
             },
             child: Image.asset(
               Constants.IMG_LOGO,

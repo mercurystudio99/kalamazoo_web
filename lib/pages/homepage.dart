@@ -1,6 +1,5 @@
 import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/utils/constants.dart';
-import 'package:bestlocaleats/utils/router.dart';
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/drawer.dart';
 import 'package:bestlocaleats/widgets/bottom_bar.dart';
@@ -13,6 +12,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
               title: InkWell(
                 onHover: (value) {},
                 onTap: () {
-                  NavigationRouter.switchToHomePage(context);
+                  context.go('/');
                 },
                 child: Image.asset(
                   Constants.IMG_LOGO,

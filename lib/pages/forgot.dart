@@ -1,11 +1,10 @@
-import 'package:bestlocaleats/models/app_model.dart';
 import 'package:bestlocaleats/utils/constants.dart';
-import 'package:bestlocaleats/utils/router.dart';
 import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/responsive.dart';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ForgotPage extends StatefulWidget {
   const ForgotPage({super.key});
@@ -217,7 +216,7 @@ class _ForgotPageState extends State<ForgotPage> {
               });
             },
             onTap: () {
-              NavigationRouter.switchToHomePage(context);
+              context.go('/');
             },
             child: Image.asset(
               Constants.IMG_LOGO,

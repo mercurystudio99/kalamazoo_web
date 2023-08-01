@@ -1,6 +1,5 @@
 import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/utils/constants.dart';
-import 'package:bestlocaleats/utils/router.dart';
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/drawer.dart';
 import 'package:bestlocaleats/widgets/bottom_bar.dart';
@@ -8,6 +7,7 @@ import 'package:bestlocaleats/widgets/responsive.dart';
 import 'package:bestlocaleats/widgets/accordion.dart';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AboutPage extends StatefulWidget {
@@ -50,7 +50,7 @@ class _AboutPageState extends State<AboutPage> {
               title: InkWell(
                 onHover: (value) {},
                 onTap: () {
-                  NavigationRouter.switchToHomePage(context);
+                  context.go('/');
                 },
                 child: Image.asset(
                   Constants.IMG_LOGO,

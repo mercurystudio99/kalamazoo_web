@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bestlocaleats/utils/colors.dart';
-import 'package:bestlocaleats/utils/router.dart';
+import 'package:go_router/go_router.dart';
 
 class BottomBarColumn extends StatefulWidget {
   final String heading;
@@ -48,7 +48,7 @@ class _BottomBarColumnState extends State<BottomBarColumn> {
             });
           },
           onTap: () {
-            NavigationRouter.switchToHomePage(context);
+            context.go('/');
           },
           child: Text(
             widget.s1,
@@ -66,7 +66,7 @@ class _BottomBarColumnState extends State<BottomBarColumn> {
             });
           },
           onTap: () {
-            NavigationRouter.switchToAllRestaurantPage(context);
+            context.go('/all');
           },
           child: Text(
             widget.s2,
@@ -84,7 +84,7 @@ class _BottomBarColumnState extends State<BottomBarColumn> {
             });
           },
           onTap: () {
-            NavigationRouter.switchToContactPage(context);
+            context.go('/contact');
           },
           child: Text(
             widget.s3,
@@ -102,7 +102,7 @@ class _BottomBarColumnState extends State<BottomBarColumn> {
             });
           },
           onTap: () {
-            NavigationRouter.switchToFavoritePage(context);
+            context.go('/favorite');
           },
           child: Text(
             widget.s4,

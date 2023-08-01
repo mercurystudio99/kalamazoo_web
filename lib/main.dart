@@ -7,7 +7,18 @@ import 'firebase_options.dart';
 
 import 'package:bestlocaleats/pages/homepage.dart';
 import 'package:bestlocaleats/pages/login.dart';
+import 'package:bestlocaleats/pages/signup.dart';
+import 'package:bestlocaleats/pages/forgot.dart';
+import 'package:bestlocaleats/pages/otp.dart';
+import 'package:bestlocaleats/pages/reset.dart';
+import 'package:bestlocaleats/pages/allrestaurantpage.dart';
+import 'package:bestlocaleats/pages/about.dart';
+import 'package:bestlocaleats/pages/favorite.dart';
+import 'package:bestlocaleats/pages/notification.dart';
+import 'package:bestlocaleats/pages/contact.dart';
+import 'package:bestlocaleats/pages/profile.dart';
 import 'package:bestlocaleats/pages/error.dart';
+
 import 'package:bestlocaleats/utils/colors.dart';
 
 void main() async {
@@ -32,6 +43,66 @@ final GoRouter _router = GoRouter(
           path: 'login',
           builder: (BuildContext context, GoRouterState state) {
             return const LoginPage();
+          },
+        ),
+        GoRoute(
+          path: 'signup',
+          builder: (BuildContext context, GoRouterState state) {
+            return const SignupPage();
+          },
+        ),
+        GoRoute(
+          path: 'forgot',
+          builder: (BuildContext context, GoRouterState state) {
+            return const ForgotPage();
+          },
+        ),
+        GoRoute(
+          path: 'otp',
+          builder: (BuildContext context, GoRouterState state) {
+            return const OTPPage();
+          },
+        ),
+        GoRoute(
+          path: 'reset',
+          builder: (BuildContext context, GoRouterState state) {
+            return const ResetPage();
+          },
+        ),
+        GoRoute(
+          path: 'all',
+          builder: (BuildContext context, GoRouterState state) {
+            return const AllRestaurantPage();
+          },
+        ),
+        GoRoute(
+          path: 'about',
+          builder: (BuildContext context, GoRouterState state) {
+            return const AboutPage();
+          },
+        ),
+        GoRoute(
+          path: 'favorite',
+          builder: (BuildContext context, GoRouterState state) {
+            return const FavoritePage();
+          },
+        ),
+        GoRoute(
+          path: 'notification',
+          builder: (BuildContext context, GoRouterState state) {
+            return const NotificationPage();
+          },
+        ),
+        GoRoute(
+          path: 'contact',
+          builder: (BuildContext context, GoRouterState state) {
+            return const ContactPage();
+          },
+        ),
+        GoRoute(
+          path: 'profile',
+          builder: (BuildContext context, GoRouterState state) {
+            return const ProfilePage();
           },
         ),
       ],

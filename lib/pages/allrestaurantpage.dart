@@ -1,6 +1,5 @@
 import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/utils/constants.dart';
-import 'package:bestlocaleats/utils/router.dart';
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/drawer.dart';
 import 'package:bestlocaleats/widgets/bottom_bar.dart';
@@ -9,6 +8,7 @@ import 'package:bestlocaleats/widgets/responsive.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 const numberOfItems = 20;
@@ -71,7 +71,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
               title: InkWell(
                 onHover: (value) {},
                 onTap: () {
-                  NavigationRouter.switchToHomePage(context);
+                  context.go('/');
                 },
                 child: Image.asset(
                   Constants.IMG_LOGO,
@@ -462,7 +462,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
         InkWell(
           hoverColor: Colors.transparent,
           onTap: () {
-            NavigationRouter.switchToAboutPage(context);
+            context.go('/about');
           },
           onHover: (value) {},
           child: Card(
