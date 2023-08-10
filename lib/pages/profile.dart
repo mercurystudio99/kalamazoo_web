@@ -1,5 +1,6 @@
 import 'package:bestlocaleats/utils/constants.dart';
 import 'package:bestlocaleats/utils/colors.dart';
+import 'package:bestlocaleats/utils/globals.dart' as global;
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/responsive.dart';
 import 'package:bestlocaleats/widgets/bottom_bar.dart';
@@ -115,6 +116,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _desktop() {
+    int topbarstatus = 1;
+    if (global.userID.isNotEmpty) topbarstatus = 2;
     Size screenSize = MediaQuery.of(context).size;
     double formPadding = ResponsiveWidget.isLargeScreen(context)
         ? Constants.mainPadding * 2
@@ -122,7 +125,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(screenSize.width, 1000),
-        child: const TopBarContents(1, 2),
+        child: TopBarContents(1, topbarstatus),
       ),
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),

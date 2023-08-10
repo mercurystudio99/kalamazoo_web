@@ -1,5 +1,6 @@
 import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/utils/constants.dart';
+import 'package:bestlocaleats/utils/globals.dart' as global;
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/drawer.dart';
 import 'package:bestlocaleats/widgets/bottom_bar.dart';
@@ -52,6 +53,8 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
 
   @override
   Widget build(BuildContext context) {
+    int topbarstatus = 1;
+    if (global.userID.isNotEmpty) topbarstatus = 2;
     var screenSize = MediaQuery.of(context).size;
     double brandWidth = (screenSize.width - Constants.mainPadding * 4) / 3;
     if (screenSize.width < 1100) {
@@ -82,7 +85,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
           : PreferredSize(
               // for larger & medium screen sizes
               preferredSize: Size(screenSize.width, 1000),
-              child: const TopBarContents(1, 1),
+              child: TopBarContents(1, topbarstatus),
             ),
       drawer: const MobileDrawer(),
       body: SingleChildScrollView(

@@ -1,5 +1,6 @@
 import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/utils/constants.dart';
+import 'package:bestlocaleats/utils/globals.dart' as global;
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/drawer.dart';
 import 'package:bestlocaleats/widgets/bottom_bar.dart';
@@ -97,6 +98,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    int topbarstatus = 1;
+    if (global.userID.isNotEmpty) topbarstatus = 2;
     Size screenSize = MediaQuery.of(context).size;
     _opacity = _scrollPosition == 0 ? 0 : 1;
     double bannerTitleSize = 0;
@@ -127,7 +130,7 @@ class _HomePageState extends State<HomePage> {
           : PreferredSize(
               // for larger & medium screen sizes
               preferredSize: Size(screenSize.width, 1000),
-              child: TopBarContents(_opacity, 2),
+              child: TopBarContents(_opacity, topbarstatus),
             ),
       drawer: const MobileDrawer(),
       body: SingleChildScrollView(

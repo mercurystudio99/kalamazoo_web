@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:bestlocaleats/utils/constants.dart';
 import 'package:bestlocaleats/utils/colors.dart';
+import 'package:bestlocaleats/utils/globals.dart' as global;
 import 'package:go_router/go_router.dart';
 
 class TopBarContents extends StatefulWidget {
@@ -379,24 +380,26 @@ class _TopBarContentsState extends State<TopBarContents> {
                       child: Row(
                         children: [
                           const SizedBox(width: 2),
-                          Image.asset(
-                            Constants.IMG_APPLE,
-                          ),
+                          global.userAvatar.isEmpty
+                              ? Image.asset(
+                                  Constants.IMG_APPLE,
+                                )
+                              : Image.network(global.userAvatar),
                           const SizedBox(width: 2),
                           Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Text(
-                                  'User name',
-                                  style: TextStyle(
+                                  global.userName,
+                                  style: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black),
                                 ),
                                 Text(
-                                  'demo@gmail.com',
-                                  style: TextStyle(
+                                  global.userEmail,
+                                  style: const TextStyle(
                                       fontSize: 8, color: Colors.grey),
                                 ),
                               ]),

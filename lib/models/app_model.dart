@@ -40,6 +40,9 @@ class AppModel extends Model {
             if (docSnapshot.data()[Constants.USER_PASS] == password) {
               globals.userEmail = email;
               globals.userID = docSnapshot.id;
+              globals.userName = docSnapshot.data()[Constants.USER_FULLNAME];
+              globals.userAvatar =
+                  docSnapshot.data()[Constants.USER_PROFILE_PHOTO];
               if (docSnapshot.data()[Constants.USER_FAVOURITIES].isNotEmpty) {
                 globals.userFavourites =
                     docSnapshot.data()[Constants.USER_FAVOURITIES];
@@ -78,6 +81,7 @@ class AppModel extends Model {
         .then((DocumentReference doc) {
       globals.userEmail = email;
       globals.userID = doc.id;
+      globals.userName = name;
       onSuccess();
     });
   }
