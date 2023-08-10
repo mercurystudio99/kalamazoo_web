@@ -1,6 +1,7 @@
 import 'package:bestlocaleats/utils/constants.dart';
 import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/utils/globals.dart' as global;
+import 'package:bestlocaleats/models/app_model.dart';
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/responsive.dart';
 import 'package:bestlocaleats/widgets/bottom_bar.dart';
@@ -30,7 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final _emailController = TextEditingController();
 
   static const List<String> listGender = <String>['Male', 'Female'];
-  static List<String> listYear = [];
+  static List<String> listYear = ['1950'];
   static const List<String> listMonth = <String>[
     'January',
     'Febrary',
@@ -45,7 +46,7 @@ class _ProfilePageState extends State<ProfilePage> {
     'November',
     'December'
   ];
-  static List<String> listDate = [];
+  static List<String> listDate = ['1'];
 
   String gender = '';
   String birthYear = '';
@@ -89,10 +90,12 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    for (var i = 1950; i < 2024; i++) {
+    listYear = ['1950'];
+    for (var i = 1951; i < 2024; i++) {
       listYear.add(i.toString());
     }
-    for (var i = 1; i < 32; i++) {
+    listDate = ['1'];
+    for (var i = 2; i < 32; i++) {
       listDate.add(i.toString());
     }
     gender = listGender.first;
@@ -746,7 +749,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                   shadowColor:
                                       CustomColor.primaryColor.withOpacity(0.5),
                                   padding: const EdgeInsets.all(5)),
-                              onPressed: () {},
+                              onPressed: () {
+                                AppModel().userLogout(onSuccess: () {
+                                  context.go('/');
+                                });
+                              },
                               child: const Text(
                                 'Log Out',
                                 style: TextStyle(
@@ -1270,7 +1277,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             borderRadius: BorderRadius.circular(8)),
                         shadowColor: CustomColor.primaryColor.withOpacity(0.5),
                         padding: const EdgeInsets.all(5)),
-                    onPressed: () {},
+                    onPressed: () {
+                      AppModel().userLogout(onSuccess: () {
+                        context.go('/');
+                      });
+                    },
                     child: const Text(
                       'Log Out',
                       style: TextStyle(

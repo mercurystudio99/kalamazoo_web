@@ -10,6 +10,7 @@ class AppModel extends Model {
 
   String? retrieveEmail;
   String? retrieveID;
+  String? retrieveName;
   Map<String, dynamic> categories = {};
 
   /// Create Singleton factory for [AppModel]
@@ -41,8 +42,10 @@ class AppModel extends Model {
               globals.userEmail = email;
               globals.userID = docSnapshot.id;
               globals.userName = docSnapshot.data()[Constants.USER_FULLNAME];
-              globals.userAvatar =
-                  docSnapshot.data()[Constants.USER_PROFILE_PHOTO];
+              if (docSnapshot.data()[Constants.USER_PROFILE_PHOTO] != null) {
+                globals.userAvatar =
+                    docSnapshot.data()[Constants.USER_PROFILE_PHOTO];
+              }
               if (docSnapshot.data()[Constants.USER_FAVOURITIES].isNotEmpty) {
                 globals.userFavourites =
                     docSnapshot.data()[Constants.USER_FAVOURITIES];
@@ -103,6 +106,7 @@ class AppModel extends Model {
           retrieveEmail = email;
           for (var docSnapshot in querySnapshot.docs) {
             retrieveID = docSnapshot.id;
+            retrieveName = docSnapshot.data()[Constants.USER_FULLNAME];
             if (docSnapshot.data()[Constants.USER_FAVOURITIES].isNotEmpty) {
               globals.userFavourites =
                   docSnapshot.data()[Constants.USER_FAVOURITIES];
@@ -133,8 +137,26 @@ class AppModel extends Model {
             .update({Constants.USER_PASS: newPass}).then((value) {
             globals.userEmail = retrieveEmail!;
             globals.userID = retrieveID!;
+            globals.userName = retrieveName!;
             onSuccess();
           }, onError: (e) => debugPrint("Error updating document $e"))
         : onError('Passwords must match.');
+  }
+
+  // user logout method
+  void userLogout({
+    // callback functions
+    required VoidCallback onSuccess,
+  }) {
+    globals.userID = "";
+    globals.userName = "";
+    globals.userEmail = "";
+    globals.userAvatar = "";
+    globals.userFavourites = [];
+
+    globals.restaurantID = "";
+    globals.restaurantRating = 0;
+    globals.menuID = "";
+    onSuccess();
   }
 }

@@ -398,7 +398,9 @@ class _TopBarContentsState extends State<TopBarContents> {
                                       color: Colors.black),
                                 ),
                                 Text(
-                                  global.userEmail,
+                                  (global.userEmail.length < 18)
+                                      ? global.userEmail
+                                      : '${global.userEmail.substring(0, 15)}..',
                                   style: const TextStyle(
                                       fontSize: 8, color: Colors.grey),
                                 ),
