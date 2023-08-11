@@ -47,6 +47,7 @@ dependencies:
   scoped_model: ^2.0.0
   go_router: ^10.0.0
   url_strategy: ^0.2.0
+  cached_network_image: ^3.2.3
 
 dev_dependencies:
   flutter_test:

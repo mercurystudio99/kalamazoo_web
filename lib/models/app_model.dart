@@ -159,4 +159,50 @@ class AppModel extends Model {
     globals.menuID = "";
     onSuccess();
   }
+
+  void getProfile({
+    required Function(Map<String, dynamic>?) onSuccess,
+    required Function(String) onError,
+  }) {
+    _firestore.collection(Constants.C_USERS).doc(globals.userID).get().then(
+      (documentSnapshot) {
+        if (documentSnapshot.exists) {
+          onSuccess(documentSnapshot.data());
+        } else {
+          onError('No user found');
+        }
+      },
+      onError: (e) => debugPrint("Error completing: $e"),
+    );
+  }
+
+  void postProfile({
+    required String imageUrl,
+    required String name,
+    required String location,
+    required String email,
+    required String gender,
+    required String birthYear,
+    required String birthMonth,
+    required String birthDate,
+    // callback functions
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) {
+    if (globals.userID.isEmpty) {
+      onError('Please login.');
+    } else {
+      _firestore.collection(Constants.C_USERS).doc(globals.userID).update({
+        Constants.USER_PROFILE_PHOTO: imageUrl,
+        Constants.USER_FULLNAME: name,
+        Constants.USER_LOCATION: location,
+        Constants.USER_EMAIL: email,
+        Constants.USER_GENDER: gender,
+        Constants.USER_BIRTH_YEAR: birthYear,
+        Constants.USER_BIRTH_MONTH: birthMonth,
+        Constants.USER_BIRTH_DAY: birthDate
+      }).then((value) => onSuccess(),
+          onError: (e) => onError('Profile Update Failed!'));
+    }
+  }
 }

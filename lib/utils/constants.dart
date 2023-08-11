@@ -19,6 +19,7 @@ class Constants {
   static const String USER_PHONE_NUMBER = "user_phone_number";
   static const String USER_EMAIL = "user_email";
   static const String USER_PASS = "user_pass";
+  static const String USER_LOCATION = "user_location";
   static const String USER_FAVOURITIES = "user_favourites";
   static const String USER_STATUS = "user_status";
   static const String USER_IS_VERIFIED = "user_is_verified";

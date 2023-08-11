@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -24,7 +26,9 @@ class _ProfilePageState extends State<ProfilePage> {
   ];
 
   PlatformFile? _imageFile;
+  String _imageLink = '';
 
+  final _storage = FirebaseStorage.instance;
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _locationController = TextEditingController();
@@ -60,7 +64,135 @@ class _ProfilePageState extends State<ProfilePage> {
     if (result == null) return;
     setState(() {
       _imageFile = result.files.first;
+      _imageLink = '';
     });
+  }
+
+  void _saveProfile(
+      {required VoidCallback onCallback,
+      required Function(String) onError}) async {
+    if (_imageFile != null) {
+      AppModel().userExist(
+          email: _emailController.text.trim(),
+          onSuccess: () async {
+            if (_emailController.text.trim() == global.userEmail) {
+              Uint8List? fileBytes = _imageFile!.bytes;
+              String filename =
+                  DateTime.now().millisecondsSinceEpoch.toString() +
+                      _imageFile!.name;
+              var snapshot = await _storage
+                  .ref()
+                  .child('avatar/$filename')
+                  .putData(fileBytes!);
+
+              var url = await snapshot.ref.getDownloadURL();
+
+              AppModel().postProfile(
+                  imageUrl: url.toString(),
+                  name: _nameController.text.trim(),
+                  location: _locationController.text.trim(),
+                  email: _emailController.text.trim(),
+                  gender: gender,
+                  birthYear: birthYear,
+                  birthMonth: birthMonth,
+                  birthDate: birthDate,
+                  onSuccess: () {
+                    global.userName = _nameController.text.trim();
+                    global.userEmail = _emailController.text.trim();
+                    global.userAvatar = url.toString();
+                    onCallback();
+                  },
+                  onError: (String text) {
+                    onError(text);
+                  });
+            } else {
+              global.userFavourites = [];
+              onError('The account already exists for that email.');
+            }
+          },
+          onError: (String text) async {
+            Uint8List? fileBytes = _imageFile!.bytes;
+            String filename = DateTime.now().millisecondsSinceEpoch.toString() +
+                _imageFile!.name;
+            var snapshot = await _storage
+                .ref()
+                .child('avatar/$filename')
+                .putData(fileBytes!);
+
+            var url = await snapshot.ref.getDownloadURL();
+
+            AppModel().postProfile(
+                imageUrl: url.toString(),
+                name: _nameController.text.trim(),
+                location: _locationController.text.trim(),
+                email: _emailController.text.trim(),
+                gender: gender,
+                birthYear: birthYear,
+                birthMonth: birthMonth,
+                birthDate: birthDate,
+                onSuccess: () {
+                  global.userName = _nameController.text.trim();
+                  global.userEmail = _emailController.text.trim();
+                  global.userAvatar = url.toString();
+                  onCallback();
+                },
+                onError: (String text) {
+                  onError(text);
+                });
+          });
+    } else {
+      if (_imageLink.isEmpty) {
+        onError("Please upload your image.");
+      } else {
+        AppModel().userExist(
+            email: _emailController.text.trim(),
+            onSuccess: () {
+              if (_emailController.text.trim() == global.userEmail) {
+                AppModel().postProfile(
+                    imageUrl: _imageLink,
+                    name: _nameController.text.trim(),
+                    location: _locationController.text.trim(),
+                    email: _emailController.text.trim(),
+                    gender: gender,
+                    birthYear: birthYear,
+                    birthMonth: birthMonth,
+                    birthDate: birthDate,
+                    onSuccess: () {
+                      global.userName = _nameController.text.trim();
+                      global.userEmail = _emailController.text.trim();
+                      global.userAvatar = _imageLink;
+                      onCallback();
+                    },
+                    onError: (String text) {
+                      onError(text);
+                    });
+              } else {
+                global.userFavourites = [];
+                onError('The account already exists for that email.');
+              }
+            },
+            onError: (String text) {
+              AppModel().postProfile(
+                  imageUrl: _imageLink,
+                  name: _nameController.text.trim(),
+                  location: _locationController.text.trim(),
+                  email: _emailController.text.trim(),
+                  gender: gender,
+                  birthYear: birthYear,
+                  birthMonth: birthMonth,
+                  birthDate: birthDate,
+                  onSuccess: () {
+                    global.userName = _nameController.text.trim();
+                    global.userEmail = _emailController.text.trim();
+                    global.userAvatar = _imageLink;
+                    onCallback();
+                  },
+                  onError: (String text) {
+                    onError(text);
+                  });
+            });
+      }
+    }
   }
 
   String? _validateEmail(String value) {
@@ -102,6 +234,39 @@ class _ProfilePageState extends State<ProfilePage> {
     birthMonth = listMonth.first;
     birthDate = listDate.first;
     birthYear = listYear.first;
+
+    if (global.userID.isNotEmpty) {
+      AppModel().getProfile(
+          onSuccess: (Map<String, dynamic>? param) {
+            if (param == null) return;
+            if (param[Constants.USER_PROFILE_PHOTO] != null) {
+              _imageLink = param[Constants.USER_PROFILE_PHOTO];
+            }
+            _nameController.text = param[Constants.USER_FULLNAME];
+            if (param[Constants.USER_LOCATION] != null) {
+              _locationController.text = param[Constants.USER_LOCATION];
+            }
+            _emailController.text = param[Constants.USER_EMAIL];
+            if (param[Constants.USER_GENDER] != null) {
+              gender =
+                  listGender[listGender.indexOf(param[Constants.USER_GENDER])];
+            }
+            if (param[Constants.USER_BIRTH_DAY] != null) {
+              birthDate =
+                  listDate[listDate.indexOf(param[Constants.USER_BIRTH_DAY])];
+            }
+            if (param[Constants.USER_BIRTH_MONTH] != null) {
+              birthMonth = listMonth[
+                  listMonth.indexOf(param[Constants.USER_BIRTH_MONTH])];
+            }
+            if (param[Constants.USER_BIRTH_YEAR] != null) {
+              birthYear =
+                  listYear[listYear.indexOf(param[Constants.USER_BIRTH_YEAR])];
+            }
+            setState(() {});
+          },
+          onError: (String text) {});
+    }
   }
 
   @override
@@ -180,16 +345,40 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ),
                                         ),
                                       )
-                                    : Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal:
-                                                Constants.mainPadding * 2),
-                                        child: ClipOval(
-                                            child: Container(
-                                          width: 150,
-                                          height: 150,
-                                          color: CustomColor.textSecondaryColor,
-                                        ))),
+                                    : _imageLink.isNotEmpty
+                                        ? Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal:
+                                                    Constants.mainPadding * 2),
+                                            child: ClipOval(
+                                                child: CachedNetworkImage(
+                                              imageUrl: _imageLink,
+                                              width: 150,
+                                              height: 150,
+                                              fit: BoxFit.cover,
+                                              progressIndicatorBuilder:
+                                                  (context, url,
+                                                          downloadProgress) =>
+                                                      CircularProgressIndicator(
+                                                          value:
+                                                              downloadProgress
+                                                                  .progress),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(Icons.error),
+                                            )),
+                                          )
+                                        : Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal:
+                                                    Constants.mainPadding * 2),
+                                            child: ClipOval(
+                                                child: Container(
+                                              width: 150,
+                                              height: 150,
+                                              color: CustomColor
+                                                  .textSecondaryColor,
+                                            ))),
                                 Positioned(
                                     right: Constants.mainPadding * 2,
                                     bottom: 10,
@@ -252,6 +441,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           onPressed: () {
                                             setState(() {
                                               _imageFile = null;
+                                              _imageLink = '';
                                             });
                                           },
                                           child: const Text(
@@ -283,16 +473,40 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ),
                                         ),
                                       )
-                                    : Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal:
-                                                Constants.mainPadding * 2),
-                                        child: ClipOval(
-                                            child: Container(
-                                          width: 150,
-                                          height: 150,
-                                          color: CustomColor.textSecondaryColor,
-                                        ))),
+                                    : _imageLink.isNotEmpty
+                                        ? Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal:
+                                                    Constants.mainPadding * 2),
+                                            child: ClipOval(
+                                                child: CachedNetworkImage(
+                                              imageUrl: _imageLink,
+                                              width: 150,
+                                              height: 150,
+                                              fit: BoxFit.cover,
+                                              progressIndicatorBuilder:
+                                                  (context, url,
+                                                          downloadProgress) =>
+                                                      CircularProgressIndicator(
+                                                          value:
+                                                              downloadProgress
+                                                                  .progress),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(Icons.error),
+                                            )),
+                                          )
+                                        : Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal:
+                                                    Constants.mainPadding * 2),
+                                            child: ClipOval(
+                                                child: Container(
+                                              width: 150,
+                                              height: 150,
+                                              color: CustomColor
+                                                  .textSecondaryColor,
+                                            ))),
                                 Positioned(
                                     right: Constants.mainPadding * 2,
                                     bottom: 10,
@@ -350,6 +564,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     onPressed: () {
                                       setState(() {
                                         _imageFile = null;
+                                        _imageLink = '';
                                       });
                                     },
                                     child: const Text(
@@ -713,11 +928,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                         padding: const EdgeInsets.all(5)),
                                     onPressed: () {
                                       if (_formKey.currentState!.validate()) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                              content: Text('Processing Data')),
-                                        );
+                                        _saveProfile(onCallback: () {
+                                          setState(() {});
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                                content: Text(
+                                                    'Successfully Updated.')),
+                                          );
+                                        }, onError: (String text) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(content: Text(text)),
+                                          );
+                                        });
                                       }
                                     },
                                     child: const Text(
@@ -832,14 +1056,33 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                       )
-                    : Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: ClipOval(
-                            child: Container(
-                          width: 150,
-                          height: 150,
-                          color: CustomColor.textSecondaryColor,
-                        ))),
+                    : _imageLink.isNotEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: Constants.mainPadding * 2),
+                            child: ClipOval(
+                                child: CachedNetworkImage(
+                              imageUrl: _imageLink,
+                              width: 150,
+                              height: 150,
+                              fit: BoxFit.cover,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) =>
+                                      CircularProgressIndicator(
+                                          value: downloadProgress.progress),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                            )),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: Constants.mainPadding * 2),
+                            child: ClipOval(
+                                child: Container(
+                              width: 150,
+                              height: 150,
+                              color: CustomColor.textSecondaryColor,
+                            ))),
                 Positioned(
                     right: 10,
                     bottom: 10,
@@ -894,6 +1137,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           onPressed: () {
                             setState(() {
                               _imageFile = null;
+                              _imageLink = '';
                             });
                           },
                           child: const Text(
@@ -1243,10 +1487,17 @@ class _ProfilePageState extends State<ProfilePage> {
                               padding: const EdgeInsets.all(5)),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Processing Data')),
-                              );
+                              _saveProfile(onCallback: () {
+                                setState(() {});
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Successfully Updated.')),
+                                );
+                              }, onError: (String text) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(text)),
+                                );
+                              });
                             }
                           },
                           child: const Text(
