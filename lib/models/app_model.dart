@@ -205,4 +205,20 @@ class AppModel extends Model {
           onError: (e) => onError('Profile Update Failed!'));
     }
   }
+
+  void getBestOffers({
+    required Function(List<Map<String, dynamic>>) onSuccess,
+    required Function(String) onError,
+  }) {
+    _firestore.collection(Constants.C_RESTAURANTS).limit(4).get().then(
+      (querySnapshot) {
+        List<Map<String, dynamic>> result = [];
+        for (var snapshot in querySnapshot.docs) {
+          result.add(snapshot.data());
+        }
+        onSuccess(result);
+      },
+      onError: (e) => debugPrint("Error completing: $e"),
+    );
+  }
 }

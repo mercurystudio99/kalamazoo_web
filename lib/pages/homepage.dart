@@ -8,6 +8,7 @@ import 'package:bestlocaleats/widgets/responsive.dart';
 import 'package:bestlocaleats/widgets/logos.dart';
 import 'package:bestlocaleats/widgets/download.dart';
 import 'package:bestlocaleats/widgets/contact.dart';
+import 'package:bestlocaleats/models/app_model.dart';
 
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -77,6 +78,8 @@ class _HomePageState extends State<HomePage> {
 
   late int categoryItemIndex = 0;
 
+  List<Map<String, dynamic>> bestOfferList = [];
+
   _scrollListener() {
     setState(() {
       _scrollPosition = _scrollController.position.pixels;
@@ -93,6 +96,12 @@ class _HomePageState extends State<HomePage> {
         (int _) =>
             heightGenerator.nextDouble() * (maxItemHeight - minItemHeight) +
             minItemHeight);
+
+    AppModel().getBestOffers(
+        onSuccess: (List<Map<String, dynamic>> param) {
+          bestOfferList = param;
+        },
+        onError: (String text) {});
     super.initState();
   }
 
@@ -611,164 +620,185 @@ class _HomePageState extends State<HomePage> {
           (MediaQuery.of(context).size.width - Constants.mainPadding * 5) / 4;
     }
 
-    Widget widget = Container(
-      width: cardWidth,
-      margin: const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
-      child: Stack(children: [
-        Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          shadowColor: CustomColor.primaryColor.withOpacity(0.2),
-          elevation: 8,
-          margin: const EdgeInsets.all(4.0),
-          child: Column(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                  topRight: Radius.circular(15),
+    List<Widget> widgetList = [];
+    for (var element in bestOfferList) {
+      Widget widget = Container(
+        width: cardWidth,
+        margin:
+            const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
+        child: Stack(children: [
+          Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            shadowColor: CustomColor.primaryColor.withOpacity(0.2),
+            elevation: 8,
+            margin: const EdgeInsets.all(4.0),
+            child: Column(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
+                  ),
+                  child: Image.network(
+                    element[Constants.RESTAURANT_IMAGE] ??
+                        'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+                  ),
                 ),
-                child: Image.network(
-                  'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          'Alro Business',
-                          style: TextStyle(
-                              fontSize: 20.0, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'demo.restaurant.com',
-                          style: TextStyle(
-                              fontSize: 14.0,
-                              color: CustomColor.textSecondaryColor),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 4, vertical: 1),
-                      decoration: BoxDecoration(
-                        color: CustomColor.activeColor,
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: Row(
-                        children: const [
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text(
-                            '4.5',
-                            style: TextStyle(color: Colors.white, fontSize: 14),
+                            element[Constants.RESTAURANT_BUSINESSNAME]
+                                        .toString()
+                                        .length <
+                                    12
+                                ? element[Constants.RESTAURANT_BUSINESSNAME]
+                                : '${element[Constants.RESTAURANT_BUSINESSNAME].toString().substring(0, 10)}..',
+                            style: const TextStyle(
+                                fontSize: 20.0, fontWeight: FontWeight.bold),
                           ),
-                          Icon(
-                            Icons.star,
-                            color: Colors.white,
-                            size: 14,
-                          )
+                          if (element[Constants.RESTAURANT_ADDRESS] != null)
+                            Text(
+                              element[Constants.RESTAURANT_ADDRESS]
+                                          .toString()
+                                          .length <
+                                      20
+                                  ? element[Constants.RESTAURANT_ADDRESS]
+                                  : '${element[Constants.RESTAURANT_ADDRESS].toString().substring(0, 18)}..',
+                              style: const TextStyle(
+                                  fontSize: 14.0,
+                                  color: CustomColor.textSecondaryColor),
+                            ),
                         ],
                       ),
-                    ),
-                  ],
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 4, vertical: 1),
+                        decoration: BoxDecoration(
+                          color: CustomColor.activeColor,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              element[Constants.RESTAURANT_RATING] ?? '0.0',
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 14),
+                            ),
+                            const Icon(
+                              Icons.star,
+                              color: Colors.white,
+                              size: 14,
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          '50% OFF',
-                          style: TextStyle(
-                              fontSize: 20.0,
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            '50% OFF',
+                            style: TextStyle(
+                                fontSize: 20.0,
+                                color: CustomColor.activeColor,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            'UPTO \$100',
+                            style: TextStyle(
+                                fontSize: 18.0,
+                                color: CustomColor.textSecondaryColor),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Row(
+                          children: const [
+                            Icon(
+                              Icons.location_on,
                               color: CustomColor.activeColor,
-                              fontWeight: FontWeight.bold),
+                              size: 14,
+                            ),
+                            Text(
+                              '1.2km',
+                              style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: CustomColor.textSecondaryColor),
+                            ),
+                            SizedBox(
+                              width: 4,
+                            ),
+                            Icon(
+                              Icons.access_time,
+                              size: 14,
+                              color: CustomColor.textSecondaryColor,
+                            ),
+                            Text(
+                              '10min',
+                              style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: CustomColor.textSecondaryColor),
+                            ),
+                          ],
                         ),
-                        Text(
-                          'UPTO \$100',
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              color: CustomColor.textSecondaryColor),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Row(
-                        children: const [
-                          Icon(
-                            Icons.location_on,
-                            color: CustomColor.activeColor,
-                            size: 14,
-                          ),
-                          Text(
-                            '1.2km',
-                            style: TextStyle(
-                                fontSize: 14.0,
-                                color: CustomColor.textSecondaryColor),
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Icon(
-                            Icons.access_time,
-                            size: 14,
-                            color: CustomColor.textSecondaryColor,
-                          ),
-                          Text(
-                            '10min',
-                            style: TextStyle(
-                                fontSize: 14.0,
-                                color: CustomColor.textSecondaryColor),
-                          ),
-                        ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 30),
-            ],
+                const SizedBox(height: 30),
+              ],
+            ),
           ),
-        ),
-        const Positioned(
-            right: 10,
-            top: 10,
-            child: Icon(
-              Icons.bookmark,
-              color: CustomColor.activeColor,
-            ))
-      ]),
-    );
-
-    List<Widget> widgetList = [widget, widget, widget, widget];
-    List<Widget> displayList;
-    if (MediaQuery.of(context).size.width < 600) {
-      displayList = widgetList.sublist(0, widgetList.length - 3);
-    } else if (MediaQuery.of(context).size.width < 900) {
-      displayList = widgetList.sublist(0, widgetList.length - 2);
-    } else if (MediaQuery.of(context).size.width < 1200) {
-      displayList = widgetList.sublist(0, widgetList.length - 1);
-    } else {
-      displayList = widgetList.sublist(0, widgetList.length);
+          const Positioned(
+              right: 10,
+              top: 10,
+              child: Icon(
+                Icons.bookmark_outline,
+                color: CustomColor.activeColor,
+              ))
+        ]),
+      );
+      widgetList.add(widget);
     }
-    return Padding(
-      padding:
-          const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.center, children: displayList),
-    );
+
+    if (widgetList.isEmpty) {
+      return const SizedBox(width: 1);
+    } else {
+      List<Widget> displayList;
+      if (MediaQuery.of(context).size.width < 600) {
+        displayList = widgetList.sublist(0, widgetList.length - 3);
+      } else if (MediaQuery.of(context).size.width < 900) {
+        displayList = widgetList.sublist(0, widgetList.length - 2);
+      } else if (MediaQuery.of(context).size.width < 1200) {
+        displayList = widgetList.sublist(0, widgetList.length - 1);
+      } else {
+        displayList = widgetList.sublist(0, widgetList.length);
+      }
+      return Padding(
+        padding:
+            const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.center, children: displayList),
+      );
+    }
   }
 }
