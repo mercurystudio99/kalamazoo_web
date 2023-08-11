@@ -98,6 +98,7 @@ class _HomePageState extends State<HomePage> {
             minItemHeight);
 
     AppModel().getBestOffers(
+        count: 4,
         onSuccess: (List<Map<String, dynamic>> param) {
           bestOfferList = param;
         },
@@ -310,7 +311,9 @@ class _HomePageState extends State<HomePage> {
               const Spacer(),
               InkWell(
                   onHover: (value) {},
-                  onTap: () {},
+                  onTap: () {
+                    context.go('/all');
+                  },
                   child: const Text('See All',
                       style: TextStyle(color: CustomColor.activeColor))),
               InkWell(

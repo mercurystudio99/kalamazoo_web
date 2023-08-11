@@ -207,18 +207,33 @@ class AppModel extends Model {
   }
 
   void getBestOffers({
+    required int count,
+    // callback functions
     required Function(List<Map<String, dynamic>>) onSuccess,
     required Function(String) onError,
   }) {
-    _firestore.collection(Constants.C_RESTAURANTS).limit(4).get().then(
-      (querySnapshot) {
-        List<Map<String, dynamic>> result = [];
-        for (var snapshot in querySnapshot.docs) {
-          result.add(snapshot.data());
-        }
-        onSuccess(result);
-      },
-      onError: (e) => debugPrint("Error completing: $e"),
-    );
+    if (count == 0) {
+      _firestore.collection(Constants.C_RESTAURANTS).get().then(
+        (querySnapshot) {
+          List<Map<String, dynamic>> result = [];
+          for (var snapshot in querySnapshot.docs) {
+            result.add(snapshot.data());
+          }
+          onSuccess(result);
+        },
+        onError: (e) => debugPrint("Error completing: $e"),
+      );
+    } else {
+      _firestore.collection(Constants.C_RESTAURANTS).limit(count).get().then(
+        (querySnapshot) {
+          List<Map<String, dynamic>> result = [];
+          for (var snapshot in querySnapshot.docs) {
+            result.add(snapshot.data());
+          }
+          onSuccess(result);
+        },
+        onError: (e) => debugPrint("Error completing: $e"),
+      );
+    }
   }
 }
