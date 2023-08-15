@@ -148,12 +148,21 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                               '1 x Push Notification',
                               style: TextStyle(color: CustomColor.primaryColor),
                             ),
-                            trailing: const Text(
-                              '\$100           ',
-                              style: TextStyle(
-                                  color: CustomColor.primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
+                            trailing: RichText(
+                              text: const TextSpan(children: [
+                                TextSpan(
+                                  text: '\$100.00',
+                                  style: TextStyle(
+                                      color: CustomColor.primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
+                                ),
+                                TextSpan(
+                                    text: '/each   ',
+                                    style: TextStyle(
+                                        color: CustomColor.primaryColor,
+                                        fontSize: 18)),
+                              ]),
                             ),
                           ),
                         ),
@@ -204,13 +213,13 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                 height: 35,
                                 child: Image.asset(Constants.IMG_CROWN)),
                             title: const Text(
-                              '2 x Push Notification',
+                              '4 x Push Notification',
                               style: TextStyle(color: CustomColor.primaryColor),
                             ),
                             trailing: RichText(
                               text: const TextSpan(children: [
                                 TextSpan(
-                                  text: '\$250',
+                                  text: '\$250.00',
                                   style: TextStyle(
                                       color: CustomColor.primaryColor,
                                       fontWeight: FontWeight.bold,
@@ -272,13 +281,13 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                 height: 35,
                                 child: Image.asset(Constants.IMG_CROWN)),
                             title: const Text(
-                              '3 x Push Notification',
+                              '10 x Push Notification',
                               style: TextStyle(color: CustomColor.primaryColor),
                             ),
                             trailing: RichText(
                               text: const TextSpan(children: [
                                 TextSpan(
-                                  text: '\$500',
+                                  text: '\$500.00',
                                   style: TextStyle(
                                       color: CustomColor.primaryColor,
                                       fontWeight: FontWeight.bold,
@@ -340,23 +349,18 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                 height: 35,
                                 child: Image.asset(Constants.IMG_CROWN)),
                             title: const Text(
-                              'Unlimited',
+                              'Unlimited Plan - 1 Push Notification/day',
                               style: TextStyle(color: CustomColor.primaryColor),
                             ),
                             trailing: RichText(
                               text: const TextSpan(children: [
                                 TextSpan(
-                                  text: '\$1000',
+                                  text: '\$1000.00         ',
                                   style: TextStyle(
                                       color: CustomColor.primaryColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20),
                                 ),
-                                TextSpan(
-                                    text: '/month',
-                                    style: TextStyle(
-                                        color: CustomColor.primaryColor,
-                                        fontSize: 18)),
                               ]),
                             ),
                           ),
@@ -521,12 +525,20 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                     '1 x Push Notification',
                     style: TextStyle(color: CustomColor.primaryColor),
                   ),
-                  trailing: const Text(
-                    '\$100           ',
-                    style: TextStyle(
-                        color: CustomColor.primaryColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
+                  trailing: RichText(
+                    text: const TextSpan(children: [
+                      TextSpan(
+                        text: '\$100.00',
+                        style: TextStyle(
+                            color: CustomColor.primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
+                      ),
+                      TextSpan(
+                          text: '/each   ',
+                          style: TextStyle(
+                              color: CustomColor.primaryColor, fontSize: 18)),
+                    ]),
                   ),
                 ),
               ),
@@ -574,13 +586,13 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                       height: 35,
                       child: Image.asset(Constants.IMG_CROWN)),
                   title: const Text(
-                    '2 x Push Notification',
+                    '4 x Push Notification',
                     style: TextStyle(color: CustomColor.primaryColor),
                   ),
                   trailing: RichText(
                     text: const TextSpan(children: [
                       TextSpan(
-                        text: '\$250',
+                        text: '\$250.00',
                         style: TextStyle(
                             color: CustomColor.primaryColor,
                             fontWeight: FontWeight.bold,
@@ -638,13 +650,13 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                       height: 35,
                       child: Image.asset(Constants.IMG_CROWN)),
                   title: const Text(
-                    '3 x Push Notification',
+                    '10 x Push Notification',
                     style: TextStyle(color: CustomColor.primaryColor),
                   ),
                   trailing: RichText(
                     text: const TextSpan(children: [
                       TextSpan(
-                        text: '\$500',
+                        text: '\$500.00',
                         style: TextStyle(
                             color: CustomColor.primaryColor,
                             fontWeight: FontWeight.bold,
@@ -702,22 +714,18 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                       height: 35,
                       child: Image.asset(Constants.IMG_CROWN)),
                   title: const Text(
-                    'Unlimited',
+                    'Unlimited Plan - 1 Push Notification/day',
                     style: TextStyle(color: CustomColor.primaryColor),
                   ),
                   trailing: RichText(
                     text: const TextSpan(children: [
                       TextSpan(
-                        text: '\$1000',
+                        text: '\$1000.00         ',
                         style: TextStyle(
                             color: CustomColor.primaryColor,
                             fontWeight: FontWeight.bold,
                             fontSize: 20),
                       ),
-                      TextSpan(
-                          text: '/month',
-                          style: TextStyle(
-                              color: CustomColor.primaryColor, fontSize: 18)),
                     ]),
                   ),
                 ),
