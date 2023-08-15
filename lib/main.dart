@@ -17,6 +17,7 @@ import 'package:bestlocaleats/pages/favorite.dart';
 import 'package:bestlocaleats/pages/notification.dart';
 import 'package:bestlocaleats/pages/contact.dart';
 import 'package:bestlocaleats/pages/profile.dart';
+import 'package:bestlocaleats/pages/subscription.dart';
 import 'package:bestlocaleats/pages/error.dart';
 
 import 'package:bestlocaleats/utils/colors.dart';
@@ -97,6 +98,12 @@ final GoRouter _router = GoRouter(
           path: 'contact',
           builder: (BuildContext context, GoRouterState state) {
             return const ContactPage();
+          },
+        ),
+        GoRoute(
+          path: 'subscription',
+          builder: (BuildContext context, GoRouterState state) {
+            return const SubscriptionPage();
           },
         ),
         GoRoute(
