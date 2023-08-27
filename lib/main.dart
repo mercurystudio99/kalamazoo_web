@@ -13,6 +13,7 @@ import 'package:bestlocaleats/pages/otp.dart';
 import 'package:bestlocaleats/pages/reset.dart';
 import 'package:bestlocaleats/pages/allrestaurantpage.dart';
 import 'package:bestlocaleats/pages/about.dart';
+import 'package:bestlocaleats/pages/search.dart';
 import 'package:bestlocaleats/pages/favorite.dart';
 import 'package:bestlocaleats/pages/notification.dart';
 import 'package:bestlocaleats/pages/contact.dart';
@@ -80,6 +81,12 @@ final GoRouter _router = GoRouter(
           path: 'about',
           builder: (BuildContext context, GoRouterState state) {
             return const AboutPage();
+          },
+        ),
+        GoRoute(
+          path: 'search',
+          builder: (BuildContext context, GoRouterState state) {
+            return const SearchPage();
           },
         ),
         GoRoute(
