@@ -111,6 +111,7 @@ class AppModel extends Model {
               globals.userFavourites =
                   docSnapshot.data()[Constants.USER_FAVOURITIES];
             }
+            globals.userPass = docSnapshot.data()[Constants.USER_PASS];
             break;
           }
           onSuccess();

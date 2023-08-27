@@ -1,6 +1,7 @@
 import 'package:bestlocaleats/models/app_model.dart';
 import 'package:bestlocaleats/utils/constants.dart';
 import 'package:bestlocaleats/utils/colors.dart';
+import 'package:bestlocaleats/utils/authentication.dart';
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/responsive.dart';
 
@@ -334,7 +335,17 @@ class _LoginPageState extends State<LoginPage> {
                                   shadowColor:
                                       CustomColor.primaryColor.withOpacity(0.5),
                                   padding: const EdgeInsets.all(5)),
-                              onPressed: () {},
+                              onPressed: () {
+                                Authentication().signInWithGoogle(
+                                    onSuccess: () {
+                                  context.go('/');
+                                }, onError: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Signin Failed!')),
+                                  );
+                                });
+                              },
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -752,7 +763,15 @@ class _LoginPageState extends State<LoginPage> {
                           shadowColor:
                               CustomColor.primaryColor.withOpacity(0.5),
                           padding: const EdgeInsets.all(5)),
-                      onPressed: () {},
+                      onPressed: () {
+                        Authentication().signInWithGoogle(onSuccess: () {
+                          context.go('/');
+                        }, onError: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Signin Failed!')),
+                          );
+                        });
+                      },
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
