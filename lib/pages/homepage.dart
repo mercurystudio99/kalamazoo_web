@@ -215,6 +215,9 @@ class _HomePageState extends State<HomePage> {
                                             color:
                                                 CustomColor.textSecondaryColor,
                                             size: 24)),
+                                    onFieldSubmitted: (value) {
+                                      context.go('/search');
+                                    },
                                   ),
                                 ],
                               ),

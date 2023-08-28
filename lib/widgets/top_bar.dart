@@ -25,6 +25,7 @@ class _TopBarContentsState extends State<TopBarContents> {
     false, // 3: contact us
     false, // 4: favorite
     false, // 5: notification
+    false, // 6: subscription
   ];
 
   @override
@@ -153,6 +154,27 @@ class _TopBarContentsState extends State<TopBarContents> {
                     'Contact us',
                     style: TextStyle(
                       color: _isHovering[3]
+                          ? CustomColor.activeColor
+                          : widget.opacity == 0
+                              ? Colors.black
+                              : Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 20),
+                InkWell(
+                  onHover: (value) {
+                    setState(() {
+                      value ? _isHovering[6] = true : _isHovering[6] = false;
+                    });
+                  },
+                  onTap: () {
+                    context.go('/subscription');
+                  },
+                  child: Text(
+                    'Subscription',
+                    style: TextStyle(
+                      color: _isHovering[6]
                           ? CustomColor.activeColor
                           : widget.opacity == 0
                               ? Colors.black
