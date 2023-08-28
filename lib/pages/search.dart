@@ -25,11 +25,11 @@ class _SearchPageState extends State<SearchPage> {
     for (var element in restaurants) {
       if (element[Constants.RESTAURANT_BUSINESSNAME]
           .toString()
-          .contains(value)) {
+          .toLowerCase()
+          .contains(value.toLowerCase())) {
         results.add(element);
       }
     }
-    debugPrint("$results");
     setState(() {});
   }
 
@@ -38,6 +38,9 @@ class _SearchPageState extends State<SearchPage> {
       count: 0,
       onSuccess: (List<Map<String, dynamic>> param) {
         restaurants = param;
+        if (global.searchText.isNotEmpty) {
+          _search(global.searchText);
+        }
       },
       onError: (String text) {},
     );
@@ -157,148 +160,154 @@ class _SearchPageState extends State<SearchPage> {
         margin:
             const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
         child: Stack(children: [
-          Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            shadowColor: CustomColor.primaryColor.withOpacity(0.2),
-            elevation: 8,
-            margin: const EdgeInsets.all(4.0),
-            child: Column(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
+          InkWell(
+            onTap: () {
+              global.restaurantID = item[Constants.RESTAURANT_ID].toString();
+              context.go('/about');
+            },
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              shadowColor: CustomColor.primaryColor.withOpacity(0.2),
+              elevation: 8,
+              margin: const EdgeInsets.all(4.0),
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(15),
+                      topRight: Radius.circular(15),
+                    ),
+                    child: Image.network(
+                      (item[Constants.RESTAURANT_IMAGE] != null)
+                          ? item[Constants.RESTAURANT_IMAGE].toString()
+                          : 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+                    ),
                   ),
-                  child: Image.network(
-                    (item[Constants.RESTAURANT_IMAGE] != null)
-                        ? item[Constants.RESTAURANT_IMAGE].toString()
-                        : 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            (item[Constants.RESTAURANT_BUSINESSNAME]
-                                        .toString()
-                                        .length <
-                                    20)
-                                ? item[Constants.RESTAURANT_BUSINESSNAME]
-                                    .toString()
-                                : '${item[Constants.RESTAURANT_BUSINESSNAME].toString().substring(0, 18)}..',
-                            style: TextStyle(
-                                fontSize: sizes[0],
-                                fontWeight: FontWeight.bold),
-                          ),
-                          if (item[Constants.RESTAURANT_URL] != null)
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             Text(
-                              (item[Constants.RESTAURANT_URL]
+                              (item[Constants.RESTAURANT_BUSINESSNAME]
                                           .toString()
                                           .length <
-                                      30)
-                                  ? item[Constants.RESTAURANT_URL].toString()
-                                  : '${item[Constants.RESTAURANT_URL].toString().substring(0, 28)}..',
+                                      20)
+                                  ? item[Constants.RESTAURANT_BUSINESSNAME]
+                                      .toString()
+                                  : '${item[Constants.RESTAURANT_BUSINESSNAME].toString().substring(0, 18)}..',
                               style: TextStyle(
-                                  fontSize: sizes[2],
-                                  color: CustomColor.textSecondaryColor),
+                                  fontSize: sizes[0],
+                                  fontWeight: FontWeight.bold),
                             ),
-                        ],
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 4, vertical: 1),
-                        decoration: BoxDecoration(
-                          color: CustomColor.activeColor,
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: Row(
-                          children: [
-                            Text(
-                              '4.5',
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: sizes[2]),
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.white,
-                              size: sizes[2],
-                            )
+                            if (item[Constants.RESTAURANT_URL] != null)
+                              Text(
+                                (item[Constants.RESTAURANT_URL]
+                                            .toString()
+                                            .length <
+                                        30)
+                                    ? item[Constants.RESTAURANT_URL].toString()
+                                    : '${item[Constants.RESTAURANT_URL].toString().substring(0, 28)}..',
+                                style: TextStyle(
+                                    fontSize: sizes[2],
+                                    color: CustomColor.textSecondaryColor),
+                              ),
                           ],
                         ),
-                      ),
-                    ],
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4, vertical: 1),
+                          decoration: BoxDecoration(
+                            color: CustomColor.activeColor,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                '4.5',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: sizes[2]),
+                              ),
+                              Icon(
+                                Icons.star,
+                                color: Colors.white,
+                                size: sizes[2],
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '50% OFF',
-                            style: TextStyle(
-                                fontSize: sizes[0],
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '50% OFF',
+                              style: TextStyle(
+                                  fontSize: sizes[0],
+                                  color: CustomColor.activeColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              'UPTO \$100',
+                              style: TextStyle(
+                                  fontSize: sizes[1],
+                                  color: CustomColor.textSecondaryColor),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.location_on,
                                 color: CustomColor.activeColor,
-                                fontWeight: FontWeight.bold),
+                                size: sizes[2],
+                              ),
+                              Text(
+                                '1.2km',
+                                style: TextStyle(
+                                    fontSize: sizes[2],
+                                    color: CustomColor.textSecondaryColor),
+                              ),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              Icon(
+                                Icons.access_time,
+                                size: sizes[2],
+                                color: CustomColor.textSecondaryColor,
+                              ),
+                              Text(
+                                '10min',
+                                style: TextStyle(
+                                    fontSize: sizes[2],
+                                    color: CustomColor.textSecondaryColor),
+                              ),
+                            ],
                           ),
-                          Text(
-                            'UPTO \$100',
-                            style: TextStyle(
-                                fontSize: sizes[1],
-                                color: CustomColor.textSecondaryColor),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.location_on,
-                              color: CustomColor.activeColor,
-                              size: sizes[2],
-                            ),
-                            Text(
-                              '1.2km',
-                              style: TextStyle(
-                                  fontSize: sizes[2],
-                                  color: CustomColor.textSecondaryColor),
-                            ),
-                            const SizedBox(
-                              width: 4,
-                            ),
-                            Icon(
-                              Icons.access_time,
-                              size: sizes[2],
-                              color: CustomColor.textSecondaryColor,
-                            ),
-                            Text(
-                              '10min',
-                              style: TextStyle(
-                                  fontSize: sizes[2],
-                                  color: CustomColor.textSecondaryColor),
-                            ),
-                          ],
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 30),
-              ],
+                  const SizedBox(height: 30),
+                ],
+              ),
             ),
           ),
           const Positioned(
@@ -365,6 +374,12 @@ class _SearchPageState extends State<SearchPage> {
       }
     }
 
-    return ListView(children: rowList);
+    if (lists.isEmpty) {
+      return const Center(
+          child: Text('No data.',
+              style: TextStyle(color: CustomColor.textPrimaryColor)));
+    } else {
+      return ListView(children: rowList);
+    }
   }
 }

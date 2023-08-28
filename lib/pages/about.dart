@@ -1,3 +1,4 @@
+import 'package:bestlocaleats/models/app_model.dart';
 import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/utils/constants.dart';
 import 'package:bestlocaleats/utils/globals.dart' as global;
@@ -19,9 +20,30 @@ class AboutPage extends StatefulWidget {
 }
 
 class _AboutPageState extends State<AboutPage> {
+  late Map<String, dynamic> restaurant = {};
+  late List<Map<String, dynamic>> foods = [];
+
+  void _getRestaurant() {
+    AppModel().getRestaurantByID(
+        id: global.restaurantID,
+        onSuccess: (Map<String, dynamic>? param) {
+          restaurant = param!;
+          setState(() {});
+        },
+        onError: (String value) {});
+    AppModel().getRestaurantFoodByID(
+        id: global.restaurantID,
+        onSuccess: (List<Map<String, dynamic>> param) {
+          foods = param;
+          setState(() {});
+        },
+        onError: (String value) {});
+  }
+
   @override
   void initState() {
     super.initState();
+    _getRestaurant();
   }
 
   @override
@@ -97,7 +119,9 @@ class _AboutPageState extends State<AboutPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                         Row(children: [
-                          Text('Maru Sushi & Grill',
+                          Text(
+                              restaurant[Constants.RESTAURANT_BUSINESSNAME] ??
+                                  '',
                               style: GoogleFonts.poppins(
                                   fontSize: 30, color: Colors.white)),
                           const SizedBox(width: 10),
@@ -139,18 +163,18 @@ class _AboutPageState extends State<AboutPage> {
                           const SizedBox(width: 10),
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text(
+                              children: [
+                                const Text(
                                   'Phone',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15.0),
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 Text(
-                                  '12345789',
-                                  style: TextStyle(
+                                  restaurant[Constants.RESTAURANT_PHONE] ?? '',
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.w100,
                                       fontSize: 12.0,
                                       color: CustomColor.textSecondaryColor),
@@ -172,18 +196,18 @@ class _AboutPageState extends State<AboutPage> {
                           const SizedBox(width: 10),
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text(
+                              children: [
+                                const Text(
                                   'E-mail',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15.0),
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 Text(
-                                  'royaldine247@gmail.com',
-                                  style: TextStyle(
+                                  restaurant[Constants.RESTAURANT_EMAIL] ?? '',
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.w100,
                                       fontSize: 12.0,
                                       color: CustomColor.textSecondaryColor),
@@ -205,18 +229,19 @@ class _AboutPageState extends State<AboutPage> {
                           const SizedBox(width: 10),
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text(
+                              children: [
+                                const Text(
                                   'Location',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15.0),
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 Text(
-                                  'Kalamazoo, Michigan, USA',
-                                  style: TextStyle(
+                                  restaurant[Constants.RESTAURANT_ADDRESS] ??
+                                      '',
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.w100,
                                       fontSize: 12.0,
                                       color: CustomColor.textSecondaryColor),
@@ -325,186 +350,217 @@ class _AboutPageState extends State<AboutPage> {
       sizes = [14, 12, 10, 100, 8, 3];
     }
 
-    Widget widget = Container(
-      width: cardWidth,
-      margin: const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
-      child: Stack(children: [
-        Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          shadowColor: CustomColor.primaryColor.withOpacity(0.2),
-          elevation: 8,
-          margin: const EdgeInsets.all(4.0),
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15),
+    List<Widget> lists = foods.map((item) {
+      return Container(
+        width: cardWidth,
+        margin:
+            const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
+        child: Stack(children: [
+          Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            shadowColor: CustomColor.primaryColor.withOpacity(0.2),
+            elevation: 8,
+            margin: const EdgeInsets.all(4.0),
+            child: Column(
+              children: [
+                Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15),
+                      ),
+                      child: Image.asset(
+                        Constants.IMG_FOOD_BG,
+                      ),
                     ),
-                    child: Image.asset(
-                      Constants.IMG_FOOD_BG,
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 50),
-                    alignment: Alignment.center,
-                    child: Container(
-                      width: sizes[3],
-                      height: sizes[3],
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                              width: 2, color: CustomColor.activeColor),
+                    Container(
+                      margin: const EdgeInsets.only(top: 50),
+                      alignment: Alignment.center,
+                      child: Container(
+                        width: sizes[3],
+                        height: sizes[3],
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                                width: 2, color: CustomColor.activeColor),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(100))),
+                        child: ClipRRect(
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(100))),
-                      child: ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(100)),
-                        child: Image.asset(
-                          Constants.IMG_SLIDER_HAMBURGER,
-                          fit: BoxFit.cover,
+                              const BorderRadius.all(Radius.circular(100)),
+                          child: (item[Constants.MENU_PHOTO] != null)
+                              ? Image.network(
+                                  item[Constants.MENU_PHOTO].toString(),
+                                  fit: BoxFit.cover)
+                              : Image.asset(
+                                  Constants.IMG_SLIDER_HAMBURGER,
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                       ),
                     ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        (item[Constants.MENU_NAME].toString().length < 22)
+                            ? item[Constants.MENU_NAME].toString()
+                            : '${item[Constants.MENU_NAME].toString().substring(0, 20)}..',
+                        style: TextStyle(
+                            color: CustomColor.primaryColor,
+                            fontSize: sizes[0],
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        '\$${item[Constants.MENU_PRICE]}',
+                        style: TextStyle(
+                            fontSize: sizes[0], fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Gyoza',
-                      style: TextStyle(
-                          color: CustomColor.primaryColor,
-                          fontSize: sizes[0],
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      '\$100',
-                      style: TextStyle(
-                          fontSize: sizes[0], fontWeight: FontWeight.bold),
-                    ),
-                  ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(12, 0, 12, 20),
-                child: Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam bibendum ornare vulputate. Curabitur faucibus condimentum purus quis tristique.',
-                  style: TextStyle(
-                      fontSize: sizes[2],
-                      color: CustomColor.textSecondaryColor),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 20),
+                  child: Text(
+                    item[Constants.MENU_DESCRIPTION] ?? '',
+                    style: TextStyle(
+                        fontSize: sizes[2],
+                        color: CustomColor.textSecondaryColor),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 4, vertical: 1),
-                      decoration: BoxDecoration(
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 4, vertical: 1),
+                        decoration: BoxDecoration(
+                          color: CustomColor.activeColor,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              '4.5',
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: sizes[1]),
+                            ),
+                            Icon(
+                              Icons.star,
+                              color: Colors.white,
+                              size: sizes[1],
+                            )
+                          ],
+                        ),
+                      ),
+                      const Spacer(),
+                      Icon(
+                        Icons.location_on,
                         color: CustomColor.activeColor,
-                        borderRadius: BorderRadius.circular(15),
+                        size: sizes[1],
                       ),
-                      child: Row(
-                        children: [
-                          Text(
-                            '4.5',
-                            style: TextStyle(
-                                color: Colors.white, fontSize: sizes[1]),
-                          ),
-                          Icon(
-                            Icons.star,
-                            color: Colors.white,
-                            size: sizes[1],
-                          )
-                        ],
+                      SizedBox(width: sizes[5]),
+                      Text(
+                        '1.2km',
+                        style: TextStyle(
+                            fontSize: sizes[1],
+                            color: CustomColor.textSecondaryColor),
                       ),
-                    ),
-                    const Spacer(),
-                    Icon(
-                      Icons.location_on,
-                      color: CustomColor.activeColor,
-                      size: sizes[1],
-                    ),
-                    SizedBox(width: sizes[5]),
-                    Text(
-                      '1.2km',
-                      style: TextStyle(
-                          fontSize: sizes[1],
-                          color: CustomColor.textSecondaryColor),
-                    ),
-                    SizedBox(
-                      width: sizes[4],
-                    ),
-                    Icon(
-                      Icons.access_time,
-                      size: sizes[1],
-                      color: CustomColor.textSecondaryColor,
-                    ),
-                    SizedBox(width: sizes[5]),
-                    Text(
-                      '10min',
-                      style: TextStyle(
-                          fontSize: sizes[1],
-                          color: CustomColor.textSecondaryColor),
-                    ),
-                  ],
+                      SizedBox(
+                        width: sizes[4],
+                      ),
+                      Icon(
+                        Icons.access_time,
+                        size: sizes[1],
+                        color: CustomColor.textSecondaryColor,
+                      ),
+                      SizedBox(width: sizes[5]),
+                      Text(
+                        '10min',
+                        style: TextStyle(
+                            fontSize: sizes[1],
+                            color: CustomColor.textSecondaryColor),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        const Positioned(
-            right: 15,
-            top: 15,
-            child: Icon(
-              Icons.bookmark,
-              color: CustomColor.activeColor,
-            ))
-      ]),
-    );
+          const Positioned(
+              right: 15,
+              top: 15,
+              child: Icon(
+                Icons.bookmark,
+                color: CustomColor.activeColor,
+              ))
+        ]),
+      );
+    }).toList();
 
-    List<Widget> list = [];
+    List<Widget> rowList = [];
     if (screenSize.width >= 1400) {
-      for (var i = 0; i < 10; i++) {
-        list.add(Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: Constants.mainPadding / 2, vertical: 20),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [widget, widget, widget]),
-        ));
+      int rowCount = lists.length ~/ 3;
+      for (int i = 0; i < rowCount + 1; i++) {
+        if (lists.length > 3 * (i + 1)) {
+          rowList.add(Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: Constants.mainPadding / 2, vertical: 20),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: lists.sublist(3 * i, 3 * (i + 1))),
+          ));
+        } else {
+          rowList.add(Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: Constants.mainPadding / 2, vertical: 20),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: lists.sublist(3 * i, lists.length)),
+          ));
+        }
       }
     } else if (screenSize.width >= 800 && screenSize.width < 1400) {
-      for (var i = 0; i < 15; i++) {
-        list.add(Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: Constants.mainPadding / 2, vertical: 20),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [widget, widget]),
-        ));
+      int rowCount = lists.length ~/ 2;
+      for (int i = 0; i < rowCount + 1; i++) {
+        if (lists.length > 2 * (i + 1)) {
+          rowList.add(Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: Constants.mainPadding / 2, vertical: 20),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: lists.sublist(2 * i, 2 * (i + 1))),
+          ));
+        } else {
+          rowList.add(Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: Constants.mainPadding / 2, vertical: 20),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: lists.sublist(2 * i, lists.length)),
+          ));
+        }
       }
     } else {
-      for (var i = 0; i < 20; i++) {
-        list.add(Padding(
+      for (var i = 0; i < lists.length; i++) {
+        rowList.add(Padding(
           padding: const EdgeInsets.symmetric(
               horizontal: Constants.mainPadding / 2, vertical: 14),
-          child: widget,
+          child: lists[i],
         ));
       }
     }
 
-    return ListView(children: list);
+    return ListView(children: rowList);
   }
 }

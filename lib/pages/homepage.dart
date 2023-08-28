@@ -216,6 +216,7 @@ class _HomePageState extends State<HomePage> {
                                                 CustomColor.textSecondaryColor,
                                             size: 24)),
                                     onFieldSubmitted: (value) {
+                                      global.searchText = value;
                                       context.go('/search');
                                     },
                                   ),

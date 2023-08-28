@@ -237,4 +237,41 @@ class AppModel extends Model {
       );
     }
   }
+
+  void getRestaurantByID({
+    required String id,
+    // callback functions
+    required Function(Map<String, dynamic>?) onSuccess,
+    required Function(String) onError,
+  }) {
+    _firestore.collection(Constants.C_RESTAURANTS).doc(id).get().then(
+      (querySnapshot) {
+        onSuccess(querySnapshot.data());
+      },
+      onError: (e) => debugPrint("Error completing: $e"),
+    );
+  }
+
+  void getRestaurantFoodByID({
+    required String id,
+    // callback functions
+    required Function(List<Map<String, dynamic>>) onSuccess,
+    required Function(String) onError,
+  }) {
+    _firestore
+        .collection(Constants.C_RESTAURANTS)
+        .doc(id)
+        .collection(Constants.C_C_MENU)
+        .get()
+        .then(
+      (querySnapshot) {
+        List<Map<String, dynamic>> result = [];
+        for (var snapshot in querySnapshot.docs) {
+          result.add(snapshot.data());
+        }
+        onSuccess(result);
+      },
+      onError: (e) => debugPrint("Error completing: $e"),
+    );
+  }
 }
