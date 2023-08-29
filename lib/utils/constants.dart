@@ -50,6 +50,8 @@ class Constants {
 
   // images
   static const String imagePath = "assets/images/";
+  static const String IMG_CUSTOMER = "${imagePath}user.png";
+  static const String IMG_OWNER = "${imagePath}shopkeeper.png";
   static const String IMG_LOGO = "${imagePath}logo.png";
   static const String IMG_APPLE = "${imagePath}apple.png";
   static const String IMG_GOOGLE = "${imagePath}google.png";

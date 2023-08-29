@@ -222,7 +222,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                               CustomColor.primaryColor.withOpacity(0.5),
                           padding: const EdgeInsets.all(5)),
                       onPressed: () {
-                        context.go('/signup');
+                        context.go('/choose');
                       },
                       child: const Text(
                         'Sign Up',

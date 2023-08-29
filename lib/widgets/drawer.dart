@@ -189,7 +189,7 @@ class _DrawerState extends State<MobileDrawer> {
                   });
                 },
                 onTap: () {
-                  context.go('/signup');
+                  context.go('/choose');
                 },
                 child: Text(
                   'Sign Up',

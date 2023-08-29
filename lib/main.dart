@@ -8,6 +8,7 @@ import 'firebase_options.dart';
 import 'package:bestlocaleats/pages/homepage.dart';
 import 'package:bestlocaleats/pages/login.dart';
 import 'package:bestlocaleats/pages/signup.dart';
+import 'package:bestlocaleats/pages/choose.dart';
 import 'package:bestlocaleats/pages/forgot.dart';
 import 'package:bestlocaleats/pages/otp.dart';
 import 'package:bestlocaleats/pages/reset.dart';
@@ -45,6 +46,12 @@ final GoRouter _router = GoRouter(
           path: 'login',
           builder: (BuildContext context, GoRouterState state) {
             return const LoginPage();
+          },
+        ),
+        GoRoute(
+          path: 'choose',
+          builder: (BuildContext context, GoRouterState state) {
+            return const ChoosePage();
           },
         ),
         GoRoute(
