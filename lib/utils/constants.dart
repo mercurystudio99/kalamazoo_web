@@ -7,6 +7,7 @@ class Constants {
   static const String C_APPINFO = "AppInfo";
   static const String C_USERS = "Users";
   static const String C_RESTAURANTS = "Restaurants";
+  static const String C_AMENITIES = "Amenities";
   static const String C_C_MENU = "Menu";
 
   static const String USER_ID = "user_id";
@@ -48,8 +49,13 @@ class Constants {
   static const String MENU_DESCRIPTION = "description";
   static const String MENU_PHOTO = "photoLink";
 
+  static const String AMENITY_ID = "id";
+  static const String AMENITY_NAME = "name";
+  static const String AMENITY_LOGO = "logo";
+
   // images
   static const String imagePath = "assets/images/";
+  static const String IMG_AMENITIES = "${imagePath}amenities/amenities.png";
   static const String IMG_CUSTOMER = "${imagePath}user.png";
   static const String IMG_OWNER = "${imagePath}shopkeeper.png";
   static const String IMG_LOGO = "${imagePath}logo.png";

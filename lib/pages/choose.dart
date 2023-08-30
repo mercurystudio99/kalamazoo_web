@@ -496,7 +496,7 @@ class _ChoosePageState extends State<ChoosePage> {
                                 if (global.userType == 'customer') {
                                   context.go('/signup');
                                 } else {
-                                  context.go('/signup');
+                                  context.go('/register');
                                 }
                               },
                               child: const Text(
@@ -770,7 +770,7 @@ class _ChoosePageState extends State<ChoosePage> {
                         if (global.userType == 'customer') {
                           context.go('/signup');
                         } else {
-                          context.go('/signup');
+                          context.go('/register');
                         }
                       },
                       child: const Text(
