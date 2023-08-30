@@ -397,7 +397,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                               CustomColor.primaryColor.withOpacity(0.5),
                           padding: const EdgeInsets.all(5)),
                       onPressed: () {
-                        context.go('/profile');
+                        context.go('/profile2');
                       },
                       child: Row(
                         children: [

@@ -20,6 +20,7 @@ import 'package:bestlocaleats/pages/favorite.dart';
 import 'package:bestlocaleats/pages/notification.dart';
 import 'package:bestlocaleats/pages/contact.dart';
 import 'package:bestlocaleats/pages/profile.dart';
+import 'package:bestlocaleats/pages/profile2.dart';
 import 'package:bestlocaleats/pages/subscription.dart';
 import 'package:bestlocaleats/pages/error.dart';
 
@@ -131,6 +132,12 @@ final GoRouter _router = GoRouter(
           path: 'profile',
           builder: (BuildContext context, GoRouterState state) {
             return const ProfilePage();
+          },
+        ),
+        GoRoute(
+          path: 'profile2',
+          builder: (BuildContext context, GoRouterState state) {
+            return const Profile2Page();
           },
         ),
       ],
