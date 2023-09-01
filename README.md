@@ -1,6 +1,6 @@
 # bestlocaleats
 
-A new Flutter project.
+Flutter Website: bestlocaleats.com | bestlocaleats.net
 
 ## Getting Started
 
@@ -14,3 +14,7 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Flutter Web Page Refresh and 404 Not Found Error Solution
+
+Add .htaccess file in root folder
