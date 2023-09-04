@@ -18,7 +18,6 @@ import 'package:go_router/go_router.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const numberOfItems = 20;
 const minItemHeight = 200.0;
 const maxItemHeight = 350.0;
 const scrollDuration = Duration(seconds: 2);
@@ -79,11 +78,22 @@ class _HomePageState extends State<HomePage> {
   late int categoryItemIndex = 0;
 
   List<Map<String, dynamic>> bestOfferList = [];
+  List<Map<String, dynamic>> topMenuList = [];
 
   _scrollListener() {
     setState(() {
       _scrollPosition = _scrollController.position.pixels;
     });
+  }
+
+  void _getTopMenu() {
+    AppModel().getTopMenu(
+      onSuccess: (List<Map<String, dynamic>> param) {
+        topMenuList = param;
+        setState(() {});
+      },
+      onEmpty: () {},
+    );
   }
 
   @override
@@ -92,7 +102,7 @@ class _HomePageState extends State<HomePage> {
     _scrollController.addListener(_scrollListener);
     final heightGenerator = Random(328902348);
     itemHeights = List<double>.generate(
-        numberOfItems,
+        topMenuList.length,
         (int _) =>
             heightGenerator.nextDouble() * (maxItemHeight - minItemHeight) +
             minItemHeight);
@@ -104,6 +114,7 @@ class _HomePageState extends State<HomePage> {
         },
         onError: (String text) {});
     super.initState();
+    _getTopMenu();
   }
 
   @override
@@ -338,7 +349,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget list(Orientation orientation) => ScrollablePositionedList.builder(
-        itemCount: numberOfItems,
+        itemCount: topMenuList.length,
         itemBuilder: (context, index) => item(index, orientation),
         itemScrollController: itemScrollController,
         itemPositionsListener: itemPositionsListener,
@@ -374,13 +385,13 @@ class _HomePageState extends State<HomePage> {
         key: ValueKey<String>('Scroll$value'),
         onPressed: () {
           if (back && value < 0) return;
-          if (!back && value > numberOfItems - 1) return;
+          if (!back && value > topMenuList.length - 1) return;
           if (back && value > 0) {
             setState(() {
               categoryItemIndex = categoryItemIndex - 1;
             });
           }
-          if (!back && value < numberOfItems - 1) {
+          if (!back && value < topMenuList.length - 1) {
             setState(() {
               categoryItemIndex = categoryItemIndex + 1;
             });
@@ -434,15 +445,20 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     const SizedBox(width: 2),
                     Image.asset(
-                      Constants.IMG_COFFEECUP,
+                      '${Constants.imagePath}topmenu/${topMenuList[i][Constants.TOPMENU_IMAGE]}.png',
                       width: 25,
                     ),
                     const SizedBox(width: 8),
-                    Container(width: 1, height: 40, color: Colors.black),
+                    Container(width: 1, height: 36, color: Colors.black),
                     const SizedBox(width: 8),
-                    const Text(
-                      'Coffee',
-                      style: TextStyle(
+                    Text(
+                      (topMenuList[i][Constants.TOPMENU_NAME]
+                                  .toString()
+                                  .length <
+                              8)
+                          ? topMenuList[i][Constants.TOPMENU_NAME].toString()
+                          : '${topMenuList[i][Constants.TOPMENU_NAME].toString().substring(0, 5)}..',
+                      style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: CustomColor.textSecondaryColor),

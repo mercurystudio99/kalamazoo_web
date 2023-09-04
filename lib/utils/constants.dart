@@ -8,6 +8,7 @@ class Constants {
   static const String C_USERS = "Users";
   static const String C_RESTAURANTS = "Restaurants";
   static const String C_AMENITIES = "Amenities";
+  static const String C_TOPMENU = "TopMenus";
   static const String C_C_MENU = "Menu";
 
   static const String USER_ID = "user_id";
@@ -53,6 +54,10 @@ class Constants {
   static const String AMENITY_NAME = "name";
   static const String AMENITY_LOGO = "logo";
 
+  static const String TOPMENU_ID = "id";
+  static const String TOPMENU_NAME = "name";
+  static const String TOPMENU_IMAGE = "imgName";
+
   // images
   static const String imagePath = "assets/images/";
   static const String IMG_AMENITIES = "${imagePath}amenities/amenities.png";
@@ -84,6 +89,5 @@ class Constants {
   static const String IMG_SUBSCRIPTION_BG = "${imagePath}subscription.png";
   static const String IMG_NOTIFICATION_BG =
       "${imagePath}notification_background.png";
-  static const String IMG_COFFEECUP = "${imagePath}coffeecup.png";
   static const String IMG_BRAND1 = "${imagePath}brand1.png";
 }

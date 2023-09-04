@@ -280,7 +280,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                   children: [
                     const SizedBox(width: 2),
                     Image.asset(
-                      Constants.IMG_COFFEECUP,
+                      Constants.IMG_APPLE,
                       width: 25,
                     ),
                     const SizedBox(width: 8),
