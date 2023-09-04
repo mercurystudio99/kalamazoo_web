@@ -664,9 +664,11 @@ class _HomePageState extends State<HomePage> {
                     topRight: Radius.circular(15),
                   ),
                   child: Image.network(
-                    element[Constants.RESTAURANT_IMAGE] ??
-                        'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
-                  ),
+                      element[Constants.RESTAURANT_IMAGE] ??
+                          'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+                      width: cardWidth,
+                      height: cardWidth * 0.6,
+                      fit: BoxFit.cover),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(15),
