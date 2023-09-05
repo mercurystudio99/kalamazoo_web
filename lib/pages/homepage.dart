@@ -17,6 +17,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:geolocator/geolocator.dart';
 
 const minItemHeight = 200.0;
 const maxItemHeight = 350.0;
@@ -62,6 +63,8 @@ class _HomePageState extends State<HomePage> {
   static double _scrollPosition = 0;
   static double _opacity = 0;
 
+  final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
+
   /// Controller to scroll or jump to a particular item.
   final ItemScrollController itemScrollController = ItemScrollController();
 
@@ -96,6 +99,60 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<bool> _handlePermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await _geolocatorPlatform.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      return false;
+    }
+
+    permission = await _geolocatorPlatform.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await _geolocatorPlatform.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return false;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return false;
+    }
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    return true;
+  }
+
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await _handlePermission();
+
+    if (!hasPermission) {
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    // List<Placemark> placemarks =
+    //     await placemarkFromCoordinates(position.latitude, position.longitude);
+    // String output = 'No results found.';
+    // if (placemarks.isNotEmpty) {
+    //   output = placemarks[0].toString();
+    // }
+    debugPrint("$position");
+  }
+
   @override
   void initState() {
     _scrollController = ScrollController();
@@ -115,6 +172,7 @@ class _HomePageState extends State<HomePage> {
         onError: (String text) {});
     super.initState();
     _getTopMenu();
+    _getCurrentPosition();
   }
 
   @override
