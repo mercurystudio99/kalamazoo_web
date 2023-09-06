@@ -162,27 +162,6 @@ class _TopBarContentsState extends State<TopBarContents> {
                   ),
                 ),
                 const SizedBox(width: 20),
-                InkWell(
-                  onHover: (value) {
-                    setState(() {
-                      value ? _isHovering[6] = true : _isHovering[6] = false;
-                    });
-                  },
-                  onTap: () {
-                    context.go('/subscription');
-                  },
-                  child: Text(
-                    'Subscription',
-                    style: TextStyle(
-                      color: _isHovering[6]
-                          ? CustomColor.activeColor
-                          : widget.opacity == 0
-                              ? Colors.black
-                              : Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 20),
                 SizedBox(
                     width: 80,
                     height: 30,
@@ -334,6 +313,29 @@ class _TopBarContentsState extends State<TopBarContents> {
                     ),
                   ),
                 ),
+                if (global.userRole == Constants.owner)
+                  const SizedBox(width: 20),
+                if (global.userRole == Constants.owner)
+                  InkWell(
+                    onHover: (value) {
+                      setState(() {
+                        value ? _isHovering[6] = true : _isHovering[6] = false;
+                      });
+                    },
+                    onTap: () {
+                      context.go('/subscription');
+                    },
+                    child: Text(
+                      'Subscription',
+                      style: TextStyle(
+                        color: _isHovering[6]
+                            ? CustomColor.activeColor
+                            : widget.opacity == 0
+                                ? Colors.black
+                                : Colors.white,
+                      ),
+                    ),
+                  ),
                 const SizedBox(width: 20),
                 InkWell(
                     onHover: (value) {
@@ -397,7 +399,9 @@ class _TopBarContentsState extends State<TopBarContents> {
                               CustomColor.primaryColor.withOpacity(0.5),
                           padding: const EdgeInsets.all(5)),
                       onPressed: () {
-                        context.go('/profile2');
+                        (global.userRole == Constants.customer)
+                            ? context.go('/profile')
+                            : context.go('/profile2');
                       },
                       child: Row(
                         children: [

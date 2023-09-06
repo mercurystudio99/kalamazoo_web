@@ -5,7 +5,7 @@ String userName = "";
 String userEmail = "";
 String userAvatar = "";
 String userPass = "";
-String userType = "";
+String userRole = "";
 List<dynamic> userFavourites = [];
 String userSubscription = "";
 

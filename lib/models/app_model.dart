@@ -76,7 +76,8 @@ class AppModel extends Model {
     final user = <String, dynamic>{
       Constants.USER_FULLNAME: name,
       Constants.USER_EMAIL: email,
-      Constants.USER_PASS: password
+      Constants.USER_PASS: password,
+      Constants.USER_ROLE: globals.userRole
     };
     _firestore
         .collection(Constants.C_USERS)
@@ -112,6 +113,7 @@ class AppModel extends Model {
                   docSnapshot.data()[Constants.USER_FAVOURITIES];
             }
             globals.userPass = docSnapshot.data()[Constants.USER_PASS];
+            globals.userRole = docSnapshot.data()[Constants.USER_ROLE];
             break;
           }
           onSuccess();
@@ -154,6 +156,7 @@ class AppModel extends Model {
     globals.userEmail = "";
     globals.userAvatar = "";
     globals.userFavourites = [];
+    globals.userRole = "";
 
     globals.restaurantID = "";
     globals.restaurantRating = 0;

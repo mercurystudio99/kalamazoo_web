@@ -129,7 +129,7 @@ class _ChoosePageState extends State<ChoosePage> {
                                     },
                                     onTap: () {
                                       setState(() {
-                                        userType = 'customer';
+                                        userType = Constants.customer;
                                       });
                                     },
                                     child: Container(
@@ -137,7 +137,8 @@ class _ChoosePageState extends State<ChoosePage> {
                                         decoration: BoxDecoration(
                                           border: Border.all(
                                               width: 1,
-                                              color: (userType == 'customer' ||
+                                              color: (userType ==
+                                                          Constants.customer ||
                                                       _isHovering[2])
                                                   ? CustomColor.primaryColor
                                                   : Colors.white),
@@ -170,7 +171,8 @@ class _ChoosePageState extends State<ChoosePage> {
                                                         shape: BoxShape.circle,
                                                         border: Border.all(
                                                             width: (userType ==
-                                                                        'customer' ||
+                                                                        Constants
+                                                                            .customer ||
                                                                     _isHovering[
                                                                         2])
                                                                 ? 5
@@ -211,7 +213,7 @@ class _ChoosePageState extends State<ChoosePage> {
                                     },
                                     onTap: () {
                                       setState(() {
-                                        userType = 'owner';
+                                        userType = Constants.owner;
                                       });
                                     },
                                     child: Container(
@@ -219,7 +221,8 @@ class _ChoosePageState extends State<ChoosePage> {
                                         decoration: BoxDecoration(
                                           border: Border.all(
                                               width: 1,
-                                              color: (userType == 'owner' ||
+                                              color: (userType ==
+                                                          Constants.owner ||
                                                       _isHovering[1])
                                                   ? CustomColor.primaryColor
                                                   : Colors.white),
@@ -252,7 +255,8 @@ class _ChoosePageState extends State<ChoosePage> {
                                                         shape: BoxShape.circle,
                                                         border: Border.all(
                                                             width: (userType ==
-                                                                        'owner' ||
+                                                                        Constants
+                                                                            .owner ||
                                                                     _isHovering[
                                                                         1])
                                                                 ? 5
@@ -300,7 +304,7 @@ class _ChoosePageState extends State<ChoosePage> {
                               },
                               onTap: () {
                                 setState(() {
-                                  userType = 'customer';
+                                  userType = Constants.customer;
                                 });
                               },
                               child: Container(
@@ -308,10 +312,11 @@ class _ChoosePageState extends State<ChoosePage> {
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                         width: 1,
-                                        color: (userType == 'customer' ||
-                                                _isHovering[2])
-                                            ? CustomColor.primaryColor
-                                            : Colors.white),
+                                        color:
+                                            (userType == Constants.customer ||
+                                                    _isHovering[2])
+                                                ? CustomColor.primaryColor
+                                                : Colors.white),
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(10)),
                                     boxShadow: [
@@ -340,7 +345,8 @@ class _ChoosePageState extends State<ChoosePage> {
                                                   shape: BoxShape.circle,
                                                   border: Border.all(
                                                       width: (userType ==
-                                                                  'customer' ||
+                                                                  Constants
+                                                                      .customer ||
                                                               _isHovering[2])
                                                           ? 5
                                                           : 1,
@@ -382,7 +388,7 @@ class _ChoosePageState extends State<ChoosePage> {
                                 },
                                 onTap: () {
                                   setState(() {
-                                    userType = 'owner';
+                                    userType = Constants.owner;
                                   });
                                 },
                                 child: Container(
@@ -390,7 +396,7 @@ class _ChoosePageState extends State<ChoosePage> {
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                           width: 1,
-                                          color: (userType == 'owner' ||
+                                          color: (userType == Constants.owner ||
                                                   _isHovering[1])
                                               ? CustomColor.primaryColor
                                               : Colors.white),
@@ -423,7 +429,8 @@ class _ChoosePageState extends State<ChoosePage> {
                                                     shape: BoxShape.circle,
                                                     border: Border.all(
                                                         width: (userType ==
-                                                                    'owner' ||
+                                                                    Constants
+                                                                        .owner ||
                                                                 _isHovering[1])
                                                             ? 5
                                                             : 1,
@@ -492,8 +499,8 @@ class _ChoosePageState extends State<ChoosePage> {
                                   padding: const EdgeInsets.all(5)),
                               onPressed: () {
                                 if (userType.isEmpty) return;
-                                global.userType = userType;
-                                if (global.userType == 'customer') {
+                                global.userRole = userType;
+                                if (global.userRole == Constants.customer) {
                                   context.go('/signup');
                                 } else {
                                   context.go('/register');
@@ -586,7 +593,7 @@ class _ChoosePageState extends State<ChoosePage> {
                           },
                           onTap: () {
                             setState(() {
-                              userType = 'customer';
+                              userType = Constants.customer;
                             });
                           },
                           child: Container(
@@ -594,7 +601,7 @@ class _ChoosePageState extends State<ChoosePage> {
                               decoration: BoxDecoration(
                                 border: Border.all(
                                     width: 1,
-                                    color: (userType == 'customer' ||
+                                    color: (userType == Constants.customer ||
                                             _isHovering[2])
                                         ? CustomColor.primaryColor
                                         : Colors.white),
@@ -625,11 +632,12 @@ class _ChoosePageState extends State<ChoosePage> {
                                           decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               border: Border.all(
-                                                  width:
-                                                      (userType == 'customer' ||
-                                                              _isHovering[2])
-                                                          ? 5
-                                                          : 1,
+                                                  width: (userType ==
+                                                              Constants
+                                                                  .customer ||
+                                                          _isHovering[2])
+                                                      ? 5
+                                                      : 1,
                                                   color:
                                                       CustomColor.primaryColor),
                                               color: Colors.white),
@@ -661,7 +669,7 @@ class _ChoosePageState extends State<ChoosePage> {
                           },
                           onTap: () {
                             setState(() {
-                              userType = 'owner';
+                              userType = Constants.owner;
                             });
                           },
                           child: Container(
@@ -669,10 +677,10 @@ class _ChoosePageState extends State<ChoosePage> {
                               decoration: BoxDecoration(
                                 border: Border.all(
                                     width: 1,
-                                    color:
-                                        (userType == 'owner' || _isHovering[1])
-                                            ? CustomColor.primaryColor
-                                            : Colors.white),
+                                    color: (userType == Constants.owner ||
+                                            _isHovering[1])
+                                        ? CustomColor.primaryColor
+                                        : Colors.white),
                                 borderRadius:
                                     const BorderRadius.all(Radius.circular(10)),
                                 boxShadow: [
@@ -700,7 +708,8 @@ class _ChoosePageState extends State<ChoosePage> {
                                           decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               border: Border.all(
-                                                  width: (userType == 'owner' ||
+                                                  width: (userType ==
+                                                              Constants.owner ||
                                                           _isHovering[1])
                                                       ? 5
                                                       : 1,
@@ -766,8 +775,8 @@ class _ChoosePageState extends State<ChoosePage> {
                           padding: const EdgeInsets.all(5)),
                       onPressed: () {
                         if (userType.isEmpty) return;
-                        global.userType = userType;
-                        if (global.userType == 'customer') {
+                        global.userRole = userType;
+                        if (global.userRole == Constants.customer) {
                           context.go('/signup');
                         } else {
                           context.go('/register');

@@ -3,6 +3,8 @@
 class Constants {
   static const String logo = "BESTLOCALEATS";
   static const double mainPadding = 32;
+  static const String owner = "owner";
+  static const String customer = "customer";
 
   static const String C_APPINFO = "AppInfo";
   static const String C_USERS = "Users";
@@ -23,6 +25,7 @@ class Constants {
   static const String USER_PASS = "user_pass";
   static const String USER_LOCATION = "user_location";
   static const String USER_FAVOURITIES = "user_favourites";
+  static const String USER_ROLE = "user_role";
   static const String USER_STATUS = "user_status";
   static const String USER_IS_VERIFIED = "user_is_verified";
   static const String USER_REG_DATE = "user_reg_date";
