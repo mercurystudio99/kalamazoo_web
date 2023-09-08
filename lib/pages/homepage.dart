@@ -7,7 +7,7 @@ import 'package:bestlocaleats/widgets/bottom_bar.dart';
 import 'package:bestlocaleats/widgets/responsive.dart';
 import 'package:bestlocaleats/widgets/logos.dart';
 import 'package:bestlocaleats/widgets/download.dart';
-import 'package:bestlocaleats/widgets/contact.dart';
+import 'package:bestlocaleats/widgets/featured.dart';
 import 'package:bestlocaleats/models/app_model.dart';
 
 import 'dart:math';
@@ -354,7 +354,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           const SizedBox(height: 40),
-          const ContactSection(),
+          const FeaturedSection(),
           Padding(
             padding: const EdgeInsets.symmetric(
                 horizontal: Constants.mainPadding, vertical: 40),
