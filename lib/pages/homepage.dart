@@ -379,6 +379,28 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.symmetric(
                 horizontal: Constants.mainPadding, vertical: 40),
             child: Row(children: [
+              const Text('Daily Special',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              const Spacer(),
+              InkWell(
+                  onHover: (value) {},
+                  onTap: () {
+                    context.go('/search');
+                  },
+                  child: const Text('See All',
+                      style: TextStyle(color: CustomColor.activeColor))),
+              InkWell(
+                  onHover: (value) {},
+                  onTap: () {},
+                  child: const Icon(Icons.arrow_forward,
+                      size: 20, color: CustomColor.activeColor)),
+            ]),
+          ),
+          _dailySpecial(),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: Constants.mainPadding, vertical: 40),
+            child: Row(children: [
               const Text('Best offers for you',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               const Spacer(),
@@ -684,6 +706,143 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  Widget _dailySpecial() {
+    double cardWidth = 0;
+    if (MediaQuery.of(context).size.width < 600) {
+      cardWidth = 300;
+    } else if (MediaQuery.of(context).size.width < 900) {
+      cardWidth =
+          (MediaQuery.of(context).size.width - Constants.mainPadding * 3) / 2;
+    } else if (MediaQuery.of(context).size.width < 1200) {
+      cardWidth =
+          (MediaQuery.of(context).size.width - Constants.mainPadding * 4) / 3;
+    } else {
+      cardWidth =
+          (MediaQuery.of(context).size.width - Constants.mainPadding * 5) / 4;
+    }
+
+    List<Widget> widgetList = [];
+    for (var element in bestOfferList) {
+      Widget widget = Container(
+        width: cardWidth,
+        margin:
+            const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
+        child: Stack(children: [
+          Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            shadowColor: CustomColor.primaryColor.withOpacity(0.2),
+            elevation: 8,
+            margin: const EdgeInsets.all(4.0),
+            child: Column(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
+                  ),
+                  child: Image.network(
+                      element[Constants.RESTAURANT_IMAGE] ??
+                          'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+                      width: cardWidth,
+                      height: cardWidth * 0.6,
+                      fit: BoxFit.cover),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            '50% OFF',
+                            style: TextStyle(
+                                fontSize: 20.0,
+                                color: CustomColor.activeColor,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            'UPTO \$100',
+                            style: TextStyle(
+                                fontSize: 18.0,
+                                color: CustomColor.textSecondaryColor),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 4, vertical: 1),
+                        decoration: BoxDecoration(
+                          color: CustomColor.activeColor,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              element[Constants.RESTAURANT_RATING] ?? '0.0',
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 14),
+                            ),
+                            const Icon(
+                              Icons.star,
+                              color: Colors.white,
+                              size: 14,
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    child: Text(
+                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                      style: TextStyle(
+                          fontSize: 16, color: CustomColor.textSecondaryColor),
+                    )),
+                const SizedBox(height: 30),
+              ],
+            ),
+          ),
+          const Positioned(
+              right: 10,
+              top: 10,
+              child: Icon(
+                Icons.bookmark_outline,
+                color: CustomColor.activeColor,
+              ))
+        ]),
+      );
+      widgetList.add(widget);
+    }
+
+    if (widgetList.isEmpty) {
+      return const SizedBox(width: 1);
+    } else {
+      List<Widget> displayList;
+      if (MediaQuery.of(context).size.width < 600) {
+        displayList = widgetList.sublist(0, widgetList.length - 3);
+      } else if (MediaQuery.of(context).size.width < 900) {
+        displayList = widgetList.sublist(0, widgetList.length - 2);
+      } else if (MediaQuery.of(context).size.width < 1200) {
+        displayList = widgetList.sublist(0, widgetList.length - 1);
+      } else {
+        displayList = widgetList.sublist(0, widgetList.length);
+      }
+      return Padding(
+        padding:
+            const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.center, children: displayList),
+      );
+    }
   }
 
   Widget _bestOffers() {
