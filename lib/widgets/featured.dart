@@ -4,6 +4,7 @@ import 'package:bestlocaleats/widgets/responsive.dart';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FeaturedSection extends StatefulWidget {
   const FeaturedSection({super.key});
@@ -13,12 +14,19 @@ class FeaturedSection extends StatefulWidget {
 }
 
 class _FeaturedSectionState extends State<FeaturedSection> {
+  final Uri _url = Uri.parse('https://bestlocaleats.net/blog');
   Map<String, dynamic> item = {
     "title": "Featured",
     "image": "assets/images/burger.png",
     "bio": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     "eventCaption": "More"
   };
+
+  Future<void> _launchUrl() async {
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +73,9 @@ class _FeaturedSectionState extends State<FeaturedSection> {
                 padding: const EdgeInsets.all(5),
                 child:
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Image.asset(item["image"],
-                      width: 300, height: 300, fit: BoxFit.contain),
+                  if (!ResponsiveWidget.isSmallScreen(context))
+                    Image.asset(item["image"],
+                        width: 300, height: 300, fit: BoxFit.contain),
                   const SizedBox(width: 30),
                   Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -102,7 +111,7 @@ class _FeaturedSectionState extends State<FeaturedSection> {
                                       padding: const EdgeInsets.all(
                                           5) //content padding inside button
                                       ),
-                                  onPressed: () {},
+                                  onPressed: _launchUrl,
                                   child: Text(
                                     item["eventCaption"]
                                         .toString()
