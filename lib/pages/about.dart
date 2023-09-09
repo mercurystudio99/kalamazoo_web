@@ -22,6 +22,7 @@ class AboutPage extends StatefulWidget {
 class _AboutPageState extends State<AboutPage> {
   late Map<String, dynamic> restaurant = {};
   late List<Map<String, dynamic>> foods = [];
+  late List<Map<String, dynamic>> amenities = [];
 
   void _getRestaurant() {
     AppModel().getRestaurantByID(
@@ -40,10 +41,21 @@ class _AboutPageState extends State<AboutPage> {
         onError: (String value) {});
   }
 
+  void _getAmenities() {
+    AppModel().getAmenities(
+      onSuccess: (List<Map<String, dynamic>> param) {
+        amenities = param;
+        setState(() {});
+      },
+      onEmpty: () {},
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     _getRestaurant();
+    _getAmenities();
   }
 
   @override
@@ -53,17 +65,192 @@ class _AboutPageState extends State<AboutPage> {
     var screenSize = MediaQuery.of(context).size;
     List<double> bannersizes = [300, 360];
     List<double> menusizes = [400];
+    int amenitiesColCount = 3;
     if (screenSize.width < 1200) {
       menusizes = [300];
+      amenitiesColCount = 2;
     }
     if (screenSize.width < 800) {
       bannersizes = [300, 250];
       menusizes = [300];
+      amenitiesColCount = 2;
     }
     if (screenSize.width < 680) {
       bannersizes = [300, 0];
       menusizes = [screenSize.width / 2];
+      amenitiesColCount = 2;
     }
+
+    List<Widget> leftSideList = [];
+    leftSideList.addAll([
+      Padding(
+          padding: const EdgeInsets.fromLTRB(
+              Constants.mainPadding, 40, Constants.mainPadding, 0),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
+                  'Menu',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+                Text(
+                  'All ITEMS',
+                  style: TextStyle(
+                      color: CustomColor.textPrimaryColor,
+                      fontWeight: FontWeight.bold),
+                )
+              ])),
+      const Padding(
+        padding: EdgeInsets.all(0),
+        child: Accordion(
+          title: 'Sharin Plates',
+          content: 'Gyoza',
+        ),
+      ),
+      const Padding(
+        padding: EdgeInsets.all(0),
+        child: Accordion(title: 'Grill', content: 'Fried tofu'),
+      ),
+      const Padding(
+        padding: EdgeInsets.all(0),
+        child: Accordion(title: 'Desserts', content: 'House salad'),
+      ),
+      Padding(
+          padding: const EdgeInsets.fromLTRB(
+              Constants.mainPadding, 40, Constants.mainPadding, 0),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
+                  'Daily Special',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                )
+              ]))
+    ]);
+
+    Widget widget = Padding(
+        padding: const EdgeInsets.all(10),
+        child: InkWell(
+          onTap: () {},
+          child: Container(
+            margin: const EdgeInsets.symmetric(
+                horizontal: Constants.mainPadding, vertical: 8),
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: CustomColor.primaryColor.withOpacity(0.2),
+                  blurRadius: 8.0,
+                ),
+              ],
+              border: Border.all(color: Colors.white),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(15)),
+                      // child: (restaurant[RESTAURANT_IMAGE] != null)
+                      //     ? Image.network(restaurant[RESTAURANT_IMAGE],
+                      //         height: 100, fit: BoxFit.cover)
+                      //     : Image.asset(
+                      //         'assets/group.png',
+                      //         fit: BoxFit.cover,
+                      //       )),
+                      child: Image.asset(
+                        'assets/group.png',
+                        fit: BoxFit.cover,
+                      )),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: _Description(
+                    caption:
+                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                    discount: '50% OFF',
+                    range: 'UPTO',
+                    amount: '100',
+                  ),
+                )
+              ],
+            ),
+          ),
+        ));
+    leftSideList.add(widget);
+
+    leftSideList.add(Padding(
+        padding: const EdgeInsets.fromLTRB(
+            Constants.mainPadding, 40, Constants.mainPadding, 0),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text(
+                'Amenities',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              )
+            ])));
+
+    List<Widget> lists = amenities.map((item) {
+      return SizedBox(
+          width: (menusizes[0] - Constants.mainPadding * 2) / amenitiesColCount,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            child: Column(children: [
+              Image.asset(
+                '${Constants.imagePath}amenities/icon (${item[Constants.AMENITY_LOGO]}).png',
+              ),
+              const SizedBox(height: 5),
+              Text(
+                  item[Constants.AMENITY_NAME].toString().length < 18
+                      ? item[Constants.AMENITY_NAME]
+                      : '${item[Constants.AMENITY_NAME].toString().substring(0, 16)}..',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: CustomColor.textPrimaryColor))
+            ]),
+          ));
+    }).toList();
+    int rowCount = lists.length ~/ amenitiesColCount;
+    List<Widget> rowList = [];
+    for (int i = 0; i < rowCount + 1; i++) {
+      if (lists.length > amenitiesColCount * (i + 1)) {
+        rowList.add(Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: lists.sublist(
+                amenitiesColCount * i, amenitiesColCount * (i + 1))));
+      } else {
+        rowList.add(Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: lists.sublist(amenitiesColCount * i, lists.length)));
+      }
+    }
+
+    leftSideList.add(Padding(
+        padding: const EdgeInsets.fromLTRB(
+            Constants.mainPadding, 40, Constants.mainPadding, 0),
+        child: Container(
+          width: menusizes[0] - Constants.mainPadding * 2,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: CustomColor.primaryColor.withOpacity(0.2),
+                blurRadius: 8.0,
+              ),
+            ],
+            border: Border.all(color: Colors.white),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: rowList),
+        )));
 
     return Scaffold(
       appBar: ResponsiveWidget.isSmallScreen(context)
@@ -278,38 +465,7 @@ class _AboutPageState extends State<AboutPage> {
                 SizedBox(
                     width: menusizes[0],
                     child: ListView(
-                      children: [
-                        Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                                Constants.mainPadding,
-                                40,
-                                Constants.mainPadding,
-                                0),
-                            child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text(
-                                    'Menu',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
-                                  ),
-                                  Text(
-                                    'All ITEMS',
-                                    style: TextStyle(
-                                        color: CustomColor.textPrimaryColor,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ])),
-                        const Accordion(
-                          title: 'Sharin Plates',
-                          content: 'Gyoza',
-                        ),
-                        const Accordion(title: 'Grill', content: 'Fried tofu'),
-                        const Accordion(
-                            title: 'Desserts', content: 'House salad'),
-                      ],
+                      children: leftSideList,
                     )),
                 Container(
                   width: 1,
@@ -562,5 +718,77 @@ class _AboutPageState extends State<AboutPage> {
     }
 
     return ListView(children: rowList);
+  }
+}
+
+class _Description extends StatelessWidget {
+  const _Description({
+    required this.caption,
+    required this.discount,
+    required this.range,
+    required this.amount,
+  });
+
+  final String caption;
+  final String discount;
+  final String range;
+  final String amount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(children: [
+              Text(
+                discount,
+                style: const TextStyle(
+                    color: CustomColor.activeColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15),
+              ),
+              Text(
+                '$range  $amount',
+                style: const TextStyle(
+                    color: CustomColor.textSecondaryColor, fontSize: 10),
+              )
+            ]),
+            const Icon(
+              Icons.bookmark,
+              color: CustomColor.activeColor,
+            ),
+          ],
+        ),
+        Text(
+          caption,
+          style: const TextStyle(
+              color: CustomColor.textSecondaryColor, fontSize: 10),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          decoration: BoxDecoration(
+            color: CustomColor.activeColor,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            children: const [
+              Text(
+                '5.3',
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              ),
+              Icon(
+                Icons.star,
+                color: Colors.white,
+                size: 12,
+              )
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
