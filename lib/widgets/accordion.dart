@@ -1,5 +1,4 @@
 import 'package:bestlocaleats/utils/colors.dart';
-import 'package:bestlocaleats/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class Accordion extends StatefulWidget {
