@@ -22,6 +22,7 @@ import 'package:bestlocaleats/pages/contact.dart';
 import 'package:bestlocaleats/pages/profile.dart';
 import 'package:bestlocaleats/pages/profile2.dart';
 import 'package:bestlocaleats/pages/subscription.dart';
+import 'package:bestlocaleats/pages/terms.dart';
 import 'package:bestlocaleats/pages/error.dart';
 
 import 'package:bestlocaleats/utils/colors.dart';
@@ -138,6 +139,12 @@ final GoRouter _router = GoRouter(
           path: 'profile2',
           builder: (BuildContext context, GoRouterState state) {
             return const Profile2Page();
+          },
+        ),
+        GoRoute(
+          path: 'terms',
+          builder: (BuildContext context, GoRouterState state) {
+            return const TermsPage();
           },
         ),
       ],
