@@ -23,6 +23,7 @@ import 'package:bestlocaleats/pages/profile.dart';
 import 'package:bestlocaleats/pages/profile2.dart';
 import 'package:bestlocaleats/pages/subscription.dart';
 import 'package:bestlocaleats/pages/terms.dart';
+import 'package:bestlocaleats/pages/policy.dart';
 import 'package:bestlocaleats/pages/error.dart';
 
 import 'package:bestlocaleats/utils/colors.dart';
@@ -145,6 +146,12 @@ final GoRouter _router = GoRouter(
           path: 'terms',
           builder: (BuildContext context, GoRouterState state) {
             return const TermsPage();
+          },
+        ),
+        GoRoute(
+          path: 'policy',
+          builder: (BuildContext context, GoRouterState state) {
+            return const PolicyPage();
           },
         ),
       ],
