@@ -46,6 +46,7 @@ class Constants {
   static const String RESTAURANT_AMENITIES = "amenities";
   static const String RESTAURANT_DISCOUNT = "discount";
   static const String RESTAURANT_MINCOST = "mincost";
+  static const String RESTAURANT_CATEGORY = "category";
 
   static const String MENU_ID = "id";
   static const String MENU_NAME = "name";
