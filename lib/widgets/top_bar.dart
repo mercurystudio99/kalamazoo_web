@@ -90,7 +90,11 @@ class _TopBarContentsState extends State<TopBarContents> {
                                     Icon(Icons.search_outlined, size: 24),
                               ),
                               onSubmitted: (value) async {
-                                getLocationsFromAPI(value);
+                                locations.clear();
+                                var success = getLocationsFromAPI(value);
+                                if (await success) {
+                                  setState(() {});
+                                }
                               }),
                           if (locations.isNotEmpty) _listing(context)
                         ],
@@ -100,7 +104,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                 ))));
   }
 
-  Future<void> getLocationsFromAPI(String keyword) async {
+  Future<bool> getLocationsFromAPI(String keyword) async {
     var url =
         'https://proxy.cors.sh/https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$keyword&language=en&types=geocode&key=$kGoogleApiKey';
 
@@ -119,13 +123,13 @@ class _TopBarContentsState extends State<TopBarContents> {
               'place_id': item['place_id']
             });
           }
-          setState(() {});
         }
+        return true;
       } else {
-        // Handle API error
+        return false;
       }
     } catch (error) {
-      // Handle error
+      return false;
     }
   }
 
