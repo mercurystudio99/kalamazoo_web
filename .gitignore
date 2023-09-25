@@ -50,3 +50,6 @@ google-services.json
 # firebase configure
 firebase_options.dart
 firebase_app_id_file.json
+
+# private keys
+key.dart

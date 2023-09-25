@@ -3,7 +3,11 @@ import 'package:badges/badges.dart' as badges;
 import 'package:bestlocaleats/utils/constants.dart';
 import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/utils/globals.dart' as global;
+import 'package:bestlocaleats/key.dart';
 import 'package:go_router/go_router.dart';
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class TopBarContents extends StatefulWidget {
   final double opacity;
@@ -26,7 +30,148 @@ class _TopBarContentsState extends State<TopBarContents> {
     false, // 4: favorite
     false, // 5: notification
     false, // 6: subscription
+    false, // 7: location
+    false, // 8: close X
   ];
+
+  static String location = '';
+  static List<Map<String, dynamic>> locations = [];
+
+  Future<void> _showLocationDialog(BuildContext context) async {
+    await showGeneralDialog<void>(
+        context: context,
+        transitionDuration: const Duration(milliseconds: 400),
+        pageBuilder: (bc, ania, anis) => StatefulBuilder(
+            builder: (context, setState) => Dialog(
+                backgroundColor: Colors.transparent,
+                child: SizedBox.expand(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: Padding(
+                      padding: const EdgeInsets.all(Constants.mainPadding),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                InkWell(
+                                  onHover: (value) {
+                                    setState(() {
+                                      value
+                                          ? _isHovering[8] = true
+                                          : _isHovering[8] = false;
+                                    });
+                                  },
+                                  onTap: () {
+                                    locations.clear();
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Icon(
+                                    Icons.close,
+                                    color: _isHovering[8]
+                                        ? Colors.white
+                                        : Colors.grey,
+                                  ),
+                                )
+                              ]),
+                          const SizedBox(height: 10),
+                          TextField(
+                              decoration: const InputDecoration(
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 10),
+                                border: OutlineInputBorder(),
+                                hintText: 'Search',
+                                prefixIconConstraints: BoxConstraints(
+                                  minWidth: 50,
+                                  minHeight: 2,
+                                ),
+                                prefixIcon:
+                                    Icon(Icons.search_outlined, size: 24),
+                              ),
+                              onSubmitted: (value) async {
+                                getLocationsFromAPI(value);
+                              }),
+                          if (locations.isNotEmpty) _listing(context)
+                        ],
+                      ),
+                    ),
+                  ),
+                ))));
+  }
+
+  Future<void> getLocationsFromAPI(String keyword) async {
+    var url =
+        'https://proxy.cors.sh/https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$keyword&language=en&types=geocode&key=$kGoogleApiKey';
+
+    try {
+      Map<String, String> requestHeaders = {
+        "x-requested-with": "XMLHttpRequest",
+        'x-cors-api-key': 'temp_7cba4ae4f44b4fb09c829d32c07bdf66'
+      };
+      final response = await http.get(Uri.parse(url), headers: requestHeaders);
+      if (response.statusCode == 200) {
+        final List<dynamic> list = json.decode(response.body)["predictions"];
+        if (list.isNotEmpty) {
+          for (var item in list) {
+            locations.add({
+              'description': item['description'],
+              'place_id': item['place_id']
+            });
+          }
+          setState(() {});
+        }
+      } else {
+        // Handle API error
+      }
+    } catch (error) {
+      // Handle error
+    }
+  }
+
+  Future<bool> getDetailFromAPI(String placeId) async {
+    var detailsUrl =
+        'https://proxy.cors.sh/https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$kGoogleApiKey';
+    try {
+      Map<String, String> requestHeaders = {
+        "x-requested-with": "XMLHttpRequest",
+        'x-cors-api-key': 'temp_7cba4ae4f44b4fb09c829d32c07bdf66'
+      };
+      final response =
+          await http.get(Uri.parse(detailsUrl), headers: requestHeaders);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> details =
+            json.decode(response.body)["result"];
+
+        // Extract city and postal code
+        for (var component in details["address_components"]) {
+          var types = component["types"];
+          if (types.contains("locality")) {
+            global.searchCity = component["long_name"];
+            global.searchPriority = Constants.RESTAURANT_CITY;
+          } else if (types.contains("postal_code")) {
+            global.searchZip = component["long_name"];
+            global.searchPriority = Constants.RESTAURANT_ZIP;
+          }
+        }
+        global.searchFullAddress = details["formatted_address"];
+        setState(() {
+          location = details["formatted_address"];
+        });
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      return false;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    location = global.searchFullAddress;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,8 +239,29 @@ class _TopBarContentsState extends State<TopBarContents> {
                         SizedBox(width: screenSize.width / 8),
                         const Icon(Icons.location_on,
                             color: CustomColor.activeColor, size: 20),
-                        const Text('Kalamazoo , Michigan USA',
-                            style: TextStyle(color: Colors.white)),
+                        InkWell(
+                          onHover: (value) {
+                            setState(() {
+                              value
+                                  ? _isHovering[7] = true
+                                  : _isHovering[7] = false;
+                            });
+                          },
+                          onTap: () async {
+                            _showLocationDialog(context);
+                            setState(() {});
+                          },
+                          child: Text(
+                            location.length < 24
+                                ? location
+                                : '${location.substring(0, 22)}..',
+                            style: TextStyle(
+                              color: _isHovering[7]
+                                  ? CustomColor.activeColor
+                                  : Colors.white,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -246,8 +412,29 @@ class _TopBarContentsState extends State<TopBarContents> {
                         SizedBox(width: screenSize.width / 8),
                         const Icon(Icons.location_on,
                             color: CustomColor.activeColor, size: 20),
-                        const Text('Kalamazoo , Michigan USA',
-                            style: TextStyle(color: Colors.white)),
+                        InkWell(
+                          onHover: (value) {
+                            setState(() {
+                              value
+                                  ? _isHovering[7] = true
+                                  : _isHovering[7] = false;
+                            });
+                          },
+                          onTap: () async {
+                            _showLocationDialog(context);
+                            setState(() {});
+                          },
+                          child: Text(
+                            location.length < 24
+                                ? location
+                                : '${location.substring(0, 22)}..',
+                            style: TextStyle(
+                              color: _isHovering[7]
+                                  ? CustomColor.activeColor
+                                  : Colors.white,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -446,5 +633,33 @@ class _TopBarContentsState extends State<TopBarContents> {
         ),
       );
     }
+  }
+
+  Widget _listing(BuildContext context) {
+    List<Widget> lists = locations.map((item) {
+      return SizedBox(
+          child: ListTile(
+        tileColor: Colors.white,
+        leading: const Icon(Icons.location_on, color: Colors.white),
+        title: Text(
+          item['description'],
+          style: const TextStyle(color: Colors.white),
+        ),
+        onTap: () async {
+          var success = getDetailFromAPI(item['place_id']);
+          if (await success) {
+            locations.clear();
+            Navigator.of(context).pop();
+          }
+        },
+      ));
+    }).toList();
+
+    return SingleChildScrollView(
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: lists),
+    );
   }
 }

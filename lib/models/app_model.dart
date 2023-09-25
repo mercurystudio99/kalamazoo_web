@@ -22,6 +22,12 @@ class AppModel extends Model {
   AppModel._internal();
   // End
 
+  String getSearchAreaKey() {
+    return (globals.searchPriority == Constants.RESTAURANT_ZIP)
+        ? globals.searchZip
+        : globals.searchCity;
+  }
+
   // user sign in method
   void userSignIn({
     required String email,
@@ -284,6 +290,7 @@ class AppModel extends Model {
     final snapshots = await _firestore
         .collection(Constants.C_RESTAURANTS)
         .where(Constants.RESTAURANT_CATEGORY, isEqualTo: topMenu)
+        .where(globals.searchPriority, isEqualTo: getSearchAreaKey())
         .get();
     if (snapshots.docs.isNotEmpty) {
       List<Map<String, dynamic>> list = [];
