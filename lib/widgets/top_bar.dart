@@ -77,25 +77,25 @@ class _TopBarContentsState extends State<TopBarContents> {
                               ]),
                           const SizedBox(height: 10),
                           TextField(
-                              decoration: const InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.symmetric(vertical: 10),
-                                border: OutlineInputBorder(),
-                                hintText: 'Search',
-                                prefixIconConstraints: BoxConstraints(
-                                  minWidth: 50,
-                                  minHeight: 2,
-                                ),
-                                prefixIcon:
-                                    Icon(Icons.search_outlined, size: 24),
+                            decoration: const InputDecoration(
+                              contentPadding:
+                                  EdgeInsets.symmetric(vertical: 10),
+                              border: OutlineInputBorder(),
+                              hintText: 'Search',
+                              prefixIconConstraints: BoxConstraints(
+                                minWidth: 50,
+                                minHeight: 2,
                               ),
-                              onSubmitted: (value) async {
-                                locations.clear();
-                                var success = getLocationsFromAPI(value);
-                                if (await success) {
-                                  setState(() {});
-                                }
-                              }),
+                              prefixIcon: Icon(Icons.search_outlined, size: 24),
+                            ),
+                            onChanged: (value) async {
+                              locations.clear();
+                              var success = getLocationsFromAPI(value);
+                              if (await success) {
+                                setState(() {});
+                              }
+                            },
+                          ),
                           if (locations.isNotEmpty) _listing(context)
                         ],
                       ),
