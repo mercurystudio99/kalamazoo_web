@@ -646,11 +646,10 @@ class _HomePageState extends State<HomePage> {
           (MediaQuery.of(context).size.width - Constants.mainPadding * 4) / 3;
     }
 
-    List<Widget> widgetList = [
-      brandBox('Mc Donald\'S', 0, cardWidth),
-      brandBox('Mc Donald\'S', 0, cardWidth),
-      brandBox('Mc Donald\'S', 0, cardWidth)
-    ];
+    List<Widget> widgetList = [];
+    for (var element in topBrands) {
+      widgetList.add(brandBox(element, cardWidth));
+    }
     List<Widget> displayList;
     if (MediaQuery.of(context).size.width < 800) {
       displayList = widgetList.sublist(0, widgetList.length - 2);
@@ -671,7 +670,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget brandBox(String title, int index, double cardWidth) {
+  Widget brandBox(Map<String, dynamic> brand, double cardWidth) {
     return Container(
       margin: const EdgeInsets.symmetric(
           horizontal: Constants.mainPadding / 2, vertical: 12),
@@ -694,19 +693,23 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-              width: 100,
-              child: Image.asset(
-                Constants.IMG_GROUP,
-                fit: BoxFit.cover,
-              )),
+            width: 100,
+            child: Image.network(
+                brand[Constants.RESTAURANT_IMAGE] ??
+                    'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+                fit: BoxFit.cover),
+          ),
           const SizedBox(width: 30),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Text(
-                'Mc Donald\'S',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              Text(
+                brand[Constants.RESTAURANT_BUSINESSNAME].toString().length < 15
+                    ? brand[Constants.RESTAURANT_BUSINESSNAME]
+                    : '${brand[Constants.RESTAURANT_BUSINESSNAME].toString().substring(0, 12)}..',
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,

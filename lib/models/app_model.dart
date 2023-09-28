@@ -282,7 +282,7 @@ class AppModel extends Model {
           .collection(globals.restaurantType)
           .where(globals.searchPriority, isEqualTo: getSearchAreaKey())
           .where(Constants.RESTAURANT_BRAND, isEqualTo: true)
-          .limit(2)
+          .limit(3)
           .get()
           .then(
         (querySnapshot) {
