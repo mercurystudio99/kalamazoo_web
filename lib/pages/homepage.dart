@@ -82,6 +82,7 @@ class _HomePageState extends State<HomePage> {
   late String _selectedTopMenu = '';
 
   List<Map<String, dynamic>> bestOfferList = [];
+  List<Map<String, dynamic>> topBrands = [];
   List<Map<String, dynamic>> topMenuList = [];
   List<Map<String, dynamic>> categoryList = [];
 
@@ -108,6 +109,23 @@ class _HomePageState extends State<HomePage> {
           categoryList.clear();
           categoryList = param;
           setState(() {});
+        });
+  }
+
+  void _getBestOffers() {
+    AppModel().getBestOffers(
+        count: 4,
+        onSuccess: (List<Map<String, dynamic>> param) {
+          bestOfferList = param;
+        },
+        onError: (String text) {});
+  }
+
+  void _getTopBrand() {
+    AppModel().getTopBrands(
+        all: false,
+        onSuccess: (List<Map<String, dynamic>> param) {
+          topBrands = param;
         });
   }
 
@@ -175,16 +193,18 @@ class _HomePageState extends State<HomePage> {
         (int _) =>
             heightGenerator.nextDouble() * (maxItemHeight - minItemHeight) +
             minItemHeight);
-
-    AppModel().getBestOffers(
-        count: 4,
-        onSuccess: (List<Map<String, dynamic>> param) {
-          bestOfferList = param;
-        },
-        onError: (String text) {});
     super.initState();
+    _getBestOffers();
+    _getTopBrand();
     _getTopMenu();
     _getCurrentPosition();
+  }
+
+  @override
+  void dispose() {
+    topBrands.clear();
+    bestOfferList.clear();
+    super.dispose();
   }
 
   @override
@@ -222,7 +242,15 @@ class _HomePageState extends State<HomePage> {
               // for larger & medium screen sizes
               preferredSize: Size(screenSize.width, 1000),
               child: TopBarContents(_opacity, topbarstatus, () {
-                debugPrint('---');
+                debugPrint(global.searchZip);
+                debugPrint(global.searchPriority);
+                if (_selectedTopMenu.isEmpty) {
+                  _getBestOffers();
+                  _getTopBrand();
+                  setState(() {});
+                } else {
+                  _getList();
+                }
               }),
             ),
       drawer: const MobileDrawer(),

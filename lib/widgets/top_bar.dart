@@ -154,9 +154,11 @@ class _TopBarContentsState extends State<TopBarContents> {
           if (types.contains("locality")) {
             global.searchCity = component["long_name"];
             global.searchPriority = Constants.RESTAURANT_CITY;
+            break;
           } else if (types.contains("postal_code")) {
             global.searchZip = component["long_name"];
             global.searchPriority = Constants.RESTAURANT_ZIP;
+            break;
           }
         }
         global.searchFullAddress = details["formatted_address"];

@@ -33,6 +33,7 @@ class Constants {
 
   static const String RESTAURANT_ID = "id";
   static const String RESTAURANT_ADDRESS = "address";
+  static const String RESTAURANT_BRAND = "brand";
   static const String RESTAURANT_BUSINESSNAME = "businessName";
   static const String RESTAURANT_CITY = "city";
   static const String RESTAURANT_EMAIL = "email";
