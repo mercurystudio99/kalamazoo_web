@@ -76,7 +76,9 @@ class _ContactPageState extends State<ContactPage> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(screenSize.width, 1000),
-        child: TopBarContents(1, topbarstatus),
+        child: TopBarContents(1, topbarstatus, () {
+          debugPrint('---');
+        }),
       ),
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),

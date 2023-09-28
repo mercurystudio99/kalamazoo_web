@@ -234,7 +234,9 @@ class _TermsPageState extends State<TermsPage> {
           : PreferredSize(
               // for larger & medium screen sizes
               preferredSize: Size(screenSize.width, 1000),
-              child: TopBarContents(1, topbarstatus),
+              child: TopBarContents(1, topbarstatus, () {
+                debugPrint('---');
+              }),
             ),
       drawer: const MobileDrawer(),
       body: SingleChildScrollView(

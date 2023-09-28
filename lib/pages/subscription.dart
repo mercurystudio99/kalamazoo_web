@@ -56,7 +56,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(screenSize.width, 1000),
-        child: TopBarContents(1, topbarstatus),
+        child: TopBarContents(1, topbarstatus, () {
+          debugPrint('---');
+        }),
       ),
       drawer: const MobileDrawer(),
       body: SingleChildScrollView(

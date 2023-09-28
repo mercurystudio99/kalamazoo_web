@@ -11,11 +11,12 @@ import 'package:http/http.dart' as http;
 
 class TopBarContents extends StatefulWidget {
   final double opacity;
+  final VoidCallback callback;
 
   // 0: login/signup, 1: homepage/others(observe), x: homepage/others(user)
   final int status;
 
-  const TopBarContents(this.opacity, this.status, {super.key});
+  const TopBarContents(this.opacity, this.status, this.callback, {super.key});
 
   @override
   State<TopBarContents> createState() => _TopBarContentsState();
@@ -654,6 +655,7 @@ class _TopBarContentsState extends State<TopBarContents> {
           if (await success) {
             locations.clear();
             Navigator.of(context).pop();
+            widget.callback();
           }
         },
       ));
