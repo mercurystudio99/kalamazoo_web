@@ -336,9 +336,10 @@ class AppModel extends Model {
     required String topMenu,
     // callback functions
     required Function(List<Map<String, dynamic>>) onSuccess,
+    required VoidCallback onEmpty,
   }) async {
     final snapshots = await _firestore
-        .collection(Constants.C_RESTAURANTS)
+        .collection(globals.restaurantType)
         .where(Constants.RESTAURANT_CATEGORY, isEqualTo: topMenu)
         .where(globals.searchPriority, isEqualTo: getSearchAreaKey())
         .get();
@@ -348,6 +349,8 @@ class AppModel extends Model {
         list.add(element.data());
       }
       onSuccess(list);
+    } else {
+      onEmpty();
     }
   }
 

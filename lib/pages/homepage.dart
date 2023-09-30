@@ -104,12 +104,17 @@ class _HomePageState extends State<HomePage> {
 
   void _getList() {
     AppModel().getListByTopMenu(
-        topMenu: _selectedTopMenu,
-        onSuccess: (List<Map<String, dynamic>> param) {
-          categoryList.clear();
-          categoryList = param;
-          setState(() {});
-        });
+      topMenu: _selectedTopMenu,
+      onSuccess: (List<Map<String, dynamic>> param) {
+        categoryList.clear();
+        categoryList = param;
+        setState(() {});
+      },
+      onEmpty: () {
+        categoryList.clear();
+        setState(() {});
+      },
+    );
   }
 
   void _getBestOffers() {
@@ -117,6 +122,7 @@ class _HomePageState extends State<HomePage> {
         count: 4,
         onSuccess: (List<Map<String, dynamic>> param) {
           bestOfferList = param;
+          setState(() {});
         },
         onError: (String text) {});
   }
@@ -126,6 +132,7 @@ class _HomePageState extends State<HomePage> {
         all: false,
         onSuccess: (List<Map<String, dynamic>> param) {
           topBrands = param;
+          setState(() {});
         });
   }
 
@@ -242,12 +249,9 @@ class _HomePageState extends State<HomePage> {
               // for larger & medium screen sizes
               preferredSize: Size(screenSize.width, 1000),
               child: TopBarContents(_opacity, topbarstatus, () {
-                debugPrint(global.searchZip);
-                debugPrint(global.searchPriority);
                 if (_selectedTopMenu.isEmpty) {
                   _getBestOffers();
                   _getTopBrand();
-                  setState(() {});
                 } else {
                   _getList();
                 }
@@ -1151,211 +1155,222 @@ class _HomePageState extends State<HomePage> {
       sizes = [20, 18, 14];
     }
 
-    List<Widget> widgetList = [];
-    for (var element in categoryList) {
-      Widget widget = Container(
-        width: cardWidth,
-        margin:
-            const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
-        child: Stack(children: [
-          Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            shadowColor: CustomColor.primaryColor.withOpacity(0.2),
-            elevation: 8,
-            margin: const EdgeInsets.all(4.0),
-            child: Column(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
-                  ),
-                  child: Image.network(
-                    element[Constants.RESTAURANT_IMAGE] ??
-                        'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
-                    width: cardWidth,
-                    height: cardWidth * 0.6,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            element[Constants.RESTAURANT_BUSINESSNAME]
-                                        .toString()
-                                        .length <
-                                    18
-                                ? element[Constants.RESTAURANT_BUSINESSNAME]
-                                : '${element[Constants.RESTAURANT_BUSINESSNAME].toString().substring(0, 12)}..',
-                            style: TextStyle(
-                                fontSize: sizes[0],
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            element[Constants.RESTAURANT_URL]
-                                        .toString()
-                                        .length <
-                                    22
-                                ? element[Constants.RESTAURANT_URL]
-                                : '${element[Constants.RESTAURANT_URL].toString().substring(0, 20)}..',
-                            style: TextStyle(
-                                fontSize: sizes[2],
-                                color: CustomColor.textSecondaryColor),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 4, vertical: 1),
-                        decoration: BoxDecoration(
-                          color: CustomColor.activeColor,
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: Row(
-                          children: [
-                            Text(
-                              '4.5',
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: sizes[2]),
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.white,
-                              size: sizes[2],
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '50% OFF',
-                            style: TextStyle(
-                                fontSize: sizes[0],
-                                color: CustomColor.activeColor,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            'UPTO \$100',
-                            style: TextStyle(
-                                fontSize: sizes[1],
-                                color: CustomColor.textSecondaryColor),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.location_on,
-                              color: CustomColor.activeColor,
-                              size: sizes[2],
-                            ),
-                            Text(
-                              '1.2km',
-                              style: TextStyle(
-                                  fontSize: sizes[2],
-                                  color: CustomColor.textSecondaryColor),
-                            ),
-                            const SizedBox(
-                              width: 4,
-                            ),
-                            Icon(
-                              Icons.access_time,
-                              size: sizes[2],
-                              color: CustomColor.textSecondaryColor,
-                            ),
-                            Text(
-                              '10min',
-                              style: TextStyle(
-                                  fontSize: sizes[2],
-                                  color: CustomColor.textSecondaryColor),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 30),
-              ],
-            ),
-          ),
-          const Positioned(
-              right: 10,
-              top: 10,
-              child: Icon(
-                Icons.bookmark,
-                color: CustomColor.activeColor,
-              ))
-        ]),
-      );
-      widgetList.add(widget);
-    }
-
-    int colCount = 0;
-    List<Widget> rowList = [];
-    if (screenSize.width >= 1300) {
-      colCount = 4;
-    } else if (screenSize.width >= 800 && screenSize.width < 1300) {
-      colCount = 3;
-    } else if (screenSize.width >= 600 && screenSize.width < 800) {
-      colCount = 2;
+    if (categoryList.isEmpty) {
+      return Column(children: const [
+        Text(
+          'No stores available in your area. Please come back soon to try again.',
+          style: TextStyle(color: CustomColor.textSecondaryColor),
+        )
+      ]);
     } else {
-      colCount = 0;
-      for (var i = 0; i < widgetList.length; i++) {
-        rowList.add(Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: Constants.mainPadding / 2, vertical: 14),
-          child: widgetList[i],
-        ));
+      List<Widget> widgetList = [];
+      for (var element in categoryList) {
+        Widget widget = Container(
+          width: cardWidth,
+          margin:
+              const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
+          child: Stack(children: [
+            Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              shadowColor: CustomColor.primaryColor.withOpacity(0.2),
+              elevation: 8,
+              margin: const EdgeInsets.all(4.0),
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(15),
+                      topRight: Radius.circular(15),
+                    ),
+                    child: Image.network(
+                      element[Constants.RESTAURANT_IMAGE] ??
+                          'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+                      width: cardWidth,
+                      height: cardWidth * 0.6,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              element[Constants.RESTAURANT_BUSINESSNAME]
+                                          .toString()
+                                          .length <
+                                      18
+                                  ? element[Constants.RESTAURANT_BUSINESSNAME]
+                                  : '${element[Constants.RESTAURANT_BUSINESSNAME].toString().substring(0, 12)}..',
+                              style: TextStyle(
+                                  fontSize: sizes[0],
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              element[Constants.RESTAURANT_URL]
+                                          .toString()
+                                          .length <
+                                      22
+                                  ? element[Constants.RESTAURANT_URL]
+                                  : '${element[Constants.RESTAURANT_URL].toString().substring(0, 20)}..',
+                              style: TextStyle(
+                                  fontSize: sizes[2],
+                                  color: CustomColor.textSecondaryColor),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4, vertical: 1),
+                          decoration: BoxDecoration(
+                            color: CustomColor.activeColor,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                '4.5',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: sizes[2]),
+                              ),
+                              Icon(
+                                Icons.star,
+                                color: Colors.white,
+                                size: sizes[2],
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '50% OFF',
+                              style: TextStyle(
+                                  fontSize: sizes[0],
+                                  color: CustomColor.activeColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              'UPTO \$100',
+                              style: TextStyle(
+                                  fontSize: sizes[1],
+                                  color: CustomColor.textSecondaryColor),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.location_on,
+                                color: CustomColor.activeColor,
+                                size: sizes[2],
+                              ),
+                              Text(
+                                '1.2km',
+                                style: TextStyle(
+                                    fontSize: sizes[2],
+                                    color: CustomColor.textSecondaryColor),
+                              ),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              Icon(
+                                Icons.access_time,
+                                size: sizes[2],
+                                color: CustomColor.textSecondaryColor,
+                              ),
+                              Text(
+                                '10min',
+                                style: TextStyle(
+                                    fontSize: sizes[2],
+                                    color: CustomColor.textSecondaryColor),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                ],
+              ),
+            ),
+            const Positioned(
+                right: 10,
+                top: 10,
+                child: Icon(
+                  Icons.bookmark,
+                  color: CustomColor.activeColor,
+                ))
+          ]),
+        );
+        widgetList.add(widget);
       }
-    }
 
-    if (colCount > 0) {
-      int rowCount = widgetList.length ~/ colCount;
-      for (int i = 0; i < rowCount + 1; i++) {
-        if (widgetList.length > colCount * (i + 1)) {
+      int colCount = 0;
+      List<Widget> rowList = [];
+      if (screenSize.width >= 1300) {
+        colCount = 4;
+      } else if (screenSize.width >= 800 && screenSize.width < 1300) {
+        colCount = 3;
+      } else if (screenSize.width >= 600 && screenSize.width < 800) {
+        colCount = 2;
+      } else {
+        colCount = 0;
+        for (var i = 0; i < widgetList.length; i++) {
           rowList.add(Padding(
             padding: const EdgeInsets.symmetric(
-                horizontal: Constants.mainPadding / 2, vertical: 20),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: widgetList.sublist(colCount * i, colCount * (i + 1))),
-          ));
-        } else {
-          rowList.add(Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: Constants.mainPadding / 2, vertical: 20),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: widgetList.sublist(colCount * i, widgetList.length)),
+                horizontal: Constants.mainPadding / 2, vertical: 14),
+            child: widgetList[i],
           ));
         }
       }
-    }
 
-    return Column(children: rowList);
+      if (colCount > 0) {
+        int rowCount = widgetList.length ~/ colCount;
+        for (int i = 0; i < rowCount + 1; i++) {
+          if (widgetList.length > colCount * (i + 1)) {
+            rowList.add(Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Constants.mainPadding / 2, vertical: 20),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children:
+                      widgetList.sublist(colCount * i, colCount * (i + 1))),
+            ));
+          } else {
+            rowList.add(Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Constants.mainPadding / 2, vertical: 20),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children:
+                      widgetList.sublist(colCount * i, widgetList.length)),
+            ));
+          }
+        }
+      }
+
+      return Column(children: rowList);
+    }
   }
 }
