@@ -218,25 +218,44 @@ class AppModel extends Model {
 
   void getBestOffers({
     required int count,
+    String? topMenu,
     // callback functions
     required Function(List<Map<String, dynamic>>) onSuccess,
     required Function(String) onError,
   }) {
     if (count == 0) {
-      _firestore
-          .collection(Constants.C_RESTAURANTS)
-          .where(globals.searchPriority, isEqualTo: getSearchAreaKey())
-          .get()
-          .then(
-        (querySnapshot) {
-          List<Map<String, dynamic>> result = [];
-          for (var snapshot in querySnapshot.docs) {
-            result.add(snapshot.data());
-          }
-          onSuccess(result);
-        },
-        onError: (e) => debugPrint("Error completing: $e"),
-      );
+      if (topMenu != null && topMenu.isNotEmpty) {
+        _firestore
+            .collection(Constants.C_RESTAURANTS)
+            .where(Constants.RESTAURANT_CATEGORY, isEqualTo: topMenu)
+            .where(globals.searchPriority, isEqualTo: getSearchAreaKey())
+            .get()
+            .then(
+          (querySnapshot) {
+            List<Map<String, dynamic>> result = [];
+            for (var snapshot in querySnapshot.docs) {
+              result.add(snapshot.data());
+            }
+            onSuccess(result);
+          },
+          onError: (e) => debugPrint("Error completing: $e"),
+        );
+      } else {
+        _firestore
+            .collection(Constants.C_RESTAURANTS)
+            .where(globals.searchPriority, isEqualTo: getSearchAreaKey())
+            .get()
+            .then(
+          (querySnapshot) {
+            List<Map<String, dynamic>> result = [];
+            for (var snapshot in querySnapshot.docs) {
+              result.add(snapshot.data());
+            }
+            onSuccess(result);
+          },
+          onError: (e) => debugPrint("Error completing: $e"),
+        );
+      }
     } else {
       _firestore
           .collection(Constants.C_RESTAURANTS)
@@ -258,25 +277,45 @@ class AppModel extends Model {
 
   void getTopBrands({
     required bool all,
+    String? topMenu,
     // callback functions
     required Function(List<Map<String, dynamic>>) onSuccess,
   }) {
     if (all) {
-      _firestore
-          .collection(globals.restaurantType)
-          .where(globals.searchPriority, isEqualTo: getSearchAreaKey())
-          .where(Constants.RESTAURANT_BRAND, isEqualTo: true)
-          .get()
-          .then(
-        (querySnapshot) {
-          List<Map<String, dynamic>> result = [];
-          for (var snapshot in querySnapshot.docs) {
-            result.add(snapshot.data());
-          }
-          onSuccess(result);
-        },
-        onError: (e) => debugPrint("Error completing: $e"),
-      );
+      if (topMenu != null && topMenu.isNotEmpty) {
+        _firestore
+            .collection(globals.restaurantType)
+            .where(Constants.RESTAURANT_CATEGORY, isEqualTo: topMenu)
+            .where(globals.searchPriority, isEqualTo: getSearchAreaKey())
+            .where(Constants.RESTAURANT_BRAND, isEqualTo: true)
+            .get()
+            .then(
+          (querySnapshot) {
+            List<Map<String, dynamic>> result = [];
+            for (var snapshot in querySnapshot.docs) {
+              result.add(snapshot.data());
+            }
+            onSuccess(result);
+          },
+          onError: (e) => debugPrint("Error completing: $e"),
+        );
+      } else {
+        _firestore
+            .collection(globals.restaurantType)
+            .where(globals.searchPriority, isEqualTo: getSearchAreaKey())
+            .where(Constants.RESTAURANT_BRAND, isEqualTo: true)
+            .get()
+            .then(
+          (querySnapshot) {
+            List<Map<String, dynamic>> result = [];
+            for (var snapshot in querySnapshot.docs) {
+              result.add(snapshot.data());
+            }
+            onSuccess(result);
+          },
+          onError: (e) => debugPrint("Error completing: $e"),
+        );
+      }
     } else {
       _firestore
           .collection(globals.restaurantType)

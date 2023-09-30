@@ -13,7 +13,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-const numberOfItems = 20;
 const minItemHeight = 200.0;
 const maxItemHeight = 350.0;
 const scrollDuration = Duration(seconds: 2);
@@ -40,14 +39,48 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
   late List<double> itemHeights;
 
   late int categoryItemIndex = 0;
+  late String _selectedTopMenu = '';
 
   List<Map<String, dynamic>> bestOfferList = [];
+  List<Map<String, dynamic>> topBrands = [];
+  List<Map<String, dynamic>> topMenuList = [];
+
+  void _getBestOffers() {
+    AppModel().getBestOffers(
+        count: 0,
+        topMenu: _selectedTopMenu,
+        onSuccess: (List<Map<String, dynamic>> param) {
+          bestOfferList = param;
+          setState(() {});
+        },
+        onError: (String text) {});
+  }
+
+  void _getTopBrand() {
+    AppModel().getTopBrands(
+        all: true,
+        topMenu: _selectedTopMenu,
+        onSuccess: (List<Map<String, dynamic>> param) {
+          topBrands = param;
+          setState(() {});
+        });
+  }
+
+  void _getTopMenu() {
+    AppModel().getTopMenu(
+      onSuccess: (List<Map<String, dynamic>> param) {
+        topMenuList = param;
+        setState(() {});
+      },
+      onEmpty: () {},
+    );
+  }
 
   @override
   void initState() {
     final heightGenerator = Random(328902348);
     itemHeights = List<double>.generate(
-        numberOfItems,
+        topMenuList.length,
         (int _) =>
             heightGenerator.nextDouble() * (maxItemHeight - minItemHeight) +
             minItemHeight);
@@ -58,6 +91,9 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
         },
         onError: (String text) {});
     super.initState();
+    _getBestOffers();
+    _getTopBrand();
+    _getTopMenu();
   }
 
   @override
@@ -186,7 +222,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
   }
 
   Widget list(Orientation orientation) => ScrollablePositionedList.builder(
-        itemCount: numberOfItems,
+        itemCount: topMenuList.length,
         itemBuilder: (context, index) => item(index, orientation),
         itemScrollController: itemScrollController,
         itemPositionsListener: itemPositionsListener,
@@ -222,13 +258,13 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
         key: ValueKey<String>('Scroll$value'),
         onPressed: () {
           if (back && value < 0) return;
-          if (!back && value > numberOfItems - 1) return;
+          if (!back && value > topMenuList.length - 1) return;
           if (back && value > 0) {
             setState(() {
               categoryItemIndex = categoryItemIndex - 1;
             });
           }
-          if (!back && value < numberOfItems - 1) {
+          if (!back && value < topMenuList.length - 1) {
             setState(() {
               categoryItemIndex = categoryItemIndex + 1;
             });
@@ -268,32 +304,63 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
           child: SizedBox(
               height: 50,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    side: const BorderSide(width: 2, color: Colors.black),
-                    backgroundColor: Colors.white,
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    shadowColor: CustomColor.primaryColor.withOpacity(0.5),
-                    padding: const EdgeInsets.all(5)),
-                onPressed: () {},
+                style: _selectedTopMenu == topMenuList[i][Constants.TOPMENU_ID]
+                    ? ElevatedButton.styleFrom(
+                        side: const BorderSide(
+                            width: 2, color: CustomColor.primaryColor),
+                        backgroundColor: CustomColor.primaryColor,
+                        elevation: 3,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        shadowColor: CustomColor.primaryColor.withOpacity(0.5),
+                        padding: const EdgeInsets.all(5))
+                    : ElevatedButton.styleFrom(
+                        side: const BorderSide(width: 2, color: Colors.black),
+                        backgroundColor: Colors.white,
+                        elevation: 3,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        shadowColor: CustomColor.primaryColor.withOpacity(0.5),
+                        padding: const EdgeInsets.all(5)),
+                onPressed: () {
+                  setState(() {
+                    _selectedTopMenu = topMenuList[i][Constants.TOPMENU_ID];
+                  });
+                  _getBestOffers();
+                  _getTopBrand();
+                  setState(() {});
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(width: 2),
                     Image.asset(
-                      Constants.IMG_APPLE,
+                      '${Constants.imagePath}topmenu/${topMenuList[i][Constants.TOPMENU_IMAGE]}.png',
                       width: 25,
                     ),
                     const SizedBox(width: 8),
-                    Container(width: 1, height: 40, color: Colors.black),
+                    Container(
+                        width: 1,
+                        height: 36,
+                        color: _selectedTopMenu ==
+                                topMenuList[i][Constants.TOPMENU_ID]
+                            ? Colors.white
+                            : Colors.black),
                     const SizedBox(width: 8),
-                    const Text(
-                      'Coffee',
+                    Text(
+                      (topMenuList[i][Constants.TOPMENU_NAME]
+                                  .toString()
+                                  .length <
+                              8)
+                          ? topMenuList[i][Constants.TOPMENU_NAME].toString()
+                          : '${topMenuList[i][Constants.TOPMENU_NAME].toString().substring(0, 5)}..',
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: CustomColor.textSecondaryColor),
+                          color: _selectedTopMenu ==
+                                  topMenuList[i][Constants.TOPMENU_ID]
+                              ? Colors.white
+                              : CustomColor.textSecondaryColor),
                     )
                   ],
                 ),
