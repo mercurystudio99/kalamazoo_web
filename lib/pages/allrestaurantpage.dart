@@ -131,7 +131,8 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
               // for larger & medium screen sizes
               preferredSize: Size(screenSize.width, 1000),
               child: TopBarContents(1, topbarstatus, () {
-                debugPrint('---');
+                _getTopBrand();
+                _getBestOffers();
               }),
             ),
       drawer: const MobileDrawer(),
@@ -163,6 +164,10 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                             'Search for your favorite foods & restaurants',
                         prefixIcon: Icon(Icons.search,
                             color: CustomColor.textSecondaryColor, size: 24)),
+                    onFieldSubmitted: (value) {
+                      global.searchText = value;
+                      context.go('/search');
+                    },
                   ),
                 ],
               )),
@@ -371,14 +376,24 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
   }
 
   Widget _topBrands() {
-    return ListView.builder(
-        itemCount: 10,
-        itemBuilder: (_, int index) {
-          return brandBox('Mc Donald\'S', 0);
-        });
+    if (topBrands.isEmpty) {
+      return const Center(
+          child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: Constants.mainPadding),
+              child: Text(
+                  'No stores available in your area. Please come back soon to try again.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: CustomColor.textPrimaryColor))));
+    } else {
+      return ListView.builder(
+          itemCount: topBrands.length,
+          itemBuilder: (_, int index) {
+            return brandBox(topBrands[index]);
+          });
+    }
   }
 
-  Widget brandBox(String title, int index) {
+  Widget brandBox(Map<String, dynamic> brand) {
     List<double> sizes = [
       Constants.mainPadding / 2,
       12,
@@ -402,120 +417,134 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
       sizes = [Constants.mainPadding / 2, 12, 8, 8, 90, 0, 10, 14, 12, 10];
     }
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: sizes[0], vertical: sizes[1]),
-      padding: EdgeInsets.symmetric(vertical: sizes[2], horizontal: sizes[3]),
-      height: sizes[4],
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: CustomColor.primaryColor.withOpacity(0.2),
-            blurRadius: 8.0,
-          ),
-        ],
-        border: Border.all(color: Colors.white),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      alignment: Alignment.center,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-              width: sizes[5],
-              child: Image.asset(
-                Constants.IMG_GROUP,
-                fit: BoxFit.cover,
-              )),
-          SizedBox(width: sizes[6]),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+        margin: EdgeInsets.symmetric(horizontal: sizes[0], vertical: sizes[1]),
+        padding: EdgeInsets.symmetric(vertical: sizes[2], horizontal: sizes[3]),
+        height: sizes[4],
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: CustomColor.primaryColor.withOpacity(0.2),
+              blurRadius: 8.0,
+            ),
+          ],
+          border: Border.all(color: Colors.white),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        alignment: Alignment.center,
+        child: InkWell(
+          hoverColor: Colors.transparent,
+          onTap: () {
+            global.restaurantID = brand[Constants.RESTAURANT_ID].toString();
+            context.go('/about');
+          },
+          onHover: (value) {},
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text('Mc Donald\'S',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: sizes[7])),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SvgPicture.asset(Constants.SVG_DISH),
-                  const SizedBox(width: 5),
+            children: [
+              SizedBox(
+                width: sizes[5],
+                child: Image.network(
+                    brand[Constants.RESTAURANT_IMAGE] ??
+                        'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+                    fit: BoxFit.cover),
+              ),
+              SizedBox(width: sizes[6]),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
                   Text(
-                    'Burger',
-                    style: TextStyle(
-                      fontSize: sizes[9],
-                      color: CustomColor.textSecondaryColor,
-                    ),
+                      brand[Constants.RESTAURANT_BUSINESSNAME]
+                                  .toString()
+                                  .length <
+                              10
+                          ? brand[Constants.RESTAURANT_BUSINESSNAME].toString()
+                          : '${brand[Constants.RESTAURANT_BUSINESSNAME].toString().substring(0, 10)}..',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: sizes[7])),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SvgPicture.asset(Constants.SVG_DISH),
+                      const SizedBox(width: 5),
+                      Text(
+                        'Burger',
+                        style: TextStyle(
+                          fontSize: sizes[9],
+                          color: CustomColor.textSecondaryColor,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Icon(
+                        Icons.location_on,
+                        color: CustomColor.activeColor,
+                        size: sizes[8],
+                      ),
+                      Text(
+                        '1.2km',
+                        style: TextStyle(
+                          fontSize: sizes[9],
+                          color: CustomColor.textSecondaryColor,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Icon(
-                    Icons.location_on,
-                    color: CustomColor.activeColor,
-                    size: sizes[8],
-                  ),
-                  Text(
-                    '1.2km',
-                    style: TextStyle(
-                      fontSize: sizes[9],
-                      color: CustomColor.textSecondaryColor,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        decoration: BoxDecoration(
+                          color: CustomColor.activeColor,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              '4.8',
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: sizes[9]),
+                            ),
+                            Icon(
+                              Icons.star,
+                              color: Colors.white,
+                              size: sizes[9],
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: sizes[6],
+                      ),
+                      Icon(
+                        Icons.access_time,
+                        size: sizes[8],
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        '10min',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: sizes[9],
+                          color: CustomColor.textSecondaryColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    decoration: BoxDecoration(
-                      color: CustomColor.activeColor,
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: Row(
-                      children: [
-                        Text(
-                          '4.8',
-                          style: TextStyle(
-                              color: Colors.white, fontSize: sizes[9]),
-                        ),
-                        Icon(
-                          Icons.star,
-                          color: Colors.white,
-                          size: sizes[9],
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: sizes[6],
-                  ),
-                  Icon(
-                    Icons.access_time,
-                    size: sizes[8],
-                  ),
-                  const SizedBox(width: 5),
-                  Text(
-                    '10min',
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: sizes[9],
-                      color: CustomColor.textSecondaryColor,
-                    ),
-                  ),
-                ],
+              const Spacer(),
+              const Icon(
+                Icons.bookmark,
+                color: CustomColor.activeColor,
               ),
             ],
           ),
-          const Spacer(),
-          const Icon(
-            Icons.bookmark,
-            color: CustomColor.activeColor,
-          ),
-        ],
-      ),
-    );
+        ));
   }
 
   Widget _bestOffers() {
@@ -536,7 +565,6 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
       sizes = [14, 12, 10];
     }
 
-    debugPrint("$bestOfferList");
     List<Widget> widgetList = [];
     for (var element in bestOfferList) {
       Widget widget = Container(
@@ -547,6 +575,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
           InkWell(
             hoverColor: Colors.transparent,
             onTap: () {
+              global.restaurantID = element[Constants.RESTAURANT_ID].toString();
               context.go('/about');
             },
             onHover: (value) {},
@@ -564,9 +593,11 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                       topRight: Radius.circular(15),
                     ),
                     child: Image.network(
-                      element[Constants.RESTAURANT_IMAGE] ??
-                          'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
-                    ),
+                        element[Constants.RESTAURANT_IMAGE] ??
+                            'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+                        width: cardWidth,
+                        height: cardWidth * 0.6,
+                        fit: BoxFit.cover),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(15),
@@ -736,6 +767,16 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
       }
     }
 
-    return ListView(children: list);
+    if (list.isEmpty) {
+      return const Center(
+          child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: Constants.mainPadding),
+              child: Text(
+                  'No stores available in your area. Please come back soon to try again.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: CustomColor.textPrimaryColor))));
+    } else {
+      return ListView(children: list);
+    }
   }
 }
