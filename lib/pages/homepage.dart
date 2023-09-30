@@ -412,12 +412,18 @@ class _HomePageState extends State<HomePage> {
                 const Spacer(),
                 InkWell(
                     onHover: (value) {},
-                    onTap: () {},
+                    onTap: () {
+                      global.listTarget = "brand";
+                      context.go('/search');
+                    },
                     child: const Text('See All',
                         style: TextStyle(color: CustomColor.activeColor))),
                 InkWell(
                     onHover: (value) {},
-                    onTap: () {},
+                    onTap: () {
+                      global.listTarget = "brand";
+                      context.go('/search');
+                    },
                     child: const Icon(Icons.arrow_forward,
                         size: 20, color: CustomColor.activeColor)),
               ]),
@@ -435,13 +441,17 @@ class _HomePageState extends State<HomePage> {
                 InkWell(
                     onHover: (value) {},
                     onTap: () {
+                      global.listTarget = "daily";
                       context.go('/search');
                     },
                     child: const Text('See All',
                         style: TextStyle(color: CustomColor.activeColor))),
                 InkWell(
                     onHover: (value) {},
-                    onTap: () {},
+                    onTap: () {
+                      global.listTarget = "daily";
+                      context.go('/search');
+                    },
                     child: const Icon(Icons.arrow_forward,
                         size: 20, color: CustomColor.activeColor)),
               ]),
@@ -459,13 +469,17 @@ class _HomePageState extends State<HomePage> {
                 InkWell(
                     onHover: (value) {},
                     onTap: () {
-                      context.go('/all');
+                      global.listTarget = "offer";
+                      context.go('/search');
                     },
                     child: const Text('See All',
                         style: TextStyle(color: CustomColor.activeColor))),
                 InkWell(
                     onHover: (value) {},
-                    onTap: () {},
+                    onTap: () {
+                      global.listTarget = "offer";
+                      context.go('/search');
+                    },
                     child: const Icon(Icons.arrow_forward,
                         size: 20, color: CustomColor.activeColor)),
               ]),

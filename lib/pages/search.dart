@@ -35,12 +35,45 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void _getList() {
-    AppModel().getList(
-      onSuccess: (List<Map<String, dynamic>> param) {
-        restaurants = param;
-        _search(_searchController.text);
-      },
-    );
+    switch (global.listTarget) {
+      case 'brand':
+        AppModel().getTopBrands(
+          all: true,
+          onSuccess: (List<Map<String, dynamic>> param) {
+            restaurants = param;
+            _search(_searchController.text);
+          },
+        );
+        break;
+      case 'daily':
+        AppModel().getBestOffers(
+          count: 0,
+          onSuccess: (List<Map<String, dynamic>> param) {
+            restaurants = param;
+            _search(_searchController.text);
+          },
+          onError: (p0) {},
+        );
+        break;
+      case 'offer':
+        AppModel().getBestOffers(
+          count: 0,
+          onSuccess: (List<Map<String, dynamic>> param) {
+            restaurants = param;
+            _search(_searchController.text);
+          },
+          onError: (p0) {},
+        );
+        break;
+      default:
+        AppModel().getList(
+          onSuccess: (List<Map<String, dynamic>> param) {
+            restaurants = param;
+            _search(_searchController.text);
+          },
+        );
+        break;
+    }
   }
 
   @override
@@ -214,9 +247,9 @@ class _SearchPageState extends State<SearchPage> {
                                 (item[Constants.RESTAURANT_URL]
                                             .toString()
                                             .length <
-                                        30)
+                                        28)
                                     ? item[Constants.RESTAURANT_URL].toString()
-                                    : '${item[Constants.RESTAURANT_URL].toString().substring(0, 28)}..',
+                                    : '${item[Constants.RESTAURANT_URL].toString().substring(0, 25)}..',
                                 style: TextStyle(
                                     fontSize: sizes[2],
                                     color: CustomColor.textSecondaryColor),
