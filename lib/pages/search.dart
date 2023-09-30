@@ -18,6 +18,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  final TextEditingController _searchController = TextEditingController();
   static List<Map<String, dynamic>> restaurants = [];
   static List<Map<String, dynamic>> results = [];
   void _search(String value) {
@@ -33,23 +34,20 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {});
   }
 
-  void initialize() {
-    AppModel().getBestOffers(
-      count: 0,
+  void _getList() {
+    AppModel().getList(
       onSuccess: (List<Map<String, dynamic>> param) {
         restaurants = param;
-        if (global.searchText.isNotEmpty) {
-          _search(global.searchText);
-        }
+        _search(_searchController.text);
       },
-      onError: (String text) {},
     );
   }
 
   @override
   void initState() {
     super.initState();
-    initialize();
+    _searchController.text = global.searchText;
+    _getList();
   }
 
   @override
@@ -80,7 +78,7 @@ class _SearchPageState extends State<SearchPage> {
               // for larger & medium screen sizes
               preferredSize: Size(screenSize.width, 1000),
               child: TopBarContents(1, topbarstatus, () {
-                debugPrint('---');
+                _getList();
               }),
             ),
       drawer: const MobileDrawer(),
@@ -106,6 +104,7 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                   ),
                   TextFormField(
+                    controller: _searchController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText:
@@ -380,7 +379,8 @@ class _SearchPageState extends State<SearchPage> {
 
     if (lists.isEmpty) {
       return const Center(
-          child: Text('No data.',
+          child: Text(
+              'No stores available in your area. Please come back soon to try again.',
               style: TextStyle(color: CustomColor.textPrimaryColor)));
     } else {
       return ListView(children: rowList);
