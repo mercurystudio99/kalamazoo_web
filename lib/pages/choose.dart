@@ -54,7 +54,7 @@ class _ChoosePageState extends State<ChoosePage> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(screenSize.width, 1000),
-        child: TopBarContents(0, 0, () {
+        child: TopBarContents(0, 0, 'choose', (param) {
           debugPrint('---');
         }),
       ),

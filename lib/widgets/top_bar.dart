@@ -11,12 +11,13 @@ import 'package:http/http.dart' as http;
 
 class TopBarContents extends StatefulWidget {
   final double opacity;
-  final VoidCallback callback;
-
   // 0: login/signup, 1: homepage/others(observe), x: homepage/others(user)
   final int status;
+  final String target;
+  final Function(String) callback;
 
-  const TopBarContents(this.opacity, this.status, this.callback, {super.key});
+  const TopBarContents(this.opacity, this.status, this.target, this.callback,
+      {super.key});
 
   @override
   State<TopBarContents> createState() => _TopBarContentsState();
@@ -202,7 +203,11 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    context.go('/');
+                    if (widget.target == 'home') {
+                      widget.callback('refresh');
+                    } else {
+                      context.go('/');
+                    }
                   },
                   child: Image.asset(
                     Constants.IMG_LOGO,
@@ -232,7 +237,11 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    context.go('/');
+                    if (widget.target == 'home') {
+                      widget.callback('refresh');
+                    } else {
+                      context.go('/');
+                    }
                   },
                   child: Image.asset(
                     Constants.IMG_LOGO,
@@ -279,16 +288,22 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    context.go('/');
+                    if (widget.target == 'home') {
+                      widget.callback('refresh');
+                    } else {
+                      context.go('/');
+                    }
                   },
                   child: Text(
                     'Home',
                     style: TextStyle(
-                      color: _isHovering[1]
+                      color: widget.target == 'home'
                           ? CustomColor.activeColor
-                          : widget.opacity == 0
-                              ? Colors.black
-                              : Colors.white,
+                          : _isHovering[1]
+                              ? CustomColor.activeColor
+                              : widget.opacity == 0
+                                  ? Colors.black
+                                  : Colors.white,
                     ),
                   ),
                 ),
@@ -300,16 +315,22 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    context.go('/all');
+                    if (widget.target == 'all') {
+                      widget.callback('refresh');
+                    } else {
+                      context.go('/all');
+                    }
                   },
                   child: Text(
                     'All Restaurant',
                     style: TextStyle(
-                      color: _isHovering[2]
+                      color: widget.target == 'all'
                           ? CustomColor.activeColor
-                          : widget.opacity == 0
-                              ? Colors.black
-                              : Colors.white,
+                          : _isHovering[2]
+                              ? CustomColor.activeColor
+                              : widget.opacity == 0
+                                  ? Colors.black
+                                  : Colors.white,
                     ),
                   ),
                 ),
@@ -321,16 +342,22 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    context.go('/contact');
+                    if (widget.target == 'contact') {
+                      widget.callback('refresh');
+                    } else {
+                      context.go('/contact');
+                    }
                   },
                   child: Text(
                     'Contact us',
                     style: TextStyle(
-                      color: _isHovering[3]
+                      color: widget.target == 'contact'
                           ? CustomColor.activeColor
-                          : widget.opacity == 0
-                              ? Colors.black
-                              : Colors.white,
+                          : _isHovering[3]
+                              ? CustomColor.activeColor
+                              : widget.opacity == 0
+                                  ? Colors.black
+                                  : Colors.white,
                     ),
                   ),
                 ),
@@ -405,7 +432,11 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    context.go('/');
+                    if (widget.target == 'home') {
+                      widget.callback('refresh');
+                    } else {
+                      context.go('/');
+                    }
                   },
                   child: Image.asset(
                     Constants.IMG_LOGO,
@@ -452,16 +483,22 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    context.go('/');
+                    if (widget.target == 'home') {
+                      widget.callback('refresh');
+                    } else {
+                      context.go('/');
+                    }
                   },
                   child: Text(
                     'Home',
                     style: TextStyle(
-                      color: _isHovering[1]
+                      color: widget.target == 'home'
                           ? CustomColor.activeColor
-                          : widget.opacity == 0
-                              ? Colors.black
-                              : Colors.white,
+                          : _isHovering[1]
+                              ? CustomColor.activeColor
+                              : widget.opacity == 0
+                                  ? Colors.black
+                                  : Colors.white,
                     ),
                   ),
                 ),
@@ -473,16 +510,22 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    context.go('/all');
+                    if (widget.target == 'all') {
+                      widget.callback('refresh');
+                    } else {
+                      context.go('/all');
+                    }
                   },
                   child: Text(
                     'All Restaurant',
                     style: TextStyle(
-                      color: _isHovering[2]
+                      color: widget.target == 'all'
                           ? CustomColor.activeColor
-                          : widget.opacity == 0
-                              ? Colors.black
-                              : Colors.white,
+                          : _isHovering[2]
+                              ? CustomColor.activeColor
+                              : widget.opacity == 0
+                                  ? Colors.black
+                                  : Colors.white,
                     ),
                   ),
                 ),
@@ -494,16 +537,22 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    context.go('/contact');
+                    if (widget.target == 'contact') {
+                      widget.callback('refresh');
+                    } else {
+                      context.go('/contact');
+                    }
                   },
                   child: Text(
                     'Contact us',
                     style: TextStyle(
-                      color: _isHovering[3]
+                      color: widget.target == 'contact'
                           ? CustomColor.activeColor
-                          : widget.opacity == 0
-                              ? Colors.black
-                              : Colors.white,
+                          : _isHovering[3]
+                              ? CustomColor.activeColor
+                              : widget.opacity == 0
+                                  ? Colors.black
+                                  : Colors.white,
                     ),
                   ),
                 ),
@@ -517,16 +566,22 @@ class _TopBarContentsState extends State<TopBarContents> {
                       });
                     },
                     onTap: () {
-                      context.go('/subscription');
+                      if (widget.target == 'subscription') {
+                        widget.callback('refresh');
+                      } else {
+                        context.go('/subscription');
+                      }
                     },
                     child: Text(
                       'Subscription',
                       style: TextStyle(
-                        color: _isHovering[6]
+                        color: widget.target == 'subscription'
                             ? CustomColor.activeColor
-                            : widget.opacity == 0
-                                ? Colors.black
-                                : Colors.white,
+                            : _isHovering[6]
+                                ? CustomColor.activeColor
+                                : widget.opacity == 0
+                                    ? Colors.black
+                                    : Colors.white,
                       ),
                     ),
                   ),
@@ -538,16 +593,23 @@ class _TopBarContentsState extends State<TopBarContents> {
                       });
                     },
                     onTap: () {
-                      context.go('/favorite');
+                      if (widget.target == 'favorite') {
+                        widget.callback('refresh');
+                      } else {
+                        context.go('/favorite');
+                      }
                     },
-                    child: _isHovering[4]
+                    child: widget.target == 'favorite'
                         ? const Icon(Icons.bookmark,
                             size: 20, color: CustomColor.activeColor)
-                        : widget.opacity == 0
-                            ? const Icon(Icons.bookmark_outline,
-                                size: 20, color: Colors.black)
-                            : const Icon(Icons.bookmark_outline,
-                                size: 20, color: Colors.white)),
+                        : _isHovering[4]
+                            ? const Icon(Icons.bookmark,
+                                size: 20, color: CustomColor.activeColor)
+                            : widget.opacity == 0
+                                ? const Icon(Icons.bookmark_outline,
+                                    size: 20, color: Colors.black)
+                                : const Icon(Icons.bookmark_outline,
+                                    size: 20, color: Colors.white)),
                 const SizedBox(width: 20),
                 InkWell(
                   onHover: (value) {
@@ -556,7 +618,11 @@ class _TopBarContentsState extends State<TopBarContents> {
                     });
                   },
                   onTap: () {
-                    context.go('/notification');
+                    if (widget.target == 'notification') {
+                      widget.callback('refresh');
+                    } else {
+                      context.go('/notification');
+                    }
                   },
                   child: badges.Badge(
                     badgeContent: const Text(
@@ -571,11 +637,13 @@ class _TopBarContentsState extends State<TopBarContents> {
                     child: Icon(
                       Icons.notifications_outlined,
                       size: 20,
-                      color: _isHovering[5]
+                      color: widget.target == 'notification'
                           ? CustomColor.activeColor
-                          : widget.opacity == 0
-                              ? Colors.black
-                              : Colors.white,
+                          : _isHovering[5]
+                              ? CustomColor.activeColor
+                              : widget.opacity == 0
+                                  ? Colors.black
+                                  : Colors.white,
                     ),
                   ),
                 ),
@@ -657,7 +725,7 @@ class _TopBarContentsState extends State<TopBarContents> {
           if (await success) {
             locations.clear();
             Navigator.of(context).pop();
-            widget.callback();
+            widget.callback('geolocation');
           }
         },
       ));

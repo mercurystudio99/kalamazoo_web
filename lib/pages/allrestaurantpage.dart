@@ -25,6 +25,8 @@ class AllRestaurantPage extends StatefulWidget {
 }
 
 class _AllRestaurantPageState extends State<AllRestaurantPage> {
+  late ScrollController _scrollController;
+
   /// Controller to scroll or jump to a particular item.
   final ItemScrollController itemScrollController = ItemScrollController();
 
@@ -78,18 +80,13 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
 
   @override
   void initState() {
+    _scrollController = ScrollController();
     final heightGenerator = Random(328902348);
     itemHeights = List<double>.generate(
         topMenuList.length,
         (int _) =>
             heightGenerator.nextDouble() * (maxItemHeight - minItemHeight) +
             minItemHeight);
-    AppModel().getBestOffers(
-        count: 0,
-        onSuccess: (List<Map<String, dynamic>> param) {
-          bestOfferList = param;
-        },
-        onError: (String text) {});
     super.initState();
     _getBestOffers();
     _getTopBrand();
@@ -130,13 +127,19 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
           : PreferredSize(
               // for larger & medium screen sizes
               preferredSize: Size(screenSize.width, 1000),
-              child: TopBarContents(1, topbarstatus, () {
+              child: TopBarContents(1, topbarstatus, 'all', (param) {
+                if (param == 'refresh') {
+                  _selectedTopMenu = '';
+                  _scrollController.animateTo(0,
+                      duration: const Duration(seconds: 1), curve: Curves.ease);
+                }
                 _getTopBrand();
                 _getBestOffers();
               }),
             ),
       drawer: const MobileDrawer(),
       body: SingleChildScrollView(
+        controller: _scrollController,
         physics: const ClampingScrollPhysics(),
         child: Column(children: [
           Padding(

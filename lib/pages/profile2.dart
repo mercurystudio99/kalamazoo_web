@@ -125,7 +125,7 @@ class _Profile2PageState extends State<Profile2Page> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(screenSize.width, 1000),
-        child: TopBarContents(1, topbarstatus, () {
+        child: TopBarContents(1, topbarstatus, 'profile2', (param) {
           debugPrint('---');
         }),
       ),

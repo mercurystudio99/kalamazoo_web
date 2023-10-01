@@ -149,7 +149,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(screenSize.width, 1000),
-        child: TopBarContents(0, 0, () {
+        child: TopBarContents(0, 0, 'register', (param) {
           debugPrint('---');
         }),
       ),

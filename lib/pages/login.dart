@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(screenSize.width, 1000),
-        child: TopBarContents(0, 0, () {
+        child: TopBarContents(0, 0, 'login', (param) {
           debugPrint('---');
         }),
       ),

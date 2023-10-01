@@ -45,116 +45,114 @@ final GoRouter _router = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         return const HomePage();
       },
-      routes: <RouteBase>[
-        GoRoute(
-          path: 'login',
-          builder: (BuildContext context, GoRouterState state) {
-            return const LoginPage();
-          },
-        ),
-        GoRoute(
-          path: 'choose',
-          builder: (BuildContext context, GoRouterState state) {
-            return const ChoosePage();
-          },
-        ),
-        GoRoute(
-          path: 'signup',
-          builder: (BuildContext context, GoRouterState state) {
-            return const SignupPage();
-          },
-        ),
-        GoRoute(
-          path: 'register',
-          builder: (BuildContext context, GoRouterState state) {
-            return const RegisterPage();
-          },
-        ),
-        GoRoute(
-          path: 'forgot',
-          builder: (BuildContext context, GoRouterState state) {
-            return const ForgotPage();
-          },
-        ),
-        GoRoute(
-          path: 'otp',
-          builder: (BuildContext context, GoRouterState state) {
-            return const OTPPage();
-          },
-        ),
-        GoRoute(
-          path: 'reset',
-          builder: (BuildContext context, GoRouterState state) {
-            return const ResetPage();
-          },
-        ),
-        GoRoute(
-          path: 'all',
-          builder: (BuildContext context, GoRouterState state) {
-            return const AllRestaurantPage();
-          },
-        ),
-        GoRoute(
-          path: 'about',
-          builder: (BuildContext context, GoRouterState state) {
-            return const AboutPage();
-          },
-        ),
-        GoRoute(
-          path: 'search',
-          builder: (BuildContext context, GoRouterState state) {
-            return const SearchPage();
-          },
-        ),
-        GoRoute(
-          path: 'favorite',
-          builder: (BuildContext context, GoRouterState state) {
-            return const FavoritePage();
-          },
-        ),
-        GoRoute(
-          path: 'notification',
-          builder: (BuildContext context, GoRouterState state) {
-            return const NotificationPage();
-          },
-        ),
-        GoRoute(
-          path: 'contact',
-          builder: (BuildContext context, GoRouterState state) {
-            return const ContactPage();
-          },
-        ),
-        GoRoute(
-          path: 'subscription',
-          builder: (BuildContext context, GoRouterState state) {
-            return const SubscriptionPage();
-          },
-        ),
-        GoRoute(
-          path: 'profile',
-          builder: (BuildContext context, GoRouterState state) {
-            return const ProfilePage();
-          },
-        ),
-        GoRoute(
-          path: 'profile2',
-          builder: (BuildContext context, GoRouterState state) {
-            return const Profile2Page();
-          },
-        ),
-        GoRoute(
-          path: 'terms',
-          builder: (BuildContext context, GoRouterState state) {
-            return const TermsPage();
-          },
-        ),
-        GoRoute(
-          path: 'policy',
-          builder: (BuildContext context, GoRouterState state) {
-            return const PolicyPage();
-          },
-        ),
-      ],
+    ),
+    GoRoute(
+      path: '/login',
+      builder: (BuildContext context, GoRouterState state) {
+        return const LoginPage();
+      },
+    ),
+    GoRoute(
+      path: '/choose',
+      builder: (BuildContext context, GoRouterState state) {
+        return const ChoosePage();
+      },
+    ),
+    GoRoute(
+      path: '/signup',
+      builder: (BuildContext context, GoRouterState state) {
+        return const SignupPage();
+      },
+    ),
+    GoRoute(
+      path: '/register',
+      builder: (BuildContext context, GoRouterState state) {
+        return const RegisterPage();
+      },
+    ),
+    GoRoute(
+      path: '/forgot',
+      builder: (BuildContext context, GoRouterState state) {
+        return const ForgotPage();
+      },
+    ),
+    GoRoute(
+      path: '/otp',
+      builder: (BuildContext context, GoRouterState state) {
+        return const OTPPage();
+      },
+    ),
+    GoRoute(
+      path: '/reset',
+      builder: (BuildContext context, GoRouterState state) {
+        return const ResetPage();
+      },
+    ),
+    GoRoute(
+      path: '/all',
+      builder: (BuildContext context, GoRouterState state) {
+        return const AllRestaurantPage();
+      },
+    ),
+    GoRoute(
+      path: '/about',
+      builder: (BuildContext context, GoRouterState state) {
+        return const AboutPage();
+      },
+    ),
+    GoRoute(
+      path: '/search',
+      builder: (BuildContext context, GoRouterState state) {
+        return const SearchPage();
+      },
+    ),
+    GoRoute(
+      path: '/favorite',
+      builder: (BuildContext context, GoRouterState state) {
+        return const FavoritePage();
+      },
+    ),
+    GoRoute(
+      path: '/notification',
+      builder: (BuildContext context, GoRouterState state) {
+        return const NotificationPage();
+      },
+    ),
+    GoRoute(
+      path: '/contact',
+      builder: (BuildContext context, GoRouterState state) {
+        return const ContactPage();
+      },
+    ),
+    GoRoute(
+      path: '/subscription',
+      builder: (BuildContext context, GoRouterState state) {
+        return const SubscriptionPage();
+      },
+    ),
+    GoRoute(
+      path: '/profile',
+      builder: (BuildContext context, GoRouterState state) {
+        return const ProfilePage();
+      },
+    ),
+    GoRoute(
+      path: '/profile2',
+      builder: (BuildContext context, GoRouterState state) {
+        return const Profile2Page();
+      },
+    ),
+    GoRoute(
+      path: '/terms',
+      builder: (BuildContext context, GoRouterState state) {
+        return const TermsPage();
+      },
+    ),
+    GoRoute(
+      path: '/policy',
+      builder: (BuildContext context, GoRouterState state) {
+        return const PolicyPage();
+      },
     ),
   ],
   errorBuilder: (context, state) => const ErrorPage(),

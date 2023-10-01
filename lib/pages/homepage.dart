@@ -248,12 +248,19 @@ class _HomePageState extends State<HomePage> {
           : PreferredSize(
               // for larger & medium screen sizes
               preferredSize: Size(screenSize.width, 1000),
-              child: TopBarContents(_opacity, topbarstatus, () {
-                if (_selectedTopMenu.isEmpty) {
-                  _getBestOffers();
-                  _getTopBrand();
+              child: TopBarContents(_opacity, topbarstatus, 'home', (param) {
+                if (param == 'geolocation') {
+                  if (_selectedTopMenu.isEmpty) {
+                    _getBestOffers();
+                    _getTopBrand();
+                  } else {
+                    _getList();
+                  }
                 } else {
-                  _getList();
+                  _selectedTopMenu = '';
+                  _scrollController.animateTo(0,
+                      duration: const Duration(seconds: 1), curve: Curves.ease);
+                  setState(() {});
                 }
               }),
             ),
