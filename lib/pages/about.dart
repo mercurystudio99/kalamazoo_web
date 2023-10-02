@@ -184,73 +184,80 @@ class _AboutPageState extends State<AboutPage> {
         ));
     leftSideList.add(widget);
 
-    leftSideList.add(Padding(
-        padding: const EdgeInsets.fromLTRB(
-            Constants.mainPadding, 40, Constants.mainPadding, 0),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text(
-                'Amenities',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              )
-            ])));
-
-    List<Widget> lists = amenities.map((item) {
-      return SizedBox(
-          width: (menusizes[0] - Constants.mainPadding * 2) / amenitiesColCount,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-            child: Column(children: [
-              Image.asset(
-                '${Constants.imagePath}amenities/icon (${item[Constants.AMENITY_LOGO]}).png',
-              ),
-              const SizedBox(height: 5),
-              Text(
-                  item[Constants.AMENITY_NAME].toString().length < 18
-                      ? item[Constants.AMENITY_NAME]
-                      : '${item[Constants.AMENITY_NAME].toString().substring(0, 16)}..',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: CustomColor.textPrimaryColor))
-            ]),
-          ));
-    }).toList();
-    int rowCount = lists.length ~/ amenitiesColCount;
-    List<Widget> rowList = [];
-    for (int i = 0; i < rowCount + 1; i++) {
-      if (lists.length > amenitiesColCount * (i + 1)) {
-        rowList.add(Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: lists.sublist(
-                amenitiesColCount * i, amenitiesColCount * (i + 1))));
-      } else {
-        rowList.add(Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: lists.sublist(amenitiesColCount * i, lists.length)));
+    List<Widget> lists = [];
+    for (var item in amenities) {
+      if (restaurant[Constants.RESTAURANT_AMENITIES] != null &&
+          restaurant[Constants.RESTAURANT_AMENITIES]
+              .contains(item[Constants.AMENITY_ID])) {
+        lists.add(SizedBox(
+            width: (menusizes[0] - Constants.mainPadding * 2 - 10) /
+                amenitiesColCount,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              child: Column(children: [
+                Image.asset(
+                  '${Constants.imagePath}amenities/icon (${item[Constants.AMENITY_LOGO]}).png',
+                ),
+                const SizedBox(height: 5),
+                Text(
+                    item[Constants.AMENITY_NAME].toString().length < 10
+                        ? item[Constants.AMENITY_NAME]
+                        : '${item[Constants.AMENITY_NAME].toString().substring(0, 10)}..',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: CustomColor.textPrimaryColor))
+              ]),
+            )));
       }
     }
+    if (lists.isNotEmpty) {
+      int rowCount = lists.length ~/ amenitiesColCount;
+      List<Widget> rowList = [];
+      for (int i = 0; i < rowCount + 1; i++) {
+        if (lists.length > amenitiesColCount * (i + 1)) {
+          rowList.add(Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: lists.sublist(
+                  amenitiesColCount * i, amenitiesColCount * (i + 1))));
+        } else {
+          rowList.add(Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: lists.sublist(amenitiesColCount * i, lists.length)));
+        }
+      }
 
-    leftSideList.add(Padding(
-        padding: const EdgeInsets.fromLTRB(
-            Constants.mainPadding, 40, Constants.mainPadding, 0),
-        child: Container(
-          width: menusizes[0] - Constants.mainPadding * 2,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: CustomColor.primaryColor.withOpacity(0.2),
-                blurRadius: 8.0,
-              ),
-            ],
-            border: Border.all(color: Colors.white),
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: rowList),
-        )));
+      leftSideList.add(Padding(
+          padding: const EdgeInsets.fromLTRB(
+              Constants.mainPadding, 40, Constants.mainPadding, 0),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
+                  'Amenities',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                )
+              ])));
+      leftSideList.add(Padding(
+          padding: const EdgeInsets.fromLTRB(
+              Constants.mainPadding, 20, Constants.mainPadding, 20),
+          child: Container(
+            width: menusizes[0] - Constants.mainPadding * 2,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: CustomColor.primaryColor.withOpacity(0.2),
+                  blurRadius: 8.0,
+                ),
+              ],
+              border: Border.all(color: Colors.white),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: rowList),
+          )));
+    }
 
     return Scaffold(
       appBar: ResponsiveWidget.isSmallScreen(context)
@@ -568,9 +575,9 @@ class _AboutPageState extends State<AboutPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        (item[Constants.MENU_NAME].toString().length < 22)
+                        (item[Constants.MENU_NAME].toString().length < 18)
                             ? item[Constants.MENU_NAME].toString()
-                            : '${item[Constants.MENU_NAME].toString().substring(0, 20)}..',
+                            : '${item[Constants.MENU_NAME].toString().substring(0, 15)}..',
                         style: TextStyle(
                             color: CustomColor.primaryColor,
                             fontSize: sizes[0],
