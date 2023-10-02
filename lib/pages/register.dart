@@ -1119,7 +1119,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   vertical: 8, horizontal: rightSidePaddingX),
                               child: Stack(children: [
                                 Container(
-                                  height: _showAmenities ? 735 : 50,
+                                  height: _showAmenities ? 610 : 50,
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(4)),
@@ -2215,7 +2215,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           Constants.mainPadding, 8, Constants.mainPadding, 0),
                       child: Stack(children: [
                         Container(
-                          height: _showAmenities ? 735 : 50,
+                          height: _showAmenities ? 610 : 50,
                           decoration: BoxDecoration(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(4)),
@@ -2419,6 +2419,51 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _listing() {
     Size size = MediaQuery.of(context).size;
+    double itemWidth = size.width / 6 - Constants.mainPadding / 2;
+    if (size.width < 1200) {
+      itemWidth = size.width / 6;
+    }
+    if (size.width < 1000) {
+      itemWidth = size.width / 6 + Constants.mainPadding / 2;
+    }
+    if (size.width < 800) {
+      itemWidth = size.width / 2 - Constants.mainPadding * 2;
+    }
+
+    List<String> amenityCategories = [];
+    for (var amenity in amenities) {
+      if (!amenityCategories.contains(amenity[Constants.AMENITY_TYPE]) &&
+          amenity[Constants.AMENITY_TYPE] != null &&
+          amenity[Constants.AMENITY_TYPE].toString().isNotEmpty) {
+        amenityCategories.add(amenity[Constants.AMENITY_TYPE]);
+      }
+    }
+
+    List<Widget> amenitiesView = [];
+    for (var type in amenityCategories) {
+      amenitiesView.add(
+        SizedBox(
+            width: itemWidth * 2,
+            child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: Text(type,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w600, fontSize: 20)))),
+      );
+
+      amenitiesView.add(_subListing(type));
+    }
+    return SizedBox(
+      width: itemWidth * 2,
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: amenitiesView),
+    );
+  }
+
+  Widget _subListing(String type) {
+    Size size = MediaQuery.of(context).size;
     int length = 18;
     double itemWidth = size.width / 6 - Constants.mainPadding / 2;
     if (size.width < 1400) {
@@ -2440,59 +2485,64 @@ class _RegisterPageState extends State<RegisterPage> {
       length = 12;
     }
 
-    List<Widget> lists = amenities.map((item) {
-      return SizedBox(
-          width: itemWidth,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-            child: Row(children: [
-              Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(5)),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.shade400,
-                        blurRadius: 5,
-                        spreadRadius: 1),
-                  ],
-                ),
-                child: ColoredBox(
-                    color: Colors.white,
-                    child: Transform.scale(
-                      scale: 1.3,
-                      child: Checkbox(
-                        side: const BorderSide(color: Colors.white),
-                        checkColor: Colors.white,
-                        fillColor: MaterialStateProperty.resolveWith<Color>(
-                            (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.disabled)) {
+    List<Widget> lists = [];
+    for (var item in amenities) {
+      if (item[Constants.AMENITY_TYPE] != null &&
+          item[Constants.AMENITY_TYPE].toString() == type) {
+        lists.add(SizedBox(
+            width: itemWidth,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              child: Row(children: [
+                Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(5)),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.shade400,
+                          blurRadius: 5,
+                          spreadRadius: 1),
+                    ],
+                  ),
+                  child: ColoredBox(
+                      color: Colors.white,
+                      child: Transform.scale(
+                        scale: 1.3,
+                        child: Checkbox(
+                          side: const BorderSide(color: Colors.white),
+                          checkColor: Colors.white,
+                          fillColor: MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.disabled)) {
+                              return CustomColor.primaryColor;
+                            }
                             return CustomColor.primaryColor;
-                          }
-                          return CustomColor.primaryColor;
-                        }),
-                        value: _isCheckedAmenities[item[Constants.AMENITY_ID]],
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _isCheckedAmenities[item[Constants.AMENITY_ID]] =
-                                value!;
-                          });
-                        },
-                      ),
-                    )),
-              ),
-              const SizedBox(width: 5),
-              Image.asset(
-                '${Constants.imagePath}amenities/icon (${item[Constants.AMENITY_LOGO]}).png',
-              ),
-              const SizedBox(width: 5),
-              Text(item[Constants.AMENITY_NAME].toString().length < length
-                  ? item[Constants.AMENITY_NAME]
-                  : '${item[Constants.AMENITY_NAME].toString().substring(0, length - 2)}..')
-            ]),
-          ));
-    }).toList();
+                          }),
+                          value:
+                              _isCheckedAmenities[item[Constants.AMENITY_ID]],
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _isCheckedAmenities[item[Constants.AMENITY_ID]] =
+                                  value!;
+                            });
+                          },
+                        ),
+                      )),
+                ),
+                const SizedBox(width: 5),
+                Image.asset(
+                  '${Constants.imagePath}amenities/icon (${item[Constants.AMENITY_LOGO]}).png',
+                ),
+                const SizedBox(width: 5),
+                Text(item[Constants.AMENITY_NAME].toString().length < length
+                    ? item[Constants.AMENITY_NAME]
+                    : '${item[Constants.AMENITY_NAME].toString().substring(0, length - 2)}..')
+              ]),
+            )));
+      }
+    }
     int rowCount = lists.length ~/ 2;
     List<Widget> rowList = [];
     for (int i = 0; i < rowCount + 1; i++) {

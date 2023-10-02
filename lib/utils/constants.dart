@@ -58,6 +58,7 @@ class Constants {
   static const String AMENITY_ID = "id";
   static const String AMENITY_NAME = "name";
   static const String AMENITY_LOGO = "logo";
+  static const String AMENITY_TYPE = "type";
 
   static const String TOPMENU_ID = "id";
   static const String TOPMENU_NAME = "name";
