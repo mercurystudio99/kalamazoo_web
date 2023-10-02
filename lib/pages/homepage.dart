@@ -181,13 +181,21 @@ class _HomePageState extends State<HomePage> {
 
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
+    global.latitude = position.latitude;
+    global.longitude = position.longitude;
     // List<Placemark> placemarks =
     //     await placemarkFromCoordinates(position.latitude, position.longitude);
     // String output = 'No results found.';
     // if (placemarks.isNotEmpty) {
     //   output = placemarks[0].toString();
     // }
-    debugPrint("$position");
+  }
+
+  String _getDistance(List<dynamic> geolocation) {
+    double distance = Geolocator.distanceBetween(
+        global.latitude, global.longitude, geolocation[0], geolocation[1]);
+    distance = distance / 1000;
+    return distance.toStringAsFixed(1);
   }
 
   @override
@@ -764,9 +772,9 @@ class _HomePageState extends State<HomePage> {
                         color: CustomColor.activeColor,
                         size: 16,
                       ),
-                      const Text(
-                        '1.2km',
-                        style: TextStyle(
+                      Text(
+                        '${_getDistance(brand[Constants.RESTAURANT_GEOLOCATION])}km',
+                        style: const TextStyle(
                           fontSize: 14.0,
                           color: CustomColor.textSecondaryColor,
                         ),
@@ -1110,27 +1118,27 @@ class _HomePageState extends State<HomePage> {
                           Padding(
                             padding: const EdgeInsets.only(top: 8),
                             child: Row(
-                              children: const [
-                                Icon(
+                              children: [
+                                const Icon(
                                   Icons.location_on,
                                   color: CustomColor.activeColor,
                                   size: 14,
                                 ),
                                 Text(
-                                  '1.2km',
-                                  style: TextStyle(
+                                  '${_getDistance(element[Constants.RESTAURANT_GEOLOCATION])}km',
+                                  style: const TextStyle(
                                       fontSize: 14.0,
                                       color: CustomColor.textSecondaryColor),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 4,
                                 ),
-                                Icon(
+                                const Icon(
                                   Icons.access_time,
                                   size: 14,
                                   color: CustomColor.textSecondaryColor,
                                 ),
-                                Text(
+                                const Text(
                                   '10min',
                                   style: TextStyle(
                                       fontSize: 14.0,
@@ -1341,7 +1349,7 @@ class _HomePageState extends State<HomePage> {
                                     size: sizes[2],
                                   ),
                                   Text(
-                                    '1.2km',
+                                    '${_getDistance(element[Constants.RESTAURANT_GEOLOCATION])}km',
                                     style: TextStyle(
                                         fontSize: sizes[2],
                                         color: CustomColor.textSecondaryColor),

@@ -8,6 +8,7 @@ import 'package:bestlocaleats/widgets/bottom_bar.dart';
 import 'package:bestlocaleats/widgets/responsive.dart';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 
 class SearchPage extends StatefulWidget {
@@ -21,6 +22,7 @@ class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
   static List<Map<String, dynamic>> restaurants = [];
   static List<Map<String, dynamic>> results = [];
+
   void _search(String value) {
     results.clear();
     for (var element in restaurants) {
@@ -74,6 +76,13 @@ class _SearchPageState extends State<SearchPage> {
         );
         break;
     }
+  }
+
+  String _getDistance(List<dynamic> geolocation) {
+    double distance = Geolocator.distanceBetween(
+        global.latitude, global.longitude, geolocation[0], geolocation[1]);
+    distance = distance / 1000;
+    return distance.toStringAsFixed(1);
   }
 
   @override
@@ -316,7 +325,7 @@ class _SearchPageState extends State<SearchPage> {
                                 size: sizes[2],
                               ),
                               Text(
-                                '1.2km',
+                                '${_getDistance(item[Constants.RESTAURANT_GEOLOCATION])}km',
                                 style: TextStyle(
                                     fontSize: sizes[2],
                                     color: CustomColor.textSecondaryColor),

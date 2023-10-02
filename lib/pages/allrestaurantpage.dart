@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:geolocator/geolocator.dart';
 
 const minItemHeight = 200.0;
 const maxItemHeight = 350.0;
@@ -76,6 +77,13 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
       },
       onEmpty: () {},
     );
+  }
+
+  String _getDistance(List<dynamic> geolocation) {
+    double distance = Geolocator.distanceBetween(
+        global.latitude, global.longitude, geolocation[0], geolocation[1]);
+    distance = distance / 1000;
+    return distance.toStringAsFixed(1);
   }
 
   @override
@@ -488,7 +496,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                         size: sizes[8],
                       ),
                       Text(
-                        '1.2km',
+                        '${_getDistance(brand[Constants.RESTAURANT_GEOLOCATION])}km',
                         style: TextStyle(
                           fontSize: sizes[9],
                           color: CustomColor.textSecondaryColor,
@@ -697,7 +705,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                                 size: sizes[2],
                               ),
                               Text(
-                                '1.2km',
+                                '${_getDistance(element[Constants.RESTAURANT_GEOLOCATION])}km',
                                 style: TextStyle(
                                     fontSize: sizes[2],
                                     color: CustomColor.textSecondaryColor),

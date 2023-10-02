@@ -37,6 +37,7 @@ class Constants {
   static const String RESTAURANT_BUSINESSNAME = "businessName";
   static const String RESTAURANT_CITY = "city";
   static const String RESTAURANT_EMAIL = "email";
+  static const String RESTAURANT_GEOLOCATION = "geolocation";
   static const String RESTAURANT_PHONE = "phone";
   static const String RESTAURANT_IMAGE = "imageLink";
   static const String RESTAURANT_STATE = "state";

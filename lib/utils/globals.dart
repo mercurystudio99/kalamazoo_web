@@ -22,3 +22,6 @@ String searchCity = "Kalamazoo";
 String searchZip = "";
 String searchPriority = Constants.RESTAURANT_CITY;
 String searchText = "";
+
+double latitude = 0;
+double longitude = 0;
