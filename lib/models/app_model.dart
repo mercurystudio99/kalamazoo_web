@@ -371,6 +371,22 @@ class AppModel extends Model {
     }
   }
 
+  void getCategories({
+    required Function(List<Map<String, dynamic>>) onSuccess,
+    required VoidCallback onEmpty,
+  }) async {
+    final snapshots = await _firestore.collection(Constants.C_CATEGORIES).get();
+    if (snapshots.docs.isEmpty) {
+      onEmpty();
+    } else {
+      List<Map<String, dynamic>> list = [];
+      for (var element in snapshots.docs) {
+        list.add(element.data());
+      }
+      onSuccess(list);
+    }
+  }
+
   void getListByTopMenu({
     required String topMenu,
     // callback functions

@@ -11,6 +11,7 @@ class Constants {
   static const String C_RESTAURANTS = "Restaurants";
   static const String C_AMENITIES = "Amenities";
   static const String C_TOPMENU = "TopMenus";
+  static const String C_CATEGORIES = "Categories";
   static const String C_C_MENU = "Menu";
 
   static const String USER_ID = "user_id";
@@ -55,6 +56,7 @@ class Constants {
   static const String MENU_PRICE = "price";
   static const String MENU_DESCRIPTION = "description";
   static const String MENU_PHOTO = "photoLink";
+  static const String MENU_CATEGORY = "category";
 
   static const String AMENITY_ID = "id";
   static const String AMENITY_NAME = "name";
@@ -64,6 +66,9 @@ class Constants {
   static const String TOPMENU_ID = "id";
   static const String TOPMENU_NAME = "name";
   static const String TOPMENU_IMAGE = "imgName";
+
+  static const String CATEGORY_ID = "id";
+  static const String CATEGORY_NAME = "name";
 
   // images
   static const String imagePath = "assets/images/";

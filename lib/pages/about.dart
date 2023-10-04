@@ -6,7 +6,6 @@ import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/drawer.dart';
 import 'package:bestlocaleats/widgets/bottom_bar.dart';
 import 'package:bestlocaleats/widgets/responsive.dart';
-import 'package:bestlocaleats/widgets/accordion.dart';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -21,8 +20,22 @@ class AboutPage extends StatefulWidget {
 
 class _AboutPageState extends State<AboutPage> {
   late Map<String, dynamic> restaurant = {};
+  late Map<String, dynamic> menu = {};
   late List<Map<String, dynamic>> foods = [];
   late List<Map<String, dynamic>> amenities = [];
+  late List<Map<String, dynamic>> categories = [];
+
+  late String target = '';
+
+  void _getCategories() {
+    AppModel().getCategories(
+      onSuccess: (List<Map<String, dynamic>> param) {
+        categories = param;
+        getMenu();
+      },
+      onEmpty: () {},
+    );
+  }
 
   void _getRestaurant() {
     AppModel().getRestaurantByID(
@@ -36,7 +49,7 @@ class _AboutPageState extends State<AboutPage> {
         id: global.restaurantID,
         onSuccess: (List<Map<String, dynamic>> param) {
           foods = param;
-          setState(() {});
+          _getCategories();
         },
         onError: (String value) {});
   }
@@ -49,6 +62,22 @@ class _AboutPageState extends State<AboutPage> {
       },
       onEmpty: () {},
     );
+  }
+
+  void getMenu() {
+    for (var food in foods) {
+      if (food[Constants.MENU_CATEGORY] == null) continue;
+      if (menu.containsKey(food[Constants.MENU_CATEGORY])) continue;
+      for (var category in categories) {
+        if (food[Constants.MENU_CATEGORY] == category[Constants.CATEGORY_ID]) {
+          menu.addAll({
+            category[Constants.CATEGORY_ID]: category[Constants.CATEGORY_NAME]
+          });
+          break;
+        }
+      }
+    }
+    setState(() {});
   }
 
   @override
@@ -82,51 +111,55 @@ class _AboutPageState extends State<AboutPage> {
     }
 
     List<Widget> leftSideList = [];
-    leftSideList.addAll([
-      Padding(
-          padding: const EdgeInsets.fromLTRB(
-              Constants.mainPadding, 40, Constants.mainPadding, 0),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text(
-                  'Menu',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                Text(
-                  'All ITEMS',
-                  style: TextStyle(
-                      color: CustomColor.textPrimaryColor,
-                      fontWeight: FontWeight.bold),
-                )
-              ])),
-      const Padding(
-        padding: EdgeInsets.all(0),
-        child: Accordion(
-          title: 'Sharin Plates',
-          content: 'Gyoza',
-        ),
-      ),
-      const Padding(
-        padding: EdgeInsets.all(0),
-        child: Accordion(title: 'Grill', content: 'Fried tofu'),
-      ),
-      const Padding(
-        padding: EdgeInsets.all(0),
-        child: Accordion(title: 'Desserts', content: 'House salad'),
-      ),
-      Padding(
-          padding: const EdgeInsets.fromLTRB(
-              Constants.mainPadding, 40, Constants.mainPadding, 0),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text(
-                  'Daily Special',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                )
-              ]))
-    ]);
+    leftSideList.add(Padding(
+        padding: const EdgeInsets.fromLTRB(
+            Constants.mainPadding, 40, Constants.mainPadding, 0),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text(
+                'Menu',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              Text(
+                'All ITEMS',
+                style: TextStyle(
+                    color: CustomColor.textPrimaryColor,
+                    fontWeight: FontWeight.bold),
+              )
+            ])));
+    menu.forEach((key, value) {
+      leftSideList.add(Padding(
+          padding: const EdgeInsets.all(0),
+          child: ListTile(
+            title: Text(
+              value,
+              style: TextStyle(
+                  color: target == key
+                      ? CustomColor.activeColor
+                      : CustomColor.textPrimaryColor,
+                  fontWeight: FontWeight.bold),
+            ),
+            trailing: const Icon(Icons.keyboard_arrow_right),
+            onTap: () {
+              setState(() {
+                target = key;
+              });
+            },
+          )));
+    });
+
+    leftSideList.add(Padding(
+        padding: const EdgeInsets.fromLTRB(
+            Constants.mainPadding, 40, Constants.mainPadding, 0),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text(
+                'Daily Special',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              )
+            ])));
 
     Widget widget = Padding(
         padding: const EdgeInsets.all(10),
@@ -515,163 +548,152 @@ class _AboutPageState extends State<AboutPage> {
       sizes = [14, 12, 10, 100, 8, 3];
     }
 
-    List<Widget> lists = foods.map((item) {
-      return Container(
-        width: cardWidth,
-        margin:
-            const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
-        child: Stack(children: [
-          Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            shadowColor: CustomColor.primaryColor.withOpacity(0.2),
-            elevation: 8,
-            margin: const EdgeInsets.all(4.0),
-            child: Column(
-              children: [
-                Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15),
-                      ),
-                      child: Image.asset(
-                        Constants.IMG_FOOD_BG,
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 50),
-                      alignment: Alignment.center,
-                      child: Container(
-                        width: sizes[3],
-                        height: sizes[3],
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                                width: 2, color: CustomColor.activeColor),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(100))),
-                        child: ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(100)),
-                          child: (item[Constants.MENU_PHOTO] != null)
-                              ? Image.network(
-                                  item[Constants.MENU_PHOTO].toString(),
-                                  fit: BoxFit.cover)
-                              : Image.asset(
-                                  Constants.IMG_SLIDER_HAMBURGER,
-                                  fit: BoxFit.cover,
-                                ),
+    List<Widget> lists = [];
+    for (var item in foods) {
+      if (item[Constants.MENU_CATEGORY] != null &&
+          item[Constants.MENU_CATEGORY] == target) {
+        lists.add(Container(
+          width: cardWidth,
+          margin:
+              const EdgeInsets.symmetric(horizontal: Constants.mainPadding / 2),
+          child: Stack(children: [
+            Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              shadowColor: CustomColor.primaryColor.withOpacity(0.2),
+              elevation: 8,
+              margin: const EdgeInsets.all(4.0),
+              child: Column(
+                children: [
+                  Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15),
+                        ),
+                        child: Image.asset(
+                          Constants.IMG_FOOD_BG,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        (item[Constants.MENU_NAME].toString().length < 18)
-                            ? item[Constants.MENU_NAME].toString()
-                            : '${item[Constants.MENU_NAME].toString().substring(0, 15)}..',
-                        style: TextStyle(
-                            color: CustomColor.primaryColor,
-                            fontSize: sizes[0],
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        '\$${item[Constants.MENU_PRICE]}',
-                        style: TextStyle(
-                            fontSize: sizes[0], fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 20),
-                  child: Text(
-                    item[Constants.MENU_DESCRIPTION] ?? '',
-                    style: TextStyle(
-                        fontSize: sizes[2],
-                        color: CustomColor.textSecondaryColor),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 4, vertical: 1),
-                        decoration: BoxDecoration(
-                          color: CustomColor.activeColor,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Row(
-                          children: [
-                            Text(
-                              '4.5',
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: sizes[1]),
-                            ),
-                            Icon(
-                              Icons.star,
+                        margin: const EdgeInsets.only(top: 50),
+                        alignment: Alignment.center,
+                        child: Container(
+                          width: sizes[3],
+                          height: sizes[3],
+                          decoration: BoxDecoration(
                               color: Colors.white,
-                              size: sizes[1],
-                            )
-                          ],
+                              border: Border.all(
+                                  width: 2, color: CustomColor.activeColor),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(100))),
+                          child: ClipRRect(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(100)),
+                            child: (item[Constants.MENU_PHOTO] != null)
+                                ? Image.network(
+                                    item[Constants.MENU_PHOTO].toString(),
+                                    fit: BoxFit.cover)
+                                : Image.asset(
+                                    Constants.IMG_SLIDER_HAMBURGER,
+                                    fit: BoxFit.cover,
+                                  ),
+                          ),
                         ),
-                      ),
-                      const Spacer(),
-                      Icon(
-                        Icons.location_on,
-                        color: CustomColor.activeColor,
-                        size: sizes[1],
-                      ),
-                      SizedBox(width: sizes[5]),
-                      Text(
-                        '1.2km',
-                        style: TextStyle(
-                            fontSize: sizes[1],
-                            color: CustomColor.textSecondaryColor),
-                      ),
-                      SizedBox(
-                        width: sizes[4],
-                      ),
-                      Icon(
-                        Icons.access_time,
-                        size: sizes[1],
-                        color: CustomColor.textSecondaryColor,
-                      ),
-                      SizedBox(width: sizes[5]),
-                      Text(
-                        '10min',
-                        style: TextStyle(
-                            fontSize: sizes[1],
-                            color: CustomColor.textSecondaryColor),
                       ),
                     ],
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          (item[Constants.MENU_NAME].toString().length < 18)
+                              ? item[Constants.MENU_NAME].toString()
+                              : '${item[Constants.MENU_NAME].toString().substring(0, 15)}..',
+                          style: TextStyle(
+                              color: CustomColor.primaryColor,
+                              fontSize: sizes[0],
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          '\$${item[Constants.MENU_PRICE]}',
+                          style: TextStyle(
+                              fontSize: sizes[0], fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 20),
+                    child: Text(
+                      item[Constants.MENU_DESCRIPTION] ?? '',
+                      style: TextStyle(
+                          fontSize: sizes[2],
+                          color: CustomColor.textSecondaryColor),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4, vertical: 1),
+                          decoration: BoxDecoration(
+                            color: CustomColor.activeColor,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                '4.5',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: sizes[1]),
+                              ),
+                              Icon(
+                                Icons.star,
+                                color: Colors.white,
+                                size: sizes[1],
+                              )
+                            ],
+                          ),
+                        ),
+                        const Spacer(),
+                        Icon(
+                          Icons.access_time,
+                          size: sizes[1],
+                          color: CustomColor.textSecondaryColor,
+                        ),
+                        SizedBox(width: sizes[5]),
+                        Text(
+                          '10min',
+                          style: TextStyle(
+                              fontSize: sizes[1],
+                              color: CustomColor.textSecondaryColor),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const Positioned(
-              right: 15,
-              top: 15,
-              child: Icon(
-                Icons.bookmark,
-                color: CustomColor.activeColor,
-              ))
-        ]),
-      );
-    }).toList();
+            const Positioned(
+                right: 15,
+                top: 15,
+                child: Icon(
+                  Icons.bookmark,
+                  color: CustomColor.activeColor,
+                ))
+          ]),
+        ));
+      }
+    }
 
     List<Widget> rowList = [];
     if (screenSize.width >= 1400) {
