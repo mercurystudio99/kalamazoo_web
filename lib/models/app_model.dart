@@ -490,20 +490,24 @@ class AppModel extends Model {
     required Function(List<Map<String, dynamic>>) onSuccess,
   }) {
     List<Map<String, dynamic>> favourites = [];
-    _firestore
-        .collection(Constants.C_RESTAURANTS)
-        .where(Constants.RESTAURANT_ID, whereIn: globals.userFavourites)
-        .get()
-        .then(
-      (querySnapshot) {
-        if (querySnapshot.docs.isNotEmpty) {
-          for (var docSnapshot in querySnapshot.docs) {
-            favourites.add(docSnapshot.data());
+    if (globals.userFavourites.isNotEmpty) {
+      _firestore
+          .collection(Constants.C_RESTAURANTS)
+          .where(Constants.RESTAURANT_ID, whereIn: globals.userFavourites)
+          .get()
+          .then(
+        (querySnapshot) {
+          if (querySnapshot.docs.isNotEmpty) {
+            for (var docSnapshot in querySnapshot.docs) {
+              favourites.add(docSnapshot.data());
+            }
+            onSuccess(favourites);
           }
-          onSuccess(favourites);
-        }
-      },
-      onError: (e) => debugPrint("Error completing: $e"),
-    );
+        },
+        onError: (e) => debugPrint("Error completing: $e"),
+      );
+    } else {
+      onSuccess(favourites);
+    }
   }
 }
