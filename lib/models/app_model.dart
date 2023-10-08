@@ -465,4 +465,45 @@ class AppModel extends Model {
       onError: (e) => debugPrint("Error completing: $e"),
     );
   }
+
+  void postFavourite({
+    required String restaurantID,
+    // callback functions
+    required VoidCallback onSuccess,
+  }) {
+    if (globals.userFavourites.contains(restaurantID)) {
+      globals.userFavourites.remove(restaurantID);
+    } else {
+      globals.userFavourites.add(restaurantID);
+    }
+
+    _firestore
+        .collection(Constants.C_USERS)
+        .doc(globals.userID)
+        .update({Constants.USER_FAVOURITIES: globals.userFavourites}).then(
+            (value) => onSuccess(),
+            onError: (e) => debugPrint("Error updating document $e"));
+  }
+
+  void getFavourites({
+    // callback functions
+    required Function(List<Map<String, dynamic>>) onSuccess,
+  }) {
+    List<Map<String, dynamic>> favourites = [];
+    _firestore
+        .collection(Constants.C_RESTAURANTS)
+        .where(Constants.RESTAURANT_ID, whereIn: globals.userFavourites)
+        .get()
+        .then(
+      (querySnapshot) {
+        if (querySnapshot.docs.isNotEmpty) {
+          for (var docSnapshot in querySnapshot.docs) {
+            favourites.add(docSnapshot.data());
+          }
+          onSuccess(favourites);
+        }
+      },
+      onError: (e) => debugPrint("Error completing: $e"),
+    );
+  }
 }

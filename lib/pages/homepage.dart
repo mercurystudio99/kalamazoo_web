@@ -827,10 +827,27 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               const Spacer(),
-              const Icon(
-                Icons.bookmark,
-                color: CustomColor.activeColor,
-              ),
+              IconButton(
+                  onPressed: () {
+                    if (global.userID.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Please log in.')),
+                      );
+                    } else {
+                      AppModel().postFavourite(
+                          restaurantID: brand[Constants.RESTAURANT_ID],
+                          onSuccess: () {
+                            setState(() {});
+                          });
+                    }
+                  },
+                  icon: Icon(
+                    global.userFavourites
+                            .contains(brand[Constants.RESTAURANT_ID])
+                        ? Icons.bookmark
+                        : Icons.bookmark_outline,
+                    color: CustomColor.activeColor,
+                  ))
             ],
           ),
         ));
@@ -1154,13 +1171,30 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              const Positioned(
+              Positioned(
                   right: 10,
                   top: 10,
-                  child: Icon(
-                    Icons.bookmark_outline,
-                    color: CustomColor.activeColor,
-                  ))
+                  child: IconButton(
+                      onPressed: () {
+                        if (global.userID.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Please log in.')),
+                          );
+                        } else {
+                          AppModel().postFavourite(
+                              restaurantID: element[Constants.RESTAURANT_ID],
+                              onSuccess: () {
+                                setState(() {});
+                              });
+                        }
+                      },
+                      icon: Icon(
+                        global.userFavourites
+                                .contains(element[Constants.RESTAURANT_ID])
+                            ? Icons.bookmark
+                            : Icons.bookmark_outline,
+                        color: CustomColor.activeColor,
+                      )))
             ]),
           ));
       widgetList.add(widget);
@@ -1378,13 +1412,30 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-                const Positioned(
+                Positioned(
                     right: 10,
                     top: 10,
-                    child: Icon(
-                      Icons.bookmark,
-                      color: CustomColor.activeColor,
-                    ))
+                    child: IconButton(
+                        onPressed: () {
+                          if (global.userID.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Please log in.')),
+                            );
+                          } else {
+                            AppModel().postFavourite(
+                                restaurantID: element[Constants.RESTAURANT_ID],
+                                onSuccess: () {
+                                  setState(() {});
+                                });
+                          }
+                        },
+                        icon: Icon(
+                          global.userFavourites
+                                  .contains(element[Constants.RESTAURANT_ID])
+                              ? Icons.bookmark
+                              : Icons.bookmark_outline,
+                          color: CustomColor.activeColor,
+                        )))
               ]),
             ));
         widgetList.add(widget);

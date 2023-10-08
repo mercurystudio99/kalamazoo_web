@@ -355,13 +355,30 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
           ),
-          const Positioned(
+          Positioned(
               right: 10,
               top: 10,
-              child: Icon(
-                Icons.bookmark,
-                color: CustomColor.activeColor,
-              ))
+              child: IconButton(
+                  onPressed: () {
+                    if (global.userID.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Please log in.')),
+                      );
+                    } else {
+                      AppModel().postFavourite(
+                          restaurantID: item[Constants.RESTAURANT_ID],
+                          onSuccess: () {
+                            setState(() {});
+                          });
+                    }
+                  },
+                  icon: Icon(
+                    global.userFavourites
+                            .contains(item[Constants.RESTAURANT_ID])
+                        ? Icons.bookmark
+                        : Icons.bookmark_outline,
+                    color: CustomColor.activeColor,
+                  )))
         ]),
       );
     }).toList();
