@@ -933,9 +933,40 @@ class _Profile2PageState extends State<Profile2Page> {
                                         shadowColor: CustomColor.primaryColor
                                             .withOpacity(0.5),
                                         padding: const EdgeInsets.all(5)),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      context.go('/subscription');
+                                    },
                                     child: const Text(
                                       'PROMOTE YOUR BUSINESS',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0,
+                                          letterSpacing: 1),
+                                    ),
+                                  )),
+                            ),
+                            const SizedBox(height: 20),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: formPadding),
+                              child: SizedBox(
+                                  height: 40,
+                                  width: screenSize.width,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            CustomColor.primaryColor,
+                                        elevation: 3,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(4)),
+                                        shadowColor: CustomColor.primaryColor
+                                            .withOpacity(0.5),
+                                        padding: const EdgeInsets.all(5)),
+                                    onPressed: () {},
+                                    child: const Text(
+                                      'UPLOAD DAILY SPECIAL',
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -1592,9 +1623,38 @@ class _Profile2PageState extends State<Profile2Page> {
                               shadowColor:
                                   CustomColor.primaryColor.withOpacity(0.5),
                               padding: const EdgeInsets.all(5)),
-                          onPressed: () {},
+                          onPressed: () {
+                            context.go('/subscription');
+                          },
                           child: const Text(
                             'PROMOTE YOUR BUSINESS',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0,
+                                letterSpacing: 1),
+                          ),
+                        )),
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: Constants.mainPadding * 2),
+                    child: SizedBox(
+                        height: 40,
+                        width: screenSize.width,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: CustomColor.primaryColor,
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4)),
+                              shadowColor:
+                                  CustomColor.primaryColor.withOpacity(0.5),
+                              padding: const EdgeInsets.all(5)),
+                          onPressed: () {},
+                          child: const Text(
+                            'UPLOAD DAILY SPECIAL',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,

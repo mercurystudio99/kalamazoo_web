@@ -48,6 +48,7 @@ class AppModel extends Model {
               globals.userEmail = email;
               globals.userID = docSnapshot.id;
               globals.userName = docSnapshot.data()[Constants.USER_FULLNAME];
+              globals.userRole = docSnapshot.data()[Constants.USER_ROLE];
               if (docSnapshot.data()[Constants.USER_PROFILE_PHOTO] != null) {
                 globals.userAvatar =
                     docSnapshot.data()[Constants.USER_PROFILE_PHOTO];
@@ -359,7 +360,10 @@ class AppModel extends Model {
     required Function(List<Map<String, dynamic>>) onSuccess,
     required VoidCallback onEmpty,
   }) async {
-    final snapshots = await _firestore.collection(Constants.C_TOPMENU).get();
+    final snapshots = await _firestore
+        .collection(Constants.C_TOPMENU)
+        .orderBy(Constants.TOPMENU_NAME)
+        .get();
     if (snapshots.docs.isEmpty) {
       onEmpty();
     } else {

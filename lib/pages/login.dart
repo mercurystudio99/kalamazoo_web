@@ -2,6 +2,7 @@ import 'package:bestlocaleats/models/app_model.dart';
 import 'package:bestlocaleats/utils/constants.dart';
 import 'package:bestlocaleats/utils/colors.dart';
 import 'package:bestlocaleats/utils/authentication.dart';
+import 'package:bestlocaleats/utils/globals.dart' as global;
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/responsive.dart';
 
@@ -267,8 +268,12 @@ class _LoginPageState extends State<LoginPage> {
                                             password:
                                                 _passController.text.trim(),
                                             onSuccess: () {
-                                              // Go to Home
-                                              context.go('/');
+                                              if (global.userRole ==
+                                                  Constants.customer) {
+                                                context.go('/');
+                                              } else {
+                                                context.go('/about');
+                                              }
                                             },
                                             onError: (String text) {
                                               // Show error message
