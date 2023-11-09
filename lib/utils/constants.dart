@@ -31,6 +31,9 @@ class Constants {
   static const String USER_IS_VERIFIED = "user_is_verified";
   static const String USER_REG_DATE = "user_reg_date";
   static const String USER_LAST_LOGIN = "user_last_login";
+  static const String USER_SUBSCRIPTION_DATE = "user_subscription_date";
+  static const String USER_SUBSCRIPTION_COUNT = "user_subscription_count";
+  static const String USER_SUBSCRIPTION_TYPE = "user_subscription_type";
 
   static const String RESTAURANT_ID = "id";
   static const String RESTAURANT_ADDRESS = "address";

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'firebase_options.dart';
 
 import 'package:bestlocaleats/pages/homepage.dart';
@@ -27,6 +28,7 @@ import 'package:bestlocaleats/pages/policy.dart';
 import 'package:bestlocaleats/pages/error.dart';
 
 import 'package:bestlocaleats/utils/colors.dart';
+import 'package:bestlocaleats/key.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +36,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   setPathUrlStrategy();
+  Stripe.publishableKey = stripePublishableKey;
   runApp(const MyApp());
 }
 

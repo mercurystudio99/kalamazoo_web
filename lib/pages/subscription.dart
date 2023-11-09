@@ -5,9 +5,16 @@ import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/responsive.dart';
 import 'package:bestlocaleats/widgets/drawer.dart';
 import 'package:bestlocaleats/widgets/bottom_bar.dart';
+import 'package:bestlocaleats/models/app_model.dart';
+import 'package:bestlocaleats/key.dart';
 
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:flutter_stripe_web/flutter_stripe_web.dart';
+import 'package:http/http.dart' as http;
 
 class SubscriptionPage extends StatefulWidget {
   const SubscriptionPage({super.key});
@@ -26,6 +33,10 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   ];
 
   List<bool> selectIndex = [false, false, false, false, false];
+  List<int> money = [0, 100, 250, 500, 1000];
+  List<int> count = [0, 1, 4, 10, 1];
+  List<String> type = ['', 'each', 'month', 'month', 'day'];
+  Map<String, dynamic>? paymentIntentData;
 
   @override
   void initState() {
@@ -386,17 +397,18 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                       CustomColor.primaryColor.withOpacity(0.5),
                                   padding: const EdgeInsets.all(5)),
                               onPressed: () {
-                                bool subscripted = false;
+                                int index = 0;
                                 for (var i = 0; i < selectIndex.length; i++) {
                                   if (selectIndex[i]) {
-                                    subscripted = true;
+                                    index = i;
                                   }
                                 }
-                                if (subscripted) {
+                                if (index > 0) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                         content: Text('Processing Data')),
                                   );
+                                  makePayment(index);
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
@@ -750,16 +762,17 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                         shadowColor: CustomColor.primaryColor.withOpacity(0.5),
                         padding: const EdgeInsets.all(5)),
                     onPressed: () {
-                      bool subscripted = false;
+                      int index = 0;
                       for (var i = 0; i < selectIndex.length; i++) {
                         if (selectIndex[i]) {
-                          subscripted = true;
+                          index = i;
                         }
                       }
-                      if (subscripted) {
+                      if (index > 0) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Processing Data')),
                         );
+                        makePayment(index);
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -784,5 +797,140 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
         ),
       ),
     );
+  }
+
+  void _setSubscription(int index) {
+    AppModel().postSubscription(
+      count: count[index],
+      type: type[index],
+      onSuccess: () {
+        debugPrint('success!!!');
+      },
+      onError: (err) {},
+    );
+  }
+
+  payFee() {
+    try {
+      //if you want to upload data to any database do it here
+    } catch (e) {
+      // exception while uploading data
+    }
+  }
+
+  Future<void> makePayment(int index) async {
+    int cost = money[index];
+    try {
+      paymentIntentData = await createPaymentIntent(
+          cost.toString(), 'USD'); //json.decode(response.body);
+      debugPrint("$paymentIntentData");
+      // await Stripe.instance
+      //     .initPaymentSheet(
+      //         paymentSheetParameters: SetupPaymentSheetParameters(
+      //             paymentIntentClientSecret:
+      //                 paymentIntentData!['client_secret'],
+      //             style: ThemeMode.dark,
+      //             merchantDisplayName: 'ANNIE'))
+      //     .then((value) {
+      //   debugPrint('===>>> $value');
+      // });
+      // await WebStripe.instance.confirmPayment(
+      //   paymentIntentData!['client_secret'],
+      //   PaymentMethodParams.card(
+      //     paymentMethodData: PaymentMethodData(
+      //       billingDetails: BillingDetails.fromJson({
+      //         'name': 'volunteer',
+      //         'phone': '123456789',
+      //       }),
+      //     ),
+      //   ),
+      //   const PaymentMethodOptions(
+      //     setupFutureUsage: PaymentIntentsFutureUsage.OffSession,
+      //   ),
+      // );
+      // displayPaymentSheet(index);
+      // await confirmPaymentIntent(paymentIntentData!); //json.decode(response.body);
+    } catch (e, s) {
+      if (kDebugMode) {
+        debugPrint('$s');
+      }
+    }
+  }
+
+  displayPaymentSheet(int index) async {
+    try {
+      await Stripe.instance.presentPaymentSheet().then((newValue) {
+        debugPrint('????');
+        payFee();
+        _setSubscription(index);
+        paymentIntentData = null;
+      }).onError((error, stackTrace) {
+        if (kDebugMode) {
+          debugPrint('Exception/DISPLAYPAYMENTSHEET==> $error $stackTrace');
+        }
+      });
+    } on StripeException catch (e) {
+      if (kDebugMode) {
+        debugPrint('$e');
+      }
+      showDialog(
+          context: context,
+          builder: (_) => const AlertDialog(
+                content: Text("Cancelled "),
+              ));
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('$e');
+      }
+    }
+  }
+
+  createPaymentIntent(String amount, String currency) async {
+    try {
+      Map<String, dynamic> body = {
+        'amount': calculateAmount(amount),
+        'currency': currency,
+        'payment_method_types[]': 'card'
+      };
+      var response = await http.post(
+          Uri.parse('https://api.stripe.com/v1/payment_intents'),
+          body: body,
+          headers: {
+            'Authorization': 'Bearer $stripeSecretKey',
+            'Content-Type': 'application/x-www-form-urlencoded'
+          });
+      return jsonDecode(response.body);
+    } catch (err) {
+      if (kDebugMode) {
+        debugPrint('err charging user: ${err.toString()}');
+      }
+    }
+  }
+
+  confirmPaymentIntent(Map<String, dynamic> data) async {
+    try {
+      Map<String, dynamic> body = {
+        'amount': calculateAmount('10'),
+        'currency': 'USD',
+        'payment_method_types[]': 'card'
+      };
+      var response = await http.post(
+          Uri.parse('https://api.stripe.com/v1/payment_intents'),
+          body: body,
+          headers: {
+            'Authorization': 'Bearer $stripeSecretKey',
+            'Content-Type': 'application/x-www-form-urlencoded'
+          });
+      return jsonDecode(response.body);
+    } catch (err) {
+      if (kDebugMode) {
+        debugPrint('err charging user: ${err.toString()}');
+      }
+    }
+  }
+
+  calculateAmount(String amount) {
+    final a = (int.parse(amount)) * 100;
+    return a.toString();
   }
 }

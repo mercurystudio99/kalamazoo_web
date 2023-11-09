@@ -514,4 +514,19 @@ class AppModel extends Model {
       onSuccess(favourites);
     }
   }
+
+  void postSubscription({
+    required int count,
+    required String type,
+    // callback functions
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) {
+    _firestore.collection(Constants.C_USERS).doc(globals.userID).update({
+      Constants.USER_SUBSCRIPTION_DATE: DateTime.now(),
+      Constants.USER_SUBSCRIPTION_COUNT: count,
+      Constants.USER_SUBSCRIPTION_TYPE: type,
+    }).then((value) => onSuccess(),
+        onError: (e) => debugPrint("Error updating document $e"));
+  }
 }
