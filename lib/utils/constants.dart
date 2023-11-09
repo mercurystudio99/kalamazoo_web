@@ -1,6 +1,19 @@
 // ignore_for_file: constant_identifier_names
 
 class Constants {
+  static const int startHour = 8;
+  static const int startMinute = 0;
+  static const int endHour = 21;
+  static const int endMinute = 0;
+
+  static const String monday = "Monday";
+  static const String tuesday = "Tuesday";
+  static const String wednesday = "Wednesday";
+  static const String thursday = "Thursday";
+  static const String friday = "Friday";
+  static const String saturday = "Saturday";
+  static const String sunday = "Sunday";
+
   static const String logo = "BESTLOCALEATS";
   static const double mainPadding = 32;
   static const String owner = "owner";
@@ -9,9 +22,13 @@ class Constants {
   static const String C_APPINFO = "AppInfo";
   static const String C_USERS = "Users";
   static const String C_RESTAURANTS = "Restaurants";
+  static const String C_WINERIES = "Wineries";
+  static const String C_BREWERIES = "Breweries";
   static const String C_AMENITIES = "Amenities";
   static const String C_TOPMENU = "TopMenus";
   static const String C_CATEGORIES = "Categories";
+  static const String C_DAILYSPECIAL = "DailySpecial";
+  static const String C_EVENTS = "Events";
   static const String C_C_MENU = "Menu";
 
   static const String USER_ID = "user_id";
@@ -26,14 +43,18 @@ class Constants {
   static const String USER_PASS = "user_pass";
   static const String USER_LOCATION = "user_location";
   static const String USER_FAVOURITIES = "user_favourites";
+  static const String USER_AMENITIES = "user_amenities";
   static const String USER_ROLE = "user_role";
   static const String USER_STATUS = "user_status";
   static const String USER_IS_VERIFIED = "user_is_verified";
   static const String USER_REG_DATE = "user_reg_date";
   static const String USER_LAST_LOGIN = "user_last_login";
+  static const String USER_RESTAURANT_ID = "user_restaurant_id";
+  static const String USER_RESTAURANT_SERVICE = "user_restaurant_service";
   static const String USER_SUBSCRIPTION_DATE = "user_subscription_date";
   static const String USER_SUBSCRIPTION_COUNT = "user_subscription_count";
   static const String USER_SUBSCRIPTION_TYPE = "user_subscription_type";
+  static const String USER_FCM_TOKEN = "user_fcm_token";
 
   static const String RESTAURANT_ID = "id";
   static const String RESTAURANT_ADDRESS = "address";
@@ -48,7 +69,13 @@ class Constants {
   static const String RESTAURANT_URL = "url";
   static const String RESTAURANT_ZIP = "zip";
   static const String RESTAURANT_RATING = "rating";
-  static const String RESTAURANT_HOURS = "hours";
+  static const String RESTAURANT_SCHEDULE = "schedule";
+  static const String RESTAURANT_SCHEDULE_DAY = "day";
+  static const String RESTAURANT_SCHEDULE_STARTHOUR = "startHour";
+  static const String RESTAURANT_SCHEDULE_STARTMINUTE = "startMinute";
+  static const String RESTAURANT_SCHEDULE_ENDHOUR = "endHour";
+  static const String RESTAURANT_SCHEDULE_ENDMINUTE = "endMinute";
+  static const String RESTAURANT_SCHEDULE_ISWORKINGDAY = "isWorkingDay";
   static const String RESTAURANT_AMENITIES = "amenities";
   static const String RESTAURANT_DISCOUNT = "discount";
   static const String RESTAURANT_MINCOST = "mincost";
@@ -72,6 +99,21 @@ class Constants {
 
   static const String CATEGORY_ID = "id";
   static const String CATEGORY_NAME = "name";
+
+  static const String DAILYSPECIAL_ID = "id";
+  static const String DAILYSPECIAL_IMAGE_LINK = "image_link";
+  static const String DAILYSPECIAL_DESC = "description";
+  static const String DAILYSPECIAL_ACTIVE = "active";
+  static const String DAILYSPECIAL_BUSINESS_ID = "business_id";
+  static const String DAILYSPECIAL_BUSINESS_TYPE = "business_type";
+
+  static const String EVENT_ID = "id";
+  static const String EVENT_TITLE = "title";
+  static const String EVENT_DESC = "description";
+  static const String EVENT_YEAR = "year";
+  static const String EVENT_MONTH = "month";
+  static const String EVENT_DATE = "date";
+  static const String EVENT_MILLISECONDS = "milliseconds";
 
   // images
   static const String imagePath = "assets/images/";
