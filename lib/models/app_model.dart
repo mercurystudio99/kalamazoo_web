@@ -57,6 +57,13 @@ class AppModel extends Model {
                 globals.userFavourites =
                     docSnapshot.data()[Constants.USER_FAVOURITIES];
               }
+              if (docSnapshot.data()[Constants.USER_RESTAURANT_ID] != null &&
+                  docSnapshot.data()[Constants.USER_RESTAURANT_ID].isNotEmpty) {
+                globals.restaurantID =
+                    docSnapshot.data()[Constants.USER_RESTAURANT_ID];
+                globals.ownerBusinessID =
+                    docSnapshot.data()[Constants.USER_RESTAURANT_ID];
+              }
               onSuccess();
             } else {
               onError('Wrong password provided for that user.');
@@ -439,7 +446,7 @@ class AppModel extends Model {
     required Function(Map<String, dynamic>?) onSuccess,
     required Function(String) onError,
   }) {
-    _firestore.collection(Constants.C_RESTAURANTS).doc(id).get().then(
+    _firestore.collection(globals.restaurantType).doc(id).get().then(
       (querySnapshot) {
         onSuccess(querySnapshot.data());
       },
