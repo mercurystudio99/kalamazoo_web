@@ -1,6 +1,7 @@
 import 'package:bestlocaleats/models/app_model.dart';
 import 'package:bestlocaleats/utils/constants.dart';
 import 'package:bestlocaleats/utils/colors.dart';
+import 'package:bestlocaleats/utils/globals.dart' as global;
 import 'package:bestlocaleats/widgets/top_bar.dart';
 import 'package:bestlocaleats/widgets/responsive.dart';
 
@@ -33,11 +34,12 @@ class _RegisterPageState extends State<RegisterPage> {
   late final Map<String, dynamic> _isCheckedAmenities = {};
 
   bool _obscureText = true;
-  bool _isChecked = false;
+  bool _isCheckedPolicy = false;
+  bool _checkConfirmPolicy = false;
   bool _showDaysHours = false;
   bool _showAmenities = false;
   String _checkBusiness = '';
-  final bool _checkConfirmBusiness = false;
+  bool _checkConfirmBusiness = false;
 
   TimePickerEntryMode entryMode = TimePickerEntryMode.dial;
   TextDirection textDirection = TextDirection.ltr;
@@ -108,7 +110,10 @@ class _RegisterPageState extends State<RegisterPage> {
       onSuccess: (List<Map<String, dynamic>> param) {
         amenities = param;
         for (var element in amenities) {
-          _isCheckedAmenities[element[Constants.AMENITY_ID]] = false;
+          _isCheckedAmenities[element[Constants.AMENITY_ID]] =
+              (global.ownerAmenities.contains(element[Constants.AMENITY_ID]))
+                  ? true
+                  : false;
         }
         setState(() {});
       },
@@ -124,6 +129,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   void dispose() {
+    global.ownerAmenities.clear();
     super.dispose();
   }
 
@@ -1113,17 +1119,21 @@ class _RegisterPageState extends State<RegisterPage> {
                                               (Set<MaterialState> states) {
                                         if (states
                                             .contains(MaterialState.disabled)) {
-                                          return Colors.black;
+                                          return (_checkConfirmPolicy
+                                              ? CustomColor.activeColor
+                                              : Colors.black.withOpacity(.32));
                                         }
-                                        return Colors.black;
+                                        return (_checkConfirmPolicy
+                                            ? CustomColor.activeColor
+                                            : Colors.black.withOpacity(.32));
                                       }),
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(3)),
-                                      value: _isChecked,
+                                      value: _isCheckedPolicy,
                                       onChanged: (bool? value) {
                                         setState(() {
-                                          _isChecked = value!;
+                                          _isCheckedPolicy = value!;
                                         });
                                       },
                                     ),
@@ -1190,11 +1200,98 @@ class _RegisterPageState extends State<RegisterPage> {
                                             .withOpacity(0.5),
                                         padding: const EdgeInsets.all(5)),
                                     onPressed: () {
+                                      _checkConfirmBusiness = true;
+                                      if (_checkBusiness.isNotEmpty) {
+                                        _checkConfirmBusiness = false;
+                                      }
+
+                                      if (_isCheckedPolicy) {
+                                        _checkConfirmPolicy = false;
+                                        setState(() {});
+                                      } else {
+                                        _checkConfirmPolicy = true;
+                                        setState(() {});
+                                      }
+                                      // Validate returns true if the form is valid, or false otherwise.
                                       if (_formKey.currentState!.validate()) {
+                                        if (_checkConfirmBusiness) return;
+                                        if (_checkConfirmPolicy) return;
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
-                                          const SnackBar(content: Text('OK')),
+                                          const SnackBar(
+                                              content: Text('Processing Data')),
                                         );
+                                        // sign up
+                                        AppModel().userExist(
+                                            email: _emailController.text.trim(),
+                                            onSuccess: () {
+                                              // Show error message
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                    content: Text(
+                                                        'The account already exists for that email.')),
+                                              );
+                                            },
+                                            onError: (String text) {
+                                              AppModel().registerRestaurant(
+                                                  email: _emailController.text
+                                                      .trim(),
+                                                  businessname:
+                                                      _businessController.text
+                                                          .trim(),
+                                                  address: _addressController
+                                                      .text
+                                                      .trim(),
+                                                  phone: _phoneController.text
+                                                      .trim(),
+                                                  businessservice:
+                                                      _checkBusiness,
+                                                  city: 'Kalamazoo',
+                                                  state: 'MI',
+                                                  zip: '49001',
+                                                  schedule: schedule,
+                                                  onSuccess: (String id) {
+                                                    AppModel().ownerSignUp(
+                                                        restaurantId: id,
+                                                        restaurantService:
+                                                            _checkBusiness,
+                                                        name: _nameController
+                                                            .text
+                                                            .trim(),
+                                                        email: _emailController
+                                                            .text
+                                                            .trim(),
+                                                        password:
+                                                            _passController.text
+                                                                .trim(),
+                                                        businessname:
+                                                            _businessController
+                                                                .text
+                                                                .trim(),
+                                                        address:
+                                                            _addressController
+                                                                .text
+                                                                .trim(),
+                                                        phone: _phoneController
+                                                            .text
+                                                            .trim(),
+                                                        onSuccess: () {
+                                                          // setFCMToken();
+                                                          context.go('/about');
+                                                        },
+                                                        onError: (String text) {
+                                                          // Show error message
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            SnackBar(
+                                                                content:
+                                                                    Text(text)),
+                                                          );
+                                                        });
+                                                  });
+                                            });
                                       }
                                     },
                                     child: const Text(
@@ -1965,16 +2062,20 @@ class _RegisterPageState extends State<RegisterPage> {
                                   MaterialStateProperty.resolveWith<Color>(
                                       (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.disabled)) {
-                                  return Colors.black;
+                                  return (_checkConfirmPolicy
+                                      ? CustomColor.activeColor
+                                      : Colors.black.withOpacity(.32));
                                 }
-                                return Colors.black;
+                                return (_checkConfirmPolicy
+                                    ? CustomColor.activeColor
+                                    : Colors.black.withOpacity(.32));
                               }),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(3)),
-                              value: _isChecked,
+                              value: _isCheckedPolicy,
                               onChanged: (bool? value) {
                                 setState(() {
-                                  _isChecked = value!;
+                                  _isCheckedPolicy = value!;
                                 });
                               },
                             ),
@@ -2034,10 +2135,83 @@ class _RegisterPageState extends State<RegisterPage> {
                                     CustomColor.primaryColor.withOpacity(0.5),
                                 padding: const EdgeInsets.all(5)),
                             onPressed: () {
+                              _checkConfirmBusiness = true;
+                              if (_checkBusiness.isNotEmpty) {
+                                _checkConfirmBusiness = false;
+                              }
+
+                              if (_isCheckedPolicy) {
+                                _checkConfirmPolicy = false;
+                                setState(() {});
+                              } else {
+                                _checkConfirmPolicy = true;
+                                setState(() {});
+                              }
+                              // Validate returns true if the form is valid, or false otherwise.
                               if (_formKey.currentState!.validate()) {
+                                if (_checkConfirmBusiness) return;
+                                if (_checkConfirmPolicy) return;
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('OK')),
+                                  const SnackBar(
+                                      content: Text('Processing Data')),
                                 );
+                                // sign up
+                                AppModel().userExist(
+                                    email: _emailController.text.trim(),
+                                    onSuccess: () {
+                                      // Show error message
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                'The account already exists for that email.')),
+                                      );
+                                    },
+                                    onError: (String text) {
+                                      AppModel().registerRestaurant(
+                                          email: _emailController.text.trim(),
+                                          businessname:
+                                              _businessController.text.trim(),
+                                          address:
+                                              _addressController.text.trim(),
+                                          phone: _phoneController.text.trim(),
+                                          businessservice: _checkBusiness,
+                                          city: 'Kalamazoo',
+                                          state: 'MI',
+                                          zip: '49001',
+                                          schedule: schedule,
+                                          onSuccess: (String id) {
+                                            AppModel().ownerSignUp(
+                                                restaurantId: id,
+                                                restaurantService:
+                                                    _checkBusiness,
+                                                name:
+                                                    _nameController.text.trim(),
+                                                email: _emailController.text
+                                                    .trim(),
+                                                password:
+                                                    _passController.text.trim(),
+                                                businessname:
+                                                    _businessController.text
+                                                        .trim(),
+                                                address: _addressController.text
+                                                    .trim(),
+                                                phone: _phoneController.text
+                                                    .trim(),
+                                                onSuccess: () {
+                                                  // setFCMToken();
+                                                  context.go('/about');
+                                                },
+                                                onError: (String text) {
+                                                  // Show error message
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                        content: Text(text)),
+                                                  );
+                                                });
+                                          });
+                                    });
                               }
                             },
                             child: const Text(
@@ -2182,6 +2356,13 @@ class _RegisterPageState extends State<RegisterPage> {
                           value:
                               _isCheckedAmenities[item[Constants.AMENITY_ID]],
                           onChanged: (bool? value) {
+                            if (value == true) {
+                              global.ownerAmenities
+                                  .add(item[Constants.AMENITY_ID]);
+                            } else {
+                              global.ownerAmenities
+                                  .remove(item[Constants.AMENITY_ID]);
+                            }
                             setState(() {
                               _isCheckedAmenities[item[Constants.AMENITY_ID]] =
                                   value!;

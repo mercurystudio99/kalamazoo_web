@@ -34,6 +34,7 @@ class Constants {
   static const String USER_ID = "user_id";
   static const String USER_PROFILE_PHOTO = "user_photo_link";
   static const String USER_FULLNAME = "user_fullname";
+  static const String USER_BUSINESSNAME = "user_businessname";
   static const String USER_GENDER = "user_gender";
   static const String USER_BIRTH_DAY = "user_birth_day";
   static const String USER_BIRTH_MONTH = "user_birth_month";

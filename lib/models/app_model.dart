@@ -78,7 +78,7 @@ class AppModel extends Model {
     );
   }
 
-  // user sign up method
+  // customer sign up method
   void userSignUp({
     required String name,
     required String email,
@@ -102,6 +102,43 @@ class AppModel extends Model {
       globals.userName = name;
       onSuccess();
     });
+  }
+
+  // owner sign up method
+  void ownerSignUp({
+    required String restaurantId,
+    required String restaurantService,
+    required String name,
+    required String email,
+    required String password,
+    required String businessname,
+    required String address,
+    required String phone,
+    // callback functions
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) async {
+    final docRef = _firestore.collection(Constants.C_USERS).doc();
+    await docRef.set({
+      Constants.USER_ID: docRef.id,
+      Constants.USER_RESTAURANT_ID: restaurantId,
+      Constants.USER_RESTAURANT_SERVICE: restaurantService,
+      Constants.USER_FULLNAME: name,
+      Constants.USER_EMAIL: email,
+      Constants.USER_PASS: password,
+      Constants.USER_BUSINESSNAME: businessname,
+      Constants.USER_LOCATION: address,
+      Constants.USER_PHONE_NUMBER: phone,
+      Constants.USER_ROLE: globals.userRole,
+      Constants.USER_FAVOURITIES: [],
+      Constants.USER_AMENITIES: globals.ownerAmenities
+    });
+    globals.userEmail = email;
+    globals.userID = docRef.id;
+    globals.restaurantID = restaurantId;
+    globals.ownerBusinessID = restaurantId;
+    globals.restaurantType = restaurantService;
+    onSuccess();
   }
 
   // user exist method
@@ -475,6 +512,42 @@ class AppModel extends Model {
       },
       onError: (e) => debugPrint("Error completing: $e"),
     );
+  }
+
+  void registerRestaurant({
+    required String email,
+    required String businessname,
+    required String address,
+    required String phone,
+    required String businessservice,
+    required String city,
+    required String state,
+    required String zip,
+    required List<Map<String, dynamic>> schedule,
+    // callback functions
+    required Function(String) onSuccess,
+  }) async {
+    if (businessservice == Constants.C_RESTAURANTS ||
+        businessservice == Constants.C_WINERIES ||
+        businessservice == Constants.C_BREWERIES) {
+      final docRef = _firestore.collection(businessservice).doc();
+      await docRef.set({
+        Constants.RESTAURANT_ID: docRef.id,
+        Constants.RESTAURANT_ADDRESS: address,
+        Constants.RESTAURANT_AMENITIES: globals.ownerAmenities,
+        Constants.RESTAURANT_BUSINESSNAME: businessname,
+        Constants.RESTAURANT_CATEGORY: '',
+        Constants.RESTAURANT_CITY: city,
+        Constants.RESTAURANT_EMAIL: email,
+        Constants.RESTAURANT_GEOLOCATION: [0, 0],
+        Constants.RESTAURANT_PHONE: phone,
+        Constants.RESTAURANT_STATE: state,
+        Constants.RESTAURANT_URL: '',
+        Constants.RESTAURANT_ZIP: zip,
+        Constants.RESTAURANT_SCHEDULE: schedule,
+      });
+      onSuccess(docRef.id);
+    }
   }
 
   void postFavourite({
