@@ -36,13 +36,71 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _isChecked = false;
   bool _showDaysHours = false;
   bool _showAmenities = false;
+  String _checkBusiness = '';
   final bool _checkConfirmBusiness = false;
-  final List<bool> _isCheckedBusiness = <bool>[
-    false,
-    false,
-    false,
-    false,
-    false
+
+  TimePickerEntryMode entryMode = TimePickerEntryMode.dial;
+  TextDirection textDirection = TextDirection.ltr;
+  MaterialTapTargetSize tapTargetSize = MaterialTapTargetSize.padded;
+  bool use24HourTime = false;
+
+  List<Map<String, dynamic>> schedule = [
+    {
+      Constants.RESTAURANT_SCHEDULE_DAY: Constants.tuesday,
+      Constants.RESTAURANT_SCHEDULE_STARTHOUR: Constants.startHour,
+      Constants.RESTAURANT_SCHEDULE_STARTMINUTE: Constants.startMinute,
+      Constants.RESTAURANT_SCHEDULE_ENDHOUR: Constants.endHour,
+      Constants.RESTAURANT_SCHEDULE_ENDMINUTE: Constants.endMinute,
+      Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY: false
+    },
+    {
+      Constants.RESTAURANT_SCHEDULE_DAY: Constants.wednesday,
+      Constants.RESTAURANT_SCHEDULE_STARTHOUR: Constants.startHour,
+      Constants.RESTAURANT_SCHEDULE_STARTMINUTE: Constants.startMinute,
+      Constants.RESTAURANT_SCHEDULE_ENDHOUR: Constants.endHour,
+      Constants.RESTAURANT_SCHEDULE_ENDMINUTE: Constants.endMinute,
+      Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY: true
+    },
+    {
+      Constants.RESTAURANT_SCHEDULE_DAY: Constants.thursday,
+      Constants.RESTAURANT_SCHEDULE_STARTHOUR: Constants.startHour,
+      Constants.RESTAURANT_SCHEDULE_STARTMINUTE: Constants.startMinute,
+      Constants.RESTAURANT_SCHEDULE_ENDHOUR: Constants.endHour,
+      Constants.RESTAURANT_SCHEDULE_ENDMINUTE: Constants.endMinute,
+      Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY: true
+    },
+    {
+      Constants.RESTAURANT_SCHEDULE_DAY: Constants.friday,
+      Constants.RESTAURANT_SCHEDULE_STARTHOUR: Constants.startHour,
+      Constants.RESTAURANT_SCHEDULE_STARTMINUTE: Constants.startMinute,
+      Constants.RESTAURANT_SCHEDULE_ENDHOUR: Constants.endHour,
+      Constants.RESTAURANT_SCHEDULE_ENDMINUTE: Constants.endMinute,
+      Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY: true
+    },
+    {
+      Constants.RESTAURANT_SCHEDULE_DAY: Constants.saturday,
+      Constants.RESTAURANT_SCHEDULE_STARTHOUR: Constants.startHour,
+      Constants.RESTAURANT_SCHEDULE_STARTMINUTE: Constants.startMinute,
+      Constants.RESTAURANT_SCHEDULE_ENDHOUR: Constants.endHour,
+      Constants.RESTAURANT_SCHEDULE_ENDMINUTE: Constants.endMinute,
+      Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY: true
+    },
+    {
+      Constants.RESTAURANT_SCHEDULE_DAY: Constants.sunday,
+      Constants.RESTAURANT_SCHEDULE_STARTHOUR: Constants.startHour,
+      Constants.RESTAURANT_SCHEDULE_STARTMINUTE: Constants.startMinute,
+      Constants.RESTAURANT_SCHEDULE_ENDHOUR: Constants.endHour,
+      Constants.RESTAURANT_SCHEDULE_ENDMINUTE: Constants.endMinute,
+      Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY: true
+    },
+    {
+      Constants.RESTAURANT_SCHEDULE_DAY: Constants.monday,
+      Constants.RESTAURANT_SCHEDULE_STARTHOUR: Constants.startHour,
+      Constants.RESTAURANT_SCHEDULE_STARTMINUTE: Constants.startMinute,
+      Constants.RESTAURANT_SCHEDULE_ENDHOUR: Constants.endHour,
+      Constants.RESTAURANT_SCHEDULE_ENDMINUTE: Constants.endMinute,
+      Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY: false
+    },
   ];
 
   void _getAmenities() {
@@ -126,14 +184,134 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> scheduleView = [];
+    for (var element in schedule) {
+      TimeOfDay startTime = TimeOfDay(
+          hour: element[Constants.RESTAURANT_SCHEDULE_STARTHOUR],
+          minute: element[Constants.RESTAURANT_SCHEDULE_STARTMINUTE]);
+      TimeOfDay endTime = TimeOfDay(
+          hour: element[Constants.RESTAURANT_SCHEDULE_ENDHOUR],
+          minute: element[Constants.RESTAURANT_SCHEDULE_ENDMINUTE]);
+      scheduleView.add(Padding(
+          padding: const EdgeInsets.all(0),
+          child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Text(element[Constants.RESTAURANT_SCHEDULE_DAY],
+                style: const TextStyle(
+                    color: CustomColor.textSecondaryColor, fontSize: 12)),
+            const Spacer(),
+            if (element[Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY])
+              TextButton(
+                  onPressed: () async {
+                    final TimeOfDay? time = await showTimePicker(
+                      context: context,
+                      initialTime: startTime,
+                      initialEntryMode: entryMode,
+                      builder: (BuildContext context, Widget? child) {
+                        return Theme(
+                          data: Theme.of(context).copyWith(
+                            materialTapTargetSize: tapTargetSize,
+                          ),
+                          child: Directionality(
+                            textDirection: textDirection,
+                            child: MediaQuery(
+                              data: MediaQuery.of(context).copyWith(
+                                alwaysUse24HourFormat: use24HourTime,
+                              ),
+                              child: child!,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                    if (time != null) {
+                      element[Constants.RESTAURANT_SCHEDULE_STARTHOUR] =
+                          time.hour;
+                      element[Constants.RESTAURANT_SCHEDULE_STARTMINUTE] =
+                          time.minute;
+                      setState(() {});
+                    }
+                  },
+                  child: Text(startTime.format(context),
+                      style: const TextStyle(
+                          color: CustomColor.textSecondaryColor,
+                          fontSize: 12))),
+            if (element[Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY])
+              const Text('-',
+                  style: TextStyle(
+                      color: CustomColor.textSecondaryColor, fontSize: 12)),
+            if (element[Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY])
+              TextButton(
+                  onPressed: () async {
+                    final TimeOfDay? time = await showTimePicker(
+                      context: context,
+                      initialTime: endTime,
+                      initialEntryMode: entryMode,
+                      builder: (BuildContext context, Widget? child) {
+                        return Theme(
+                          data: Theme.of(context).copyWith(
+                            materialTapTargetSize: tapTargetSize,
+                          ),
+                          child: Directionality(
+                            textDirection: textDirection,
+                            child: MediaQuery(
+                              data: MediaQuery.of(context).copyWith(
+                                alwaysUse24HourFormat: use24HourTime,
+                              ),
+                              child: child!,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                    if (time != null) {
+                      element[Constants.RESTAURANT_SCHEDULE_ENDHOUR] =
+                          time.hour;
+                      element[Constants.RESTAURANT_SCHEDULE_ENDMINUTE] =
+                          time.minute;
+                      setState(() {});
+                    }
+                  },
+                  child: Text(endTime.format(context),
+                      style: const TextStyle(
+                          color: CustomColor.textSecondaryColor,
+                          fontSize: 12))),
+            if (!element[Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY])
+              const Padding(
+                padding: EdgeInsets.only(right: 50),
+                child: Text('Closed',
+                    style: TextStyle(
+                        color: CustomColor.activeColor, fontSize: 12)),
+              ),
+            IconButton(
+                onPressed: () {
+                  if (element[Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY]) {
+                    element[Constants.RESTAURANT_SCHEDULE_STARTHOUR] =
+                        Constants.startHour;
+                    element[Constants.RESTAURANT_SCHEDULE_STARTMINUTE] =
+                        Constants.startMinute;
+                    element[Constants.RESTAURANT_SCHEDULE_ENDHOUR] =
+                        Constants.endHour;
+                    element[Constants.RESTAURANT_SCHEDULE_ENDMINUTE] =
+                        Constants.endMinute;
+                  }
+                  element[Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY] =
+                      !element[Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY];
+                  setState(() {});
+                },
+                icon: element[Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY]
+                    ? const Icon(Icons.close, color: Colors.black, size: 22)
+                    : const Icon(Icons.add, color: Colors.black, size: 22))
+          ])));
+    }
+
     if (ResponsiveWidget.isSmallScreen(context)) {
-      return _mobile();
+      return _mobile(scheduleView);
     } else {
-      return _desktop();
+      return _desktop(scheduleView);
     }
   }
 
-  Widget _desktop() {
+  Widget _desktop(List<Widget> scheduleView) {
     Size screenSize = MediaQuery.of(context).size;
     double rightSidePaddingX = Constants.mainPadding * 2;
     double checkItemWidth = screenSize.width / 6 - Constants.mainPadding / 2;
@@ -409,7 +587,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   vertical: 8, horizontal: rightSidePaddingX),
                               child: Stack(children: [
                                 Container(
-                                  height: _showDaysHours ? 204 : 50,
+                                  height: _showDaysHours ? 330 : 50,
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(4)),
@@ -467,253 +645,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
                                                               .start,
-                                                      children: [
-                                                        Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              const Text(
-                                                                  'Tuesday',
-                                                                  style: TextStyle(
-                                                                      color: CustomColor
-                                                                          .textSecondaryColor,
-                                                                      fontSize:
-                                                                          12)),
-                                                              const Spacer(),
-                                                              const Padding(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        right:
-                                                                            50),
-                                                                child: Text(
-                                                                    'Closed',
-                                                                    style: TextStyle(
-                                                                        color: CustomColor
-                                                                            .activeColor,
-                                                                        fontSize:
-                                                                            12)),
-                                                              ),
-                                                              InkWell(
-                                                                  onTap: () {},
-                                                                  child:
-                                                                      const Icon(
-                                                                    Icons
-                                                                        .edit_outlined,
-                                                                    size: 22,
-                                                                  )),
-                                                            ]),
-                                                        Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              const Text(
-                                                                  'Wednesday',
-                                                                  style: TextStyle(
-                                                                      color: CustomColor
-                                                                          .textSecondaryColor,
-                                                                      fontSize:
-                                                                          12)),
-                                                              const Spacer(),
-                                                              const Padding(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        right:
-                                                                            50),
-                                                                child: Text(
-                                                                    '8:00 AM - 9:00 PM',
-                                                                    style: TextStyle(
-                                                                        color: CustomColor
-                                                                            .textSecondaryColor,
-                                                                        fontSize:
-                                                                            12)),
-                                                              ),
-                                                              InkWell(
-                                                                  onTap: () {},
-                                                                  child:
-                                                                      const Icon(
-                                                                    Icons
-                                                                        .edit_outlined,
-                                                                    size: 22,
-                                                                  )),
-                                                            ]),
-                                                        Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              const Text(
-                                                                  'Thursday',
-                                                                  style: TextStyle(
-                                                                      color: CustomColor
-                                                                          .textSecondaryColor,
-                                                                      fontSize:
-                                                                          12)),
-                                                              const Spacer(),
-                                                              const Padding(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        right:
-                                                                            50),
-                                                                child: Text(
-                                                                    '8:00 AM - 9:00 PM',
-                                                                    style: TextStyle(
-                                                                        color: CustomColor
-                                                                            .textSecondaryColor,
-                                                                        fontSize:
-                                                                            12)),
-                                                              ),
-                                                              InkWell(
-                                                                  onTap: () {},
-                                                                  child:
-                                                                      const Icon(
-                                                                    Icons
-                                                                        .edit_outlined,
-                                                                    size: 22,
-                                                                  )),
-                                                            ]),
-                                                        Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              const Text(
-                                                                  'Friday',
-                                                                  style: TextStyle(
-                                                                      color: CustomColor
-                                                                          .textSecondaryColor,
-                                                                      fontSize:
-                                                                          12)),
-                                                              const Spacer(),
-                                                              const Padding(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        right:
-                                                                            50),
-                                                                child: Text(
-                                                                    '8:00 AM - 9:00 PM',
-                                                                    style: TextStyle(
-                                                                        color: CustomColor
-                                                                            .textSecondaryColor,
-                                                                        fontSize:
-                                                                            12)),
-                                                              ),
-                                                              InkWell(
-                                                                  onTap: () {},
-                                                                  child:
-                                                                      const Icon(
-                                                                    Icons
-                                                                        .edit_outlined,
-                                                                    size: 22,
-                                                                  )),
-                                                            ]),
-                                                        Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              const Text(
-                                                                  'Saturday',
-                                                                  style: TextStyle(
-                                                                      color: CustomColor
-                                                                          .textSecondaryColor,
-                                                                      fontSize:
-                                                                          12)),
-                                                              const Spacer(),
-                                                              const Padding(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        right:
-                                                                            50),
-                                                                child: Text(
-                                                                    '8:00 AM - 9:00 PM',
-                                                                    style: TextStyle(
-                                                                        color: CustomColor
-                                                                            .textSecondaryColor,
-                                                                        fontSize:
-                                                                            12)),
-                                                              ),
-                                                              InkWell(
-                                                                  onTap: () {},
-                                                                  child:
-                                                                      const Icon(
-                                                                    Icons
-                                                                        .edit_outlined,
-                                                                    size: 22,
-                                                                  )),
-                                                            ]),
-                                                        Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              const Text(
-                                                                  'Sunday',
-                                                                  style: TextStyle(
-                                                                      color: CustomColor
-                                                                          .textSecondaryColor,
-                                                                      fontSize:
-                                                                          12)),
-                                                              const Spacer(),
-                                                              const Padding(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        right:
-                                                                            50),
-                                                                child: Text(
-                                                                    '8:00 AM - 9:00 PM',
-                                                                    style: TextStyle(
-                                                                        color: CustomColor
-                                                                            .textSecondaryColor,
-                                                                        fontSize:
-                                                                            12)),
-                                                              ),
-                                                              InkWell(
-                                                                  onTap: () {},
-                                                                  child:
-                                                                      const Icon(
-                                                                    Icons
-                                                                        .edit_outlined,
-                                                                    size: 22,
-                                                                  )),
-                                                            ]),
-                                                        Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              const Text(
-                                                                  'Monday',
-                                                                  style: TextStyle(
-                                                                      color: CustomColor
-                                                                          .textSecondaryColor,
-                                                                      fontSize:
-                                                                          12)),
-                                                              const Spacer(),
-                                                              const Padding(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        right:
-                                                                            50),
-                                                                child: Text(
-                                                                    'Closed',
-                                                                    style: TextStyle(
-                                                                        color: CustomColor
-                                                                            .activeColor,
-                                                                        fontSize:
-                                                                            12)),
-                                                              ),
-                                                              InkWell(
-                                                                  onTap: () {},
-                                                                  child:
-                                                                      const Icon(
-                                                                    Icons
-                                                                        .edit_outlined,
-                                                                    size: 22,
-                                                                  )),
-                                                            ]),
-                                                      ]),
+                                                      children: scheduleView),
                                                 )
                                               : Container(),
                                         ])))
@@ -776,12 +708,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                                             : CustomColor
                                                                 .primaryColor);
                                                       }),
-                                                      value:
-                                                          _isCheckedBusiness[0],
+                                                      value: (_checkBusiness ==
+                                                              Constants
+                                                                  .C_BREWERIES)
+                                                          ? true
+                                                          : false,
                                                       onChanged: (bool? value) {
                                                         setState(() {
-                                                          _isCheckedBusiness[
-                                                              0] = value!;
+                                                          _checkBusiness =
+                                                              Constants
+                                                                  .C_BREWERIES;
                                                         });
                                                       },
                                                     ),
@@ -844,12 +780,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                                             : CustomColor
                                                                 .primaryColor);
                                                       }),
-                                                      value:
-                                                          _isCheckedBusiness[1],
+                                                      value: (_checkBusiness ==
+                                                              'Food Truck')
+                                                          ? true
+                                                          : false,
                                                       onChanged: (bool? value) {
                                                         setState(() {
-                                                          _isCheckedBusiness[
-                                                              1] = value!;
+                                                          _checkBusiness =
+                                                              'Food Truck';
                                                         });
                                                       },
                                                     ),
@@ -921,12 +859,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                                             : CustomColor
                                                                 .primaryColor);
                                                       }),
-                                                      value:
-                                                          _isCheckedBusiness[2],
+                                                      value: (_checkBusiness ==
+                                                              Constants
+                                                                  .C_RESTAURANTS)
+                                                          ? true
+                                                          : false,
                                                       onChanged: (bool? value) {
                                                         setState(() {
-                                                          _isCheckedBusiness[
-                                                              2] = value!;
+                                                          _checkBusiness =
+                                                              Constants
+                                                                  .C_RESTAURANTS;
                                                         });
                                                       },
                                                     ),
@@ -989,12 +931,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                                             : CustomColor
                                                                 .primaryColor);
                                                       }),
-                                                      value:
-                                                          _isCheckedBusiness[3],
+                                                      value: (_checkBusiness ==
+                                                              Constants
+                                                                  .C_WINERIES)
+                                                          ? true
+                                                          : false,
                                                       onChanged: (bool? value) {
                                                         setState(() {
-                                                          _isCheckedBusiness[
-                                                              3] = value!;
+                                                          _checkBusiness =
+                                                              Constants
+                                                                  .C_WINERIES;
                                                         });
                                                       },
                                                     ),
@@ -1066,12 +1012,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                                             : CustomColor
                                                                 .primaryColor);
                                                       }),
-                                                      value:
-                                                          _isCheckedBusiness[4],
+                                                      value: (_checkBusiness ==
+                                                              'Catering')
+                                                          ? true
+                                                          : false,
                                                       onChanged: (bool? value) {
                                                         setState(() {
-                                                          _isCheckedBusiness[
-                                                              4] = value!;
+                                                          _checkBusiness =
+                                                              'Catering';
                                                         });
                                                       },
                                                     ),
@@ -1085,34 +1033,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                           ]),
                                         )),
                                   ]),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: rightSidePaddingX),
-                              child: SizedBox(
-                                  height: 40,
-                                  width: screenSize.width,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            CustomColor.primaryColor,
-                                        elevation: 3,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(4)),
-                                        shadowColor: CustomColor.primaryColor
-                                            .withOpacity(0.5),
-                                        padding: const EdgeInsets.all(5)),
-                                    onPressed: () {},
-                                    child: const Text(
-                                      'UPLOAD MENU',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16.0,
-                                          letterSpacing: 1),
-                                    ),
-                                  )),
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(
@@ -1181,36 +1101,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               ]),
                             ),
                             Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 30, horizontal: rightSidePaddingX),
-                              child: SizedBox(
-                                  height: 40,
-                                  width: screenSize.width,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            CustomColor.primaryColor,
-                                        elevation: 3,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(4)),
-                                        shadowColor: CustomColor.primaryColor
-                                            .withOpacity(0.5),
-                                        padding: const EdgeInsets.all(5)),
-                                    onPressed: () {},
-                                    child: const Text(
-                                      'PROMOTE YOUR BUSINESS',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16.0,
-                                          letterSpacing: 1),
-                                    ),
-                                  )),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 2),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 2, vertical: 10),
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -1344,7 +1236,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _mobile() {
+  Widget _mobile(List<Widget> scheduleView) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -1612,7 +1504,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           Constants.mainPadding, 8, Constants.mainPadding, 8),
                       child: Stack(children: [
                         Container(
-                          height: _showDaysHours ? 204 : 50,
+                          height: _showDaysHours ? 330 : 50,
                           decoration: BoxDecoration(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(4)),
@@ -1664,202 +1556,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                                   MainAxisAlignment.start,
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      const Text('Tuesday',
-                                                          style: TextStyle(
-                                                              color: CustomColor
-                                                                  .textSecondaryColor,
-                                                              fontSize: 12)),
-                                                      const Spacer(),
-                                                      const Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                right: 50),
-                                                        child: Text('Closed',
-                                                            style: TextStyle(
-                                                                color: CustomColor
-                                                                    .activeColor,
-                                                                fontSize: 12)),
-                                                      ),
-                                                      InkWell(
-                                                          onTap: () {},
-                                                          child: const Icon(
-                                                            Icons.edit_outlined,
-                                                            size: 22,
-                                                          )),
-                                                    ]),
-                                                Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      const Text('Wednesday',
-                                                          style: TextStyle(
-                                                              color: CustomColor
-                                                                  .textSecondaryColor,
-                                                              fontSize: 12)),
-                                                      const Spacer(),
-                                                      const Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                right: 50),
-                                                        child: Text(
-                                                            '8:00 AM - 9:00 PM',
-                                                            style: TextStyle(
-                                                                color: CustomColor
-                                                                    .textSecondaryColor,
-                                                                fontSize: 12)),
-                                                      ),
-                                                      InkWell(
-                                                          onTap: () {},
-                                                          child: const Icon(
-                                                            Icons.edit_outlined,
-                                                            size: 22,
-                                                          )),
-                                                    ]),
-                                                Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      const Text('Thursday',
-                                                          style: TextStyle(
-                                                              color: CustomColor
-                                                                  .textSecondaryColor,
-                                                              fontSize: 12)),
-                                                      const Spacer(),
-                                                      const Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                right: 50),
-                                                        child: Text(
-                                                            '8:00 AM - 9:00 PM',
-                                                            style: TextStyle(
-                                                                color: CustomColor
-                                                                    .textSecondaryColor,
-                                                                fontSize: 12)),
-                                                      ),
-                                                      InkWell(
-                                                          onTap: () {},
-                                                          child: const Icon(
-                                                            Icons.edit_outlined,
-                                                            size: 22,
-                                                          )),
-                                                    ]),
-                                                Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      const Text('Friday',
-                                                          style: TextStyle(
-                                                              color: CustomColor
-                                                                  .textSecondaryColor,
-                                                              fontSize: 12)),
-                                                      const Spacer(),
-                                                      const Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                right: 50),
-                                                        child: Text(
-                                                            '8:00 AM - 9:00 PM',
-                                                            style: TextStyle(
-                                                                color: CustomColor
-                                                                    .textSecondaryColor,
-                                                                fontSize: 12)),
-                                                      ),
-                                                      InkWell(
-                                                          onTap: () {},
-                                                          child: const Icon(
-                                                            Icons.edit_outlined,
-                                                            size: 22,
-                                                          )),
-                                                    ]),
-                                                Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      const Text('Saturday',
-                                                          style: TextStyle(
-                                                              color: CustomColor
-                                                                  .textSecondaryColor,
-                                                              fontSize: 12)),
-                                                      const Spacer(),
-                                                      const Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                right: 50),
-                                                        child: Text(
-                                                            '8:00 AM - 9:00 PM',
-                                                            style: TextStyle(
-                                                                color: CustomColor
-                                                                    .textSecondaryColor,
-                                                                fontSize: 12)),
-                                                      ),
-                                                      InkWell(
-                                                          onTap: () {},
-                                                          child: const Icon(
-                                                            Icons.edit_outlined,
-                                                            size: 22,
-                                                          )),
-                                                    ]),
-                                                Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      const Text('Sunday',
-                                                          style: TextStyle(
-                                                              color: CustomColor
-                                                                  .textSecondaryColor,
-                                                              fontSize: 12)),
-                                                      const Spacer(),
-                                                      const Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                right: 50),
-                                                        child: Text(
-                                                            '8:00 AM - 9:00 PM',
-                                                            style: TextStyle(
-                                                                color: CustomColor
-                                                                    .textSecondaryColor,
-                                                                fontSize: 12)),
-                                                      ),
-                                                      InkWell(
-                                                          onTap: () {},
-                                                          child: const Icon(
-                                                            Icons.edit_outlined,
-                                                            size: 22,
-                                                          )),
-                                                    ]),
-                                                Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      const Text('Monday',
-                                                          style: TextStyle(
-                                                              color: CustomColor
-                                                                  .textSecondaryColor,
-                                                              fontSize: 12)),
-                                                      const Spacer(),
-                                                      const Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                right: 50),
-                                                        child: Text('Closed',
-                                                            style: TextStyle(
-                                                                color: CustomColor
-                                                                    .activeColor,
-                                                                fontSize: 12)),
-                                                      ),
-                                                      InkWell(
-                                                          onTap: () {},
-                                                          child: const Icon(
-                                                            Icons.edit_outlined,
-                                                            size: 22,
-                                                          )),
-                                                    ]),
-                                              ]),
+                                              children: scheduleView),
                                         )
                                       : Container(),
                                 ])))
@@ -1913,11 +1610,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                                     ? CustomColor.activeColor
                                                     : CustomColor.primaryColor);
                                               }),
-                                              value: _isCheckedBusiness[0],
+                                              value: (_checkBusiness ==
+                                                      Constants.C_BREWERIES)
+                                                  ? true
+                                                  : false,
                                               onChanged: (bool? value) {
                                                 setState(() {
-                                                  _isCheckedBusiness[0] =
-                                                      value!;
+                                                  _checkBusiness =
+                                                      Constants.C_BREWERIES;
                                                 });
                                               },
                                             ),
@@ -1972,11 +1672,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                                     ? CustomColor.activeColor
                                                     : CustomColor.primaryColor);
                                               }),
-                                              value: _isCheckedBusiness[1],
+                                              value: (_checkBusiness ==
+                                                      'Food Truck')
+                                                  ? true
+                                                  : false,
                                               onChanged: (bool? value) {
                                                 setState(() {
-                                                  _isCheckedBusiness[1] =
-                                                      value!;
+                                                  _checkBusiness = 'Food Truck';
                                                 });
                                               },
                                             ),
@@ -2039,11 +1741,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                                     ? CustomColor.activeColor
                                                     : CustomColor.primaryColor);
                                               }),
-                                              value: _isCheckedBusiness[2],
+                                              value: (_checkBusiness ==
+                                                      Constants.C_RESTAURANTS)
+                                                  ? true
+                                                  : false,
                                               onChanged: (bool? value) {
                                                 setState(() {
-                                                  _isCheckedBusiness[2] =
-                                                      value!;
+                                                  _checkBusiness =
+                                                      Constants.C_RESTAURANTS;
                                                 });
                                               },
                                             ),
@@ -2098,11 +1803,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                                     ? CustomColor.activeColor
                                                     : CustomColor.primaryColor);
                                               }),
-                                              value: _isCheckedBusiness[3],
+                                              value: (_checkBusiness ==
+                                                      Constants.C_WINERIES)
+                                                  ? true
+                                                  : false,
                                               onChanged: (bool? value) {
                                                 setState(() {
-                                                  _isCheckedBusiness[3] =
-                                                      value!;
+                                                  _checkBusiness =
+                                                      Constants.C_WINERIES;
                                                 });
                                               },
                                             ),
@@ -2165,11 +1873,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                                     ? CustomColor.activeColor
                                                     : CustomColor.primaryColor);
                                               }),
-                                              value: _isCheckedBusiness[4],
+                                              value:
+                                                  (_checkBusiness == 'Catering')
+                                                      ? true
+                                                      : false,
                                               onChanged: (bool? value) {
                                                 setState(() {
-                                                  _isCheckedBusiness[4] =
-                                                      value!;
+                                                  _checkBusiness = 'Catering';
                                                 });
                                               },
                                             ),
@@ -2183,32 +1893,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                   ]),
                                 )),
                           ]),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: Constants.mainPadding),
-                      child: SizedBox(
-                          height: 40,
-                          width: screenSize.width,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: CustomColor.primaryColor,
-                                elevation: 3,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4)),
-                                shadowColor:
-                                    CustomColor.primaryColor.withOpacity(0.5),
-                                padding: const EdgeInsets.all(5)),
-                            onPressed: () {},
-                            child: const Text(
-                              'UPLOAD MENU',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16.0,
-                                  letterSpacing: 1),
-                            ),
-                          )),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(
@@ -2271,32 +1955,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 30, horizontal: Constants.mainPadding),
-                      child: SizedBox(
-                          height: 40,
-                          width: screenSize.width,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: CustomColor.primaryColor,
-                                elevation: 3,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4)),
-                                shadowColor:
-                                    CustomColor.primaryColor.withOpacity(0.5),
-                                padding: const EdgeInsets.all(5)),
-                            onPressed: () {},
-                            child: const Text(
-                              'PROMOTE YOUR BUSINESS',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16.0,
-                                  letterSpacing: 1),
-                            ),
-                          )),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                          horizontal: 5, vertical: 20),
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
