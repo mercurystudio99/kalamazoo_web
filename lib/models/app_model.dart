@@ -477,6 +477,31 @@ class AppModel extends Model {
     );
   }
 
+  void getRestaurantProfile({
+    required String businessId,
+    required String businessService,
+    // callback functions
+    required Function(Map<String, dynamic>) onSuccess,
+  }) {
+    _firestore
+        .collection(businessService)
+        .where(Constants.RESTAURANT_ID, isEqualTo: businessId)
+        .get()
+        .then(
+      (querySnapshot) {
+        if (querySnapshot.docs.isNotEmpty) {
+          Map<String, dynamic> data = {};
+          for (var docSnapshot in querySnapshot.docs) {
+            data = docSnapshot.data();
+            break;
+          }
+          onSuccess(data);
+        }
+      },
+      onError: (e) => debugPrint("Error completing: $e"),
+    );
+  }
+
   void getRestaurantByID({
     required String id,
     // callback functions

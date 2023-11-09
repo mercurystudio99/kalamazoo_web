@@ -35,6 +35,15 @@ class _Profile2PageState extends State<Profile2Page> {
   final _locationController = TextEditingController();
   final _emailController = TextEditingController();
 
+  String _restaurantID = '';
+  String _restaurantService = '';
+  static Map<String, dynamic> profileRestaurant = {};
+
+  TimePickerEntryMode entryMode = TimePickerEntryMode.dial;
+  TextDirection textDirection = TextDirection.ltr;
+  MaterialTapTargetSize tapTargetSize = MaterialTapTargetSize.padded;
+  bool use24HourTime = false;
+
   Future getImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.any,
@@ -84,6 +93,8 @@ class _Profile2PageState extends State<Profile2Page> {
       AppModel().getProfile(
           onSuccess: (Map<String, dynamic>? param) {
             if (param == null) return;
+            _restaurantID = param[Constants.USER_RESTAURANT_ID];
+            _restaurantService = param[Constants.USER_RESTAURANT_SERVICE];
             if (param[Constants.USER_PROFILE_PHOTO] != null) {
               _imageLink = param[Constants.USER_PROFILE_PHOTO];
             }
@@ -95,7 +106,14 @@ class _Profile2PageState extends State<Profile2Page> {
             if (param[Constants.USER_PHONE_NUMBER] != null) {
               _phoneController.text = param[Constants.USER_PHONE_NUMBER];
             }
-            setState(() {});
+            AppModel().getRestaurantProfile(
+                businessId: param[Constants.USER_RESTAURANT_ID],
+                businessService: param[Constants.USER_RESTAURANT_SERVICE],
+                onSuccess: (Map<String, dynamic> param2) {
+                  profileRestaurant = param2;
+                  if (!mounted) return;
+                  setState(() {});
+                });
           },
           onError: (String text) {});
     }
@@ -108,14 +126,144 @@ class _Profile2PageState extends State<Profile2Page> {
 
   @override
   Widget build(BuildContext context) {
+    String service = '';
+    List<Widget> scheduleView = [];
+    if (_restaurantService == Constants.C_RESTAURANTS) {
+      service = 'Restaurant';
+    }
+    if (_restaurantService == Constants.C_BREWERIES) service = 'Brewery';
+    if (_restaurantService == Constants.C_WINERIES) service = 'Winery';
+
+    if (profileRestaurant.isNotEmpty &&
+        profileRestaurant[Constants.RESTAURANT_SCHEDULE] != null) {
+      for (var element in profileRestaurant[Constants.RESTAURANT_SCHEDULE]) {
+        TimeOfDay startTime = TimeOfDay(
+            hour: element[Constants.RESTAURANT_SCHEDULE_STARTHOUR],
+            minute: element[Constants.RESTAURANT_SCHEDULE_STARTMINUTE]);
+        TimeOfDay endTime = TimeOfDay(
+            hour: element[Constants.RESTAURANT_SCHEDULE_ENDHOUR],
+            minute: element[Constants.RESTAURANT_SCHEDULE_ENDMINUTE]);
+        scheduleView.add(Padding(
+            padding: const EdgeInsets.all(0),
+            child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+              Text(element[Constants.RESTAURANT_SCHEDULE_DAY],
+                  style: const TextStyle(
+                      color: CustomColor.textSecondaryColor, fontSize: 12)),
+              const Spacer(),
+              if (element[Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY])
+                TextButton(
+                    onPressed: () async {
+                      final TimeOfDay? time = await showTimePicker(
+                        context: context,
+                        initialTime: startTime,
+                        initialEntryMode: entryMode,
+                        builder: (BuildContext context, Widget? child) {
+                          return Theme(
+                            data: Theme.of(context).copyWith(
+                              materialTapTargetSize: tapTargetSize,
+                            ),
+                            child: Directionality(
+                              textDirection: textDirection,
+                              child: MediaQuery(
+                                data: MediaQuery.of(context).copyWith(
+                                  alwaysUse24HourFormat: use24HourTime,
+                                ),
+                                child: child!,
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                      if (time != null) {
+                        element[Constants.RESTAURANT_SCHEDULE_STARTHOUR] =
+                            time.hour;
+                        element[Constants.RESTAURANT_SCHEDULE_STARTMINUTE] =
+                            time.minute;
+                        setState(() {});
+                      }
+                    },
+                    child: Text(startTime.format(context),
+                        style: const TextStyle(
+                            color: CustomColor.textSecondaryColor,
+                            fontSize: 12))),
+              if (element[Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY])
+                const Text('-',
+                    style: TextStyle(
+                        color: CustomColor.textSecondaryColor, fontSize: 12)),
+              if (element[Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY])
+                TextButton(
+                    onPressed: () async {
+                      final TimeOfDay? time = await showTimePicker(
+                        context: context,
+                        initialTime: endTime,
+                        initialEntryMode: entryMode,
+                        builder: (BuildContext context, Widget? child) {
+                          return Theme(
+                            data: Theme.of(context).copyWith(
+                              materialTapTargetSize: tapTargetSize,
+                            ),
+                            child: Directionality(
+                              textDirection: textDirection,
+                              child: MediaQuery(
+                                data: MediaQuery.of(context).copyWith(
+                                  alwaysUse24HourFormat: use24HourTime,
+                                ),
+                                child: child!,
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                      if (time != null) {
+                        element[Constants.RESTAURANT_SCHEDULE_ENDHOUR] =
+                            time.hour;
+                        element[Constants.RESTAURANT_SCHEDULE_ENDMINUTE] =
+                            time.minute;
+                        setState(() {});
+                      }
+                    },
+                    child: Text(endTime.format(context),
+                        style: const TextStyle(
+                            color: CustomColor.textSecondaryColor,
+                            fontSize: 12))),
+              if (!element[Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY])
+                const Padding(
+                  padding: EdgeInsets.only(right: 45),
+                  child: Text('Closed',
+                      style: TextStyle(
+                          color: CustomColor.activeColor, fontSize: 12)),
+                ),
+              IconButton(
+                  onPressed: () {
+                    if (element[Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY]) {
+                      element[Constants.RESTAURANT_SCHEDULE_STARTHOUR] =
+                          Constants.startHour;
+                      element[Constants.RESTAURANT_SCHEDULE_STARTMINUTE] =
+                          Constants.startMinute;
+                      element[Constants.RESTAURANT_SCHEDULE_ENDHOUR] =
+                          Constants.endHour;
+                      element[Constants.RESTAURANT_SCHEDULE_ENDMINUTE] =
+                          Constants.endMinute;
+                    }
+                    element[Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY] =
+                        !element[Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY];
+                    setState(() {});
+                  },
+                  icon: element[Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY]
+                      ? const Icon(Icons.close, color: Colors.black, size: 22)
+                      : const Icon(Icons.add, color: Colors.black, size: 22))
+            ])));
+      }
+    }
+
     if (ResponsiveWidget.isSmallScreen(context)) {
-      return _mobile();
+      return _mobile(scheduleView, service);
     } else {
-      return _desktop();
+      return _desktop(scheduleView, service);
     }
   }
 
-  Widget _desktop() {
+  Widget _desktop(List<Widget> scheduleView, String service) {
     int topbarstatus = 1;
     if (global.userID.isNotEmpty) topbarstatus = 2;
     Size screenSize = MediaQuery.of(context).size;
@@ -602,20 +750,12 @@ class _Profile2PageState extends State<Profile2Page> {
                             Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: formPadding, vertical: 10),
-                                child: Row(children: const [
+                                child: Row(children: [
                                   SizedBox(
-                                      width: 100,
+                                      width: 150,
                                       child: Text(
-                                        'Brewery',
-                                        style: TextStyle(
-                                          color: CustomColor.textPrimaryColor,
-                                        ),
-                                      )),
-                                  SizedBox(
-                                      width: 100,
-                                      child: Text(
-                                        'Food Truck',
-                                        style: TextStyle(
+                                        service,
+                                        style: const TextStyle(
                                           color: CustomColor.textPrimaryColor,
                                         ),
                                       )),
@@ -633,7 +773,7 @@ class _Profile2PageState extends State<Profile2Page> {
                                   horizontal: formPadding, vertical: 10),
                               child: Stack(children: [
                                 Container(
-                                  height: 164,
+                                  height: 290,
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(4)),
@@ -665,223 +805,7 @@ class _Profile2PageState extends State<Profile2Page> {
                                                     MainAxisAlignment.start,
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        const Text('Tuesday',
-                                                            style: TextStyle(
-                                                                color: CustomColor
-                                                                    .textSecondaryColor,
-                                                                fontSize: 12)),
-                                                        const Spacer(),
-                                                        const Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  right: 45),
-                                                          child: Text('Closed',
-                                                              style: TextStyle(
-                                                                  color: CustomColor
-                                                                      .activeColor,
-                                                                  fontSize:
-                                                                      12)),
-                                                        ),
-                                                        InkWell(
-                                                            onTap: () {},
-                                                            child: const Icon(
-                                                              Icons
-                                                                  .edit_outlined,
-                                                              size: 22,
-                                                            )),
-                                                      ]),
-                                                  Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        const Text('Wednesday',
-                                                            style: TextStyle(
-                                                                color: CustomColor
-                                                                    .textSecondaryColor,
-                                                                fontSize: 12)),
-                                                        const Spacer(),
-                                                        const Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  right: 45),
-                                                          child: Text(
-                                                              '8:00 AM - 9:00 PM',
-                                                              style: TextStyle(
-                                                                  color: CustomColor
-                                                                      .textSecondaryColor,
-                                                                  fontSize:
-                                                                      12)),
-                                                        ),
-                                                        InkWell(
-                                                            onTap: () {},
-                                                            child: const Icon(
-                                                              Icons
-                                                                  .edit_outlined,
-                                                              size: 22,
-                                                            )),
-                                                      ]),
-                                                  Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        const Text('Thursday',
-                                                            style: TextStyle(
-                                                                color: CustomColor
-                                                                    .textSecondaryColor,
-                                                                fontSize: 12)),
-                                                        const Spacer(),
-                                                        const Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  right: 45),
-                                                          child: Text(
-                                                              '8:00 AM - 9:00 PM',
-                                                              style: TextStyle(
-                                                                  color: CustomColor
-                                                                      .textSecondaryColor,
-                                                                  fontSize:
-                                                                      12)),
-                                                        ),
-                                                        InkWell(
-                                                            onTap: () {},
-                                                            child: const Icon(
-                                                              Icons
-                                                                  .edit_outlined,
-                                                              size: 22,
-                                                            )),
-                                                      ]),
-                                                  Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        const Text('Friday',
-                                                            style: TextStyle(
-                                                                color: CustomColor
-                                                                    .textSecondaryColor,
-                                                                fontSize: 12)),
-                                                        const Spacer(),
-                                                        const Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  right: 45),
-                                                          child: Text(
-                                                              '8:00 AM - 9:00 PM',
-                                                              style: TextStyle(
-                                                                  color: CustomColor
-                                                                      .textSecondaryColor,
-                                                                  fontSize:
-                                                                      12)),
-                                                        ),
-                                                        InkWell(
-                                                            onTap: () {},
-                                                            child: const Icon(
-                                                              Icons
-                                                                  .edit_outlined,
-                                                              size: 22,
-                                                            )),
-                                                      ]),
-                                                  Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        const Text('Saturday',
-                                                            style: TextStyle(
-                                                                color: CustomColor
-                                                                    .textSecondaryColor,
-                                                                fontSize: 12)),
-                                                        const Spacer(),
-                                                        const Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  right: 45),
-                                                          child: Text(
-                                                              '8:00 AM - 9:00 PM',
-                                                              style: TextStyle(
-                                                                  color: CustomColor
-                                                                      .textSecondaryColor,
-                                                                  fontSize:
-                                                                      12)),
-                                                        ),
-                                                        InkWell(
-                                                            onTap: () {},
-                                                            child: const Icon(
-                                                              Icons
-                                                                  .edit_outlined,
-                                                              size: 22,
-                                                            )),
-                                                      ]),
-                                                  Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        const Text('Sunday',
-                                                            style: TextStyle(
-                                                                color: CustomColor
-                                                                    .textSecondaryColor,
-                                                                fontSize: 12)),
-                                                        const Spacer(),
-                                                        const Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  right: 45),
-                                                          child: Text(
-                                                              '8:00 AM - 9:00 PM',
-                                                              style: TextStyle(
-                                                                  color: CustomColor
-                                                                      .textSecondaryColor,
-                                                                  fontSize:
-                                                                      12)),
-                                                        ),
-                                                        InkWell(
-                                                            onTap: () {},
-                                                            child: const Icon(
-                                                              Icons
-                                                                  .edit_outlined,
-                                                              size: 22,
-                                                            )),
-                                                      ]),
-                                                  Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        const Text('Monday',
-                                                            style: TextStyle(
-                                                                color: CustomColor
-                                                                    .textSecondaryColor,
-                                                                fontSize: 12)),
-                                                        const Spacer(),
-                                                        const Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  right: 45),
-                                                          child: Text('Closed',
-                                                              style: TextStyle(
-                                                                  color: CustomColor
-                                                                      .activeColor,
-                                                                  fontSize:
-                                                                      12)),
-                                                        ),
-                                                        InkWell(
-                                                            onTap: () {},
-                                                            child: const Icon(
-                                                              Icons
-                                                                  .edit_outlined,
-                                                              size: 22,
-                                                            )),
-                                                      ]),
-                                                ]),
+                                                children: scheduleView),
                                           )
                                         ])))
                               ]),
@@ -989,7 +913,7 @@ class _Profile2PageState extends State<Profile2Page> {
     );
   }
 
-  Widget _mobile() {
+  Widget _mobile(List<Widget> scheduleView, String service) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -1331,20 +1255,12 @@ class _Profile2PageState extends State<Profile2Page> {
                   Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: Constants.mainPadding * 2, vertical: 10),
-                      child: Row(children: const [
+                      child: Row(children: [
                         SizedBox(
-                            width: 100,
+                            width: 150,
                             child: Text(
-                              'Brewery',
-                              style: TextStyle(
-                                color: CustomColor.textPrimaryColor,
-                              ),
-                            )),
-                        SizedBox(
-                            width: 100,
-                            child: Text(
-                              'Food Truck',
-                              style: TextStyle(
+                              service,
+                              style: const TextStyle(
                                 color: CustomColor.textPrimaryColor,
                               ),
                             )),
@@ -1362,7 +1278,7 @@ class _Profile2PageState extends State<Profile2Page> {
                         horizontal: Constants.mainPadding * 2, vertical: 10),
                     child: Stack(children: [
                       Container(
-                        height: 164,
+                        height: 290,
                         decoration: BoxDecoration(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(4)),
@@ -1392,190 +1308,7 @@ class _Profile2PageState extends State<Profile2Page> {
                                           MainAxisAlignment.start,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const Text('Tuesday',
-                                                  style: TextStyle(
-                                                      color: CustomColor
-                                                          .textSecondaryColor,
-                                                      fontSize: 12)),
-                                              const Spacer(),
-                                              const Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 45),
-                                                child: Text('Closed',
-                                                    style: TextStyle(
-                                                        color: CustomColor
-                                                            .activeColor,
-                                                        fontSize: 12)),
-                                              ),
-                                              InkWell(
-                                                  onTap: () {},
-                                                  child: const Icon(
-                                                    Icons.edit_outlined,
-                                                    size: 22,
-                                                  )),
-                                            ]),
-                                        Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const Text('Wednesday',
-                                                  style: TextStyle(
-                                                      color: CustomColor
-                                                          .textSecondaryColor,
-                                                      fontSize: 12)),
-                                              const Spacer(),
-                                              const Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 45),
-                                                child: Text('8:00 AM - 9:00 PM',
-                                                    style: TextStyle(
-                                                        color: CustomColor
-                                                            .textSecondaryColor,
-                                                        fontSize: 12)),
-                                              ),
-                                              InkWell(
-                                                  onTap: () {},
-                                                  child: const Icon(
-                                                    Icons.edit_outlined,
-                                                    size: 22,
-                                                  )),
-                                            ]),
-                                        Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const Text('Thursday',
-                                                  style: TextStyle(
-                                                      color: CustomColor
-                                                          .textSecondaryColor,
-                                                      fontSize: 12)),
-                                              const Spacer(),
-                                              const Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 45),
-                                                child: Text('8:00 AM - 9:00 PM',
-                                                    style: TextStyle(
-                                                        color: CustomColor
-                                                            .textSecondaryColor,
-                                                        fontSize: 12)),
-                                              ),
-                                              InkWell(
-                                                  onTap: () {},
-                                                  child: const Icon(
-                                                    Icons.edit_outlined,
-                                                    size: 22,
-                                                  )),
-                                            ]),
-                                        Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const Text('Friday',
-                                                  style: TextStyle(
-                                                      color: CustomColor
-                                                          .textSecondaryColor,
-                                                      fontSize: 12)),
-                                              const Spacer(),
-                                              const Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 45),
-                                                child: Text('8:00 AM - 9:00 PM',
-                                                    style: TextStyle(
-                                                        color: CustomColor
-                                                            .textSecondaryColor,
-                                                        fontSize: 12)),
-                                              ),
-                                              InkWell(
-                                                  onTap: () {},
-                                                  child: const Icon(
-                                                    Icons.edit_outlined,
-                                                    size: 22,
-                                                  )),
-                                            ]),
-                                        Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const Text('Saturday',
-                                                  style: TextStyle(
-                                                      color: CustomColor
-                                                          .textSecondaryColor,
-                                                      fontSize: 12)),
-                                              const Spacer(),
-                                              const Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 45),
-                                                child: Text('8:00 AM - 9:00 PM',
-                                                    style: TextStyle(
-                                                        color: CustomColor
-                                                            .textSecondaryColor,
-                                                        fontSize: 12)),
-                                              ),
-                                              InkWell(
-                                                  onTap: () {},
-                                                  child: const Icon(
-                                                    Icons.edit_outlined,
-                                                    size: 22,
-                                                  )),
-                                            ]),
-                                        Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const Text('Sunday',
-                                                  style: TextStyle(
-                                                      color: CustomColor
-                                                          .textSecondaryColor,
-                                                      fontSize: 12)),
-                                              const Spacer(),
-                                              const Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 45),
-                                                child: Text('8:00 AM - 9:00 PM',
-                                                    style: TextStyle(
-                                                        color: CustomColor
-                                                            .textSecondaryColor,
-                                                        fontSize: 12)),
-                                              ),
-                                              InkWell(
-                                                  onTap: () {},
-                                                  child: const Icon(
-                                                    Icons.edit_outlined,
-                                                    size: 22,
-                                                  )),
-                                            ]),
-                                        Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const Text('Monday',
-                                                  style: TextStyle(
-                                                      color: CustomColor
-                                                          .textSecondaryColor,
-                                                      fontSize: 12)),
-                                              const Spacer(),
-                                              const Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 45),
-                                                child: Text('Closed',
-                                                    style: TextStyle(
-                                                        color: CustomColor
-                                                            .activeColor,
-                                                        fontSize: 12)),
-                                              ),
-                                              InkWell(
-                                                  onTap: () {},
-                                                  child: const Icon(
-                                                    Icons.edit_outlined,
-                                                    size: 22,
-                                                  )),
-                                            ]),
-                                      ]),
+                                      children: scheduleView),
                                 )
                               ])))
                     ]),
