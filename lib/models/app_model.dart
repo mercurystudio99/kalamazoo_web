@@ -236,10 +236,10 @@ class AppModel extends Model {
     required String name,
     required String location,
     required String email,
-    required String gender,
-    required String birthYear,
-    required String birthMonth,
-    required String birthDate,
+    String? gender,
+    String? birthYear,
+    String? birthMonth,
+    String? birthDate,
     // callback functions
     required VoidCallback onSuccess,
     required Function(String) onError,
@@ -252,10 +252,10 @@ class AppModel extends Model {
         Constants.USER_FULLNAME: name,
         Constants.USER_LOCATION: location,
         Constants.USER_EMAIL: email,
-        Constants.USER_GENDER: gender,
-        Constants.USER_BIRTH_YEAR: birthYear,
-        Constants.USER_BIRTH_MONTH: birthMonth,
-        Constants.USER_BIRTH_DAY: birthDate
+        Constants.USER_GENDER: gender ?? '',
+        Constants.USER_BIRTH_YEAR: birthYear ?? '',
+        Constants.USER_BIRTH_MONTH: birthMonth ?? '',
+        Constants.USER_BIRTH_DAY: birthDate ?? ''
       }).then((value) => onSuccess(),
           onError: (e) => onError('Profile Update Failed!'));
     }
@@ -572,6 +572,26 @@ class AppModel extends Model {
         Constants.RESTAURANT_SCHEDULE: schedule,
       });
       onSuccess(docRef.id);
+    }
+  }
+
+  void postServiceProfile({
+    required String imageUrl,
+    required String businessservice,
+    required String businessId,
+    required List<Map<String, dynamic>> schedule,
+    // callback functions
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) {
+    if (businessservice == Constants.C_RESTAURANTS ||
+        businessservice == Constants.C_WINERIES ||
+        businessservice == Constants.C_BREWERIES) {
+      _firestore.collection(businessservice).doc(businessId).update({
+        Constants.RESTAURANT_IMAGE: imageUrl,
+        Constants.RESTAURANT_SCHEDULE: schedule,
+      }).then((value) => onSuccess(),
+          onError: (e) => debugPrint("Error updating document $e"));
     }
   }
 

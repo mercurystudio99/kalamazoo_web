@@ -27,6 +27,8 @@ class _Profile2PageState extends State<Profile2Page> {
 
   PlatformFile? _imageFile;
   String _imageLink = '';
+  PlatformFile? _imageServiceFile;
+  String _imageServiceLink = '';
 
   final _storage = FirebaseStorage.instance;
   final _formKey = GlobalKey<FormState>();
@@ -53,6 +55,224 @@ class _Profile2PageState extends State<Profile2Page> {
       _imageFile = result.files.first;
       _imageLink = '';
     });
+  }
+
+  Future getImageService() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.any,
+    );
+    if (result == null) return;
+    setState(() {
+      _imageServiceFile = result.files.first;
+      _imageServiceLink = '';
+    });
+  }
+
+  void _saveProfile(
+      {required VoidCallback onCallback,
+      required Function(String) onError}) async {
+    if (_imageFile != null) {
+      AppModel().userExist(
+          email: _emailController.text.trim(),
+          onSuccess: () async {
+            if (_emailController.text.trim() == global.userEmail) {
+              Uint8List? fileBytes = _imageFile!.bytes;
+              String filename =
+                  DateTime.now().millisecondsSinceEpoch.toString() +
+                      _imageFile!.name;
+              var snapshot = await _storage
+                  .ref()
+                  .child('avatar/$filename')
+                  .putData(fileBytes!);
+
+              var url = await snapshot.ref.getDownloadURL();
+
+              AppModel().postProfile(
+                  imageUrl: url.toString(),
+                  name: _nameController.text.trim(),
+                  location: _locationController.text.trim(),
+                  email: _emailController.text.trim(),
+                  onSuccess: () {
+                    global.userName = _nameController.text.trim();
+                    global.userEmail = _emailController.text.trim();
+                    global.userAvatar = url.toString();
+                    onCallback();
+                  },
+                  onError: (String text) {
+                    onError(text);
+                  });
+            } else {
+              global.userFavourites = [];
+              onError('The account already exists for that email.');
+            }
+          },
+          onError: (String text) async {
+            Uint8List? fileBytes = _imageFile!.bytes;
+            String filename = DateTime.now().millisecondsSinceEpoch.toString() +
+                _imageFile!.name;
+            var snapshot = await _storage
+                .ref()
+                .child('avatar/$filename')
+                .putData(fileBytes!);
+
+            var url = await snapshot.ref.getDownloadURL();
+
+            AppModel().postProfile(
+                imageUrl: url.toString(),
+                name: _nameController.text.trim(),
+                location: _locationController.text.trim(),
+                email: _emailController.text.trim(),
+                onSuccess: () {
+                  global.userName = _nameController.text.trim();
+                  global.userEmail = _emailController.text.trim();
+                  global.userAvatar = url.toString();
+                  onCallback();
+                },
+                onError: (String text) {
+                  onError(text);
+                });
+          });
+    } else {
+      if (_imageLink.isEmpty) {
+        onError("Please upload your image.");
+      } else {
+        AppModel().userExist(
+            email: _emailController.text.trim(),
+            onSuccess: () {
+              if (_emailController.text.trim() == global.userEmail) {
+                AppModel().postProfile(
+                    imageUrl: _imageLink,
+                    name: _nameController.text.trim(),
+                    location: _locationController.text.trim(),
+                    email: _emailController.text.trim(),
+                    onSuccess: () {
+                      global.userName = _nameController.text.trim();
+                      global.userEmail = _emailController.text.trim();
+                      global.userAvatar = _imageLink;
+                      onCallback();
+                    },
+                    onError: (String text) {
+                      onError(text);
+                    });
+              } else {
+                global.userFavourites = [];
+                onError('The account already exists for that email.');
+              }
+            },
+            onError: (String text) {
+              AppModel().postProfile(
+                  imageUrl: _imageLink,
+                  name: _nameController.text.trim(),
+                  location: _locationController.text.trim(),
+                  email: _emailController.text.trim(),
+                  onSuccess: () {
+                    global.userName = _nameController.text.trim();
+                    global.userEmail = _emailController.text.trim();
+                    global.userAvatar = _imageLink;
+                    onCallback();
+                  },
+                  onError: (String text) {
+                    onError(text);
+                  });
+            });
+      }
+    }
+  }
+
+  void _saveServiceProfile(
+      {required VoidCallback onCallback,
+      required Function(String) onError}) async {
+    String service = '';
+    if (_restaurantService == Constants.C_RESTAURANTS) {
+      service = 'restaurant';
+    }
+    if (_restaurantService == Constants.C_BREWERIES) service = 'brewery';
+    if (_restaurantService == Constants.C_WINERIES) service = 'winery';
+    if (service.isEmpty) return;
+    List<Map<String, dynamic>> schedule = [];
+    for (var element in profileRestaurant[Constants.RESTAURANT_SCHEDULE]) {
+      schedule.add({
+        Constants.RESTAURANT_SCHEDULE_DAY:
+            element[Constants.RESTAURANT_SCHEDULE_DAY],
+        Constants.RESTAURANT_SCHEDULE_STARTHOUR:
+            element[Constants.RESTAURANT_SCHEDULE_STARTHOUR],
+        Constants.RESTAURANT_SCHEDULE_STARTMINUTE:
+            element[Constants.RESTAURANT_SCHEDULE_STARTMINUTE],
+        Constants.RESTAURANT_SCHEDULE_ENDHOUR:
+            element[Constants.RESTAURANT_SCHEDULE_ENDHOUR],
+        Constants.RESTAURANT_SCHEDULE_ENDMINUTE:
+            element[Constants.RESTAURANT_SCHEDULE_ENDMINUTE],
+        Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY:
+            element[Constants.RESTAURANT_SCHEDULE_ISWORKINGDAY]
+      });
+    }
+    if (_imageServiceFile != null) {
+      Uint8List? fileBytes = _imageServiceFile!.bytes;
+      String filename = DateTime.now().millisecondsSinceEpoch.toString() +
+          _imageServiceFile!.name;
+      var snapshot =
+          await _storage.ref().child('$service/$filename').putData(fileBytes!);
+
+      var url = await snapshot.ref.getDownloadURL();
+
+      AppModel().postServiceProfile(
+          imageUrl: url.toString(),
+          businessservice: _restaurantService,
+          businessId: _restaurantID,
+          schedule: schedule,
+          onSuccess: () {
+            onCallback();
+          },
+          onError: (String text) {});
+    } else {
+      if (_imageServiceLink.isEmpty) {
+        onError("Please upload the image.");
+      } else {
+        AppModel().postServiceProfile(
+            imageUrl: _imageServiceLink,
+            businessservice: _restaurantService,
+            businessId: _restaurantID,
+            schedule: schedule,
+            onSuccess: () {
+              onCallback();
+            },
+            onError: (String text) {});
+      }
+    }
+  }
+
+  void _getProfile() {
+    if (global.userID.isNotEmpty) {
+      AppModel().getProfile(
+          onSuccess: (Map<String, dynamic>? param) {
+            if (param == null) return;
+            _restaurantID = param[Constants.USER_RESTAURANT_ID];
+            _restaurantService = param[Constants.USER_RESTAURANT_SERVICE];
+            if (param[Constants.USER_PROFILE_PHOTO] != null) {
+              _imageLink = param[Constants.USER_PROFILE_PHOTO];
+            }
+            _nameController.text = param[Constants.USER_FULLNAME];
+            if (param[Constants.USER_LOCATION] != null) {
+              _locationController.text = param[Constants.USER_LOCATION];
+            }
+            _emailController.text = param[Constants.USER_EMAIL];
+            if (param[Constants.USER_PHONE_NUMBER] != null) {
+              _phoneController.text = param[Constants.USER_PHONE_NUMBER];
+            }
+            AppModel().getRestaurantProfile(
+                businessId: param[Constants.USER_RESTAURANT_ID],
+                businessService: param[Constants.USER_RESTAURANT_SERVICE],
+                onSuccess: (Map<String, dynamic> param2) {
+                  profileRestaurant = param2;
+                  if (param2[Constants.RESTAURANT_IMAGE] != null) {
+                    _imageServiceLink = param2[Constants.RESTAURANT_IMAGE];
+                  }
+                  if (!mounted) return;
+                  setState(() {});
+                });
+          },
+          onError: (String text) {});
+    }
   }
 
   String? _validateEmail(String value) {
@@ -89,34 +309,7 @@ class _Profile2PageState extends State<Profile2Page> {
   @override
   void initState() {
     super.initState();
-    if (global.userID.isNotEmpty) {
-      AppModel().getProfile(
-          onSuccess: (Map<String, dynamic>? param) {
-            if (param == null) return;
-            _restaurantID = param[Constants.USER_RESTAURANT_ID];
-            _restaurantService = param[Constants.USER_RESTAURANT_SERVICE];
-            if (param[Constants.USER_PROFILE_PHOTO] != null) {
-              _imageLink = param[Constants.USER_PROFILE_PHOTO];
-            }
-            _nameController.text = param[Constants.USER_FULLNAME];
-            if (param[Constants.USER_LOCATION] != null) {
-              _locationController.text = param[Constants.USER_LOCATION];
-            }
-            _emailController.text = param[Constants.USER_EMAIL];
-            if (param[Constants.USER_PHONE_NUMBER] != null) {
-              _phoneController.text = param[Constants.USER_PHONE_NUMBER];
-            }
-            AppModel().getRestaurantProfile(
-                businessId: param[Constants.USER_RESTAURANT_ID],
-                businessService: param[Constants.USER_RESTAURANT_SERVICE],
-                onSuccess: (Map<String, dynamic> param2) {
-                  profileRestaurant = param2;
-                  if (!mounted) return;
-                  setState(() {});
-                });
-          },
-          onError: (String text) {});
-    }
+    _getProfile();
   }
 
   @override
@@ -762,6 +955,171 @@ class _Profile2PageState extends State<Profile2Page> {
                                 ])),
                             const SizedBox(height: 20),
                             Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: formPadding),
+                              child: SizedBox(
+                                  height: 40,
+                                  width: screenSize.width,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            CustomColor.primaryColor,
+                                        elevation: 3,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(4)),
+                                        shadowColor: CustomColor.primaryColor
+                                            .withOpacity(0.5),
+                                        padding: const EdgeInsets.all(5)),
+                                    onPressed: () {
+                                      if (_formKey.currentState!.validate()) {
+                                        _saveProfile(onCallback: () {
+                                          setState(() {});
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                                content: Text(
+                                                    'Successfully Updated.')),
+                                          );
+                                        }, onError: (String text) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(content: Text(text)),
+                                          );
+                                        });
+                                      }
+                                    },
+                                    child: const Text(
+                                      'Save',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0,
+                                          letterSpacing: 1),
+                                    ),
+                                  )),
+                            ),
+                            const SizedBox(height: 20),
+                            Center(
+                                child: Column(children: [
+                              Stack(children: [
+                                _imageServiceFile != null
+                                    ? Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal:
+                                                Constants.mainPadding * 2),
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(10)),
+                                          child: Image.memory(
+                                            Uint8List.fromList(
+                                                _imageServiceFile!.bytes!),
+                                            width: 300,
+                                            height: 150,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      )
+                                    : _imageServiceLink.isNotEmpty
+                                        ? Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal:
+                                                    Constants.mainPadding * 2),
+                                            child: ClipRRect(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(10)),
+                                                child: CachedNetworkImage(
+                                                  imageUrl: _imageServiceLink,
+                                                  width: 300,
+                                                  height: 150,
+                                                  fit: BoxFit.cover,
+                                                  progressIndicatorBuilder: (context,
+                                                          url,
+                                                          downloadProgress) =>
+                                                      CircularProgressIndicator(
+                                                          value:
+                                                              downloadProgress
+                                                                  .progress),
+                                                  errorWidget: (context, url,
+                                                          error) =>
+                                                      const Icon(Icons.error),
+                                                )),
+                                          )
+                                        : Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal:
+                                                    Constants.mainPadding * 2),
+                                            child: ClipRRect(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(10)),
+                                                child: Container(
+                                                  width: 300,
+                                                  height: 150,
+                                                  color: CustomColor
+                                                      .textSecondaryColor,
+                                                ))),
+                              ]),
+                              const SizedBox(height: 20),
+                              SizedBox(
+                                  height: 40,
+                                  width: 160,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            CustomColor.primaryColor,
+                                        elevation: 3,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(4)),
+                                        shadowColor: CustomColor.primaryColor
+                                            .withOpacity(0.5),
+                                        padding: const EdgeInsets.all(5)),
+                                    onPressed: () {
+                                      getImageService();
+                                    },
+                                    child: const Text(
+                                      'Upload New',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0,
+                                          letterSpacing: 1),
+                                    ),
+                                  )),
+                              const SizedBox(height: 20),
+                              SizedBox(
+                                  height: 40,
+                                  width: 160,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                            side: const BorderSide(
+                                                width: 1,
+                                                color: CustomColor.activeColor),
+                                            borderRadius:
+                                                BorderRadius.circular(4)),
+                                        padding: const EdgeInsets.all(5)),
+                                    onPressed: () {
+                                      setState(() {
+                                        _imageServiceFile = null;
+                                        _imageServiceLink = '';
+                                      });
+                                    },
+                                    child: const Text(
+                                      'Delete photo',
+                                      style: TextStyle(
+                                          color: CustomColor.activeColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0,
+                                          letterSpacing: 1),
+                                    ),
+                                  )),
+                            ])),
+                            const SizedBox(height: 20),
+                            Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: formPadding, vertical: 10),
                                 child: const Text(
@@ -809,6 +1167,50 @@ class _Profile2PageState extends State<Profile2Page> {
                                           )
                                         ])))
                               ]),
+                            ),
+                            const SizedBox(height: 20),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: formPadding),
+                              child: SizedBox(
+                                  height: 40,
+                                  width: screenSize.width,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            CustomColor.primaryColor,
+                                        elevation: 3,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(4)),
+                                        shadowColor: CustomColor.primaryColor
+                                            .withOpacity(0.5),
+                                        padding: const EdgeInsets.all(5)),
+                                    onPressed: () {
+                                      _saveServiceProfile(onCallback: () {
+                                        setState(() {});
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Successfully Updated.')),
+                                        );
+                                      }, onError: (String text) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(content: Text(text)),
+                                        );
+                                      });
+                                    },
+                                    child: const Text(
+                                      'Save',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0,
+                                          letterSpacing: 1),
+                                    ),
+                                  )),
                             ),
                             const SizedBox(height: 20),
                             Padding(
@@ -903,6 +1305,37 @@ class _Profile2PageState extends State<Profile2Page> {
                         ),
                       ),
                       const SizedBox(height: 50),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: Constants.mainPadding * 2),
+                        child: SizedBox(
+                            height: 40,
+                            width: 200,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  elevation: 3,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)),
+                                  shadowColor:
+                                      CustomColor.primaryColor.withOpacity(0.5),
+                                  padding: const EdgeInsets.all(5)),
+                              onPressed: () {
+                                AppModel().userLogout(onSuccess: () {
+                                  context.go('/');
+                                });
+                              },
+                              child: const Text(
+                                'Log Out',
+                                style: TextStyle(
+                                    color: CustomColor.primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0,
+                                    letterSpacing: 1),
+                              ),
+                            )),
+                      ),
                     ],
                   )),
                 ],
@@ -1266,6 +1699,152 @@ class _Profile2PageState extends State<Profile2Page> {
                             )),
                       ])),
                   const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: Constants.mainPadding * 2),
+                    child: SizedBox(
+                        height: 40,
+                        width: screenSize.width,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: CustomColor.primaryColor,
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4)),
+                              shadowColor:
+                                  CustomColor.primaryColor.withOpacity(0.5),
+                              padding: const EdgeInsets.all(5)),
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _saveProfile(onCallback: () {
+                                setState(() {});
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Successfully Updated.')),
+                                );
+                              }, onError: (String text) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(text)),
+                                );
+                              });
+                            }
+                          },
+                          child: const Text(
+                            'Save',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0,
+                                letterSpacing: 1),
+                          ),
+                        )),
+                  ),
+                  const SizedBox(height: 20),
+                  Center(
+                      child: Column(children: [
+                    Stack(children: [
+                      _imageServiceFile != null
+                          ? Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: Constants.mainPadding * 2),
+                              child: ClipRRect(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(10)),
+                                child: Image.memory(
+                                  Uint8List.fromList(_imageServiceFile!.bytes!),
+                                  width: 300,
+                                  height: 150,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            )
+                          : _imageServiceLink.isNotEmpty
+                              ? Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: Constants.mainPadding * 2),
+                                  child: ClipRRect(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(10)),
+                                      child: CachedNetworkImage(
+                                        imageUrl: _imageServiceLink,
+                                        width: 300,
+                                        height: 150,
+                                        fit: BoxFit.cover,
+                                        progressIndicatorBuilder: (context, url,
+                                                downloadProgress) =>
+                                            CircularProgressIndicator(
+                                                value:
+                                                    downloadProgress.progress),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
+                                      )),
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: Constants.mainPadding * 2),
+                                  child: ClipRRect(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(10)),
+                                      child: Container(
+                                        width: 300,
+                                        height: 150,
+                                        color: CustomColor.textSecondaryColor,
+                                      ))),
+                    ]),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                        height: 40,
+                        width: 160,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: CustomColor.primaryColor,
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4)),
+                              shadowColor:
+                                  CustomColor.primaryColor.withOpacity(0.5),
+                              padding: const EdgeInsets.all(5)),
+                          onPressed: () {
+                            getImageService();
+                          },
+                          child: const Text(
+                            'Upload New',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0,
+                                letterSpacing: 1),
+                          ),
+                        )),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                        height: 40,
+                        width: 160,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  side: const BorderSide(
+                                      width: 1, color: CustomColor.activeColor),
+                                  borderRadius: BorderRadius.circular(4)),
+                              padding: const EdgeInsets.all(5)),
+                          onPressed: () {
+                            setState(() {
+                              _imageServiceFile = null;
+                              _imageServiceLink = '';
+                            });
+                          },
+                          child: const Text(
+                            'Delete photo',
+                            style: TextStyle(
+                                color: CustomColor.activeColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0,
+                                letterSpacing: 1),
+                          ),
+                        )),
+                  ])),
+                  const SizedBox(height: 20),
                   const Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: Constants.mainPadding * 2, vertical: 10),
@@ -1312,6 +1891,45 @@ class _Profile2PageState extends State<Profile2Page> {
                                 )
                               ])))
                     ]),
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: Constants.mainPadding * 2),
+                    child: SizedBox(
+                        height: 40,
+                        width: screenSize.width,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: CustomColor.primaryColor,
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4)),
+                              shadowColor:
+                                  CustomColor.primaryColor.withOpacity(0.5),
+                              padding: const EdgeInsets.all(5)),
+                          onPressed: () {
+                            _saveServiceProfile(onCallback: () {
+                              setState(() {});
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Successfully Updated.')),
+                              );
+                            }, onError: (String text) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(text)),
+                              );
+                            });
+                          },
+                          child: const Text(
+                            'Save',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0,
+                                letterSpacing: 1),
+                          ),
+                        )),
                   ),
                   const SizedBox(height: 20),
                   Padding(
@@ -1398,6 +2016,36 @@ class _Profile2PageState extends State<Profile2Page> {
                   ),
                 ],
               ),
+            ),
+            const SizedBox(height: 50),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                  vertical: 10, horizontal: Constants.mainPadding * 2),
+              child: SizedBox(
+                  height: 40,
+                  width: 200,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        elevation: 3,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        shadowColor: CustomColor.primaryColor.withOpacity(0.5),
+                        padding: const EdgeInsets.all(5)),
+                    onPressed: () {
+                      AppModel().userLogout(onSuccess: () {
+                        context.go('/');
+                      });
+                    },
+                    child: const Text(
+                      'Log Out',
+                      style: TextStyle(
+                          color: CustomColor.primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
+                          letterSpacing: 1),
+                    ),
+                  )),
             ),
             const SizedBox(height: 50),
             const BottomBar()
