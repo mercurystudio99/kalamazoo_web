@@ -1290,7 +1290,9 @@ class _Profile2PageState extends State<Profile2Page> {
                                         shadowColor: CustomColor.primaryColor
                                             .withOpacity(0.5),
                                         padding: const EdgeInsets.all(5)),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      context.go('/uploaddailyspecial');
+                                    },
                                     child: const Text(
                                       'UPLOAD DAILY SPECIAL',
                                       style: TextStyle(
@@ -2003,7 +2005,9 @@ class _Profile2PageState extends State<Profile2Page> {
                               shadowColor:
                                   CustomColor.primaryColor.withOpacity(0.5),
                               padding: const EdgeInsets.all(5)),
-                          onPressed: () {},
+                          onPressed: () {
+                            context.go('/uploaddailyspecial');
+                          },
                           child: const Text(
                             'UPLOAD DAILY SPECIAL',
                             style: TextStyle(
