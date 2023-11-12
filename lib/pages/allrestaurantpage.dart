@@ -82,7 +82,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
   String _getDistance(List<dynamic> geolocation) {
     double distance = Geolocator.distanceBetween(
         global.latitude, global.longitude, geolocation[0], geolocation[1]);
-    distance = distance / 1000;
+    distance = distance / 1609.344;
     return distance.toStringAsFixed(1);
   }
 
@@ -496,7 +496,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                         size: sizes[8],
                       ),
                       Text(
-                        '${_getDistance(brand[Constants.RESTAURANT_GEOLOCATION])}km',
+                        '${_getDistance(brand[Constants.RESTAURANT_GEOLOCATION])}mi',
                         style: TextStyle(
                           fontSize: sizes[9],
                           color: CustomColor.textSecondaryColor,
@@ -722,7 +722,7 @@ class _AllRestaurantPageState extends State<AllRestaurantPage> {
                                 size: sizes[2],
                               ),
                               Text(
-                                '${_getDistance(element[Constants.RESTAURANT_GEOLOCATION])}km',
+                                '${_getDistance(element[Constants.RESTAURANT_GEOLOCATION])}mi',
                                 style: TextStyle(
                                     fontSize: sizes[2],
                                     color: CustomColor.textSecondaryColor),

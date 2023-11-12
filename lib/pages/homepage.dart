@@ -194,7 +194,7 @@ class _HomePageState extends State<HomePage> {
   String _getDistance(List<dynamic> geolocation) {
     double distance = Geolocator.distanceBetween(
         global.latitude, global.longitude, geolocation[0], geolocation[1]);
-    distance = distance / 1000;
+    distance = distance / 1609.344;
     return distance.toStringAsFixed(1);
   }
 
@@ -773,7 +773,7 @@ class _HomePageState extends State<HomePage> {
                         size: 16,
                       ),
                       Text(
-                        '${_getDistance(brand[Constants.RESTAURANT_GEOLOCATION])}km',
+                        '${_getDistance(brand[Constants.RESTAURANT_GEOLOCATION])}mi',
                         style: const TextStyle(
                           fontSize: 14.0,
                           color: CustomColor.textSecondaryColor,
@@ -1142,7 +1142,7 @@ class _HomePageState extends State<HomePage> {
                                   size: 14,
                                 ),
                                 Text(
-                                  '${_getDistance(element[Constants.RESTAURANT_GEOLOCATION])}km',
+                                  '${_getDistance(element[Constants.RESTAURANT_GEOLOCATION])}mi',
                                   style: const TextStyle(
                                       fontSize: 14.0,
                                       color: CustomColor.textSecondaryColor),
@@ -1383,7 +1383,7 @@ class _HomePageState extends State<HomePage> {
                                     size: sizes[2],
                                   ),
                                   Text(
-                                    '${_getDistance(element[Constants.RESTAURANT_GEOLOCATION])}km',
+                                    '${_getDistance(element[Constants.RESTAURANT_GEOLOCATION])}mi',
                                     style: TextStyle(
                                         fontSize: sizes[2],
                                         color: CustomColor.textSecondaryColor),

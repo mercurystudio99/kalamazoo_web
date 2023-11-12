@@ -81,7 +81,7 @@ class _SearchPageState extends State<SearchPage> {
   String _getDistance(List<dynamic> geolocation) {
     double distance = Geolocator.distanceBetween(
         global.latitude, global.longitude, geolocation[0], geolocation[1]);
-    distance = distance / 1000;
+    distance = distance / 1609.344;
     return distance.toStringAsFixed(1);
   }
 
@@ -325,7 +325,7 @@ class _SearchPageState extends State<SearchPage> {
                                 size: sizes[2],
                               ),
                               Text(
-                                '${_getDistance(item[Constants.RESTAURANT_GEOLOCATION])}km',
+                                '${_getDistance(item[Constants.RESTAURANT_GEOLOCATION])}mi',
                                 style: TextStyle(
                                     fontSize: sizes[2],
                                     color: CustomColor.textSecondaryColor),
