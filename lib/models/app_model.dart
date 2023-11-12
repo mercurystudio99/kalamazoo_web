@@ -654,4 +654,22 @@ class AppModel extends Model {
     }).then((value) => onSuccess(),
         onError: (e) => debugPrint("Error updating document $e"));
   }
+
+  void postDailySpecial({
+    required String imageLink,
+    required String desc,
+    // callback functions
+    required VoidCallback onSuccess,
+  }) async {
+    final docRef = _firestore.collection(Constants.C_DAILYSPECIAL).doc();
+    await docRef.set({
+      Constants.DAILYSPECIAL_ID: docRef.id,
+      Constants.DAILYSPECIAL_IMAGE_LINK: imageLink,
+      Constants.DAILYSPECIAL_DESC: desc,
+      Constants.DAILYSPECIAL_ACTIVE: false,
+      Constants.DAILYSPECIAL_BUSINESS_ID: globals.ownerBusinessID,
+      Constants.DAILYSPECIAL_BUSINESS_TYPE: globals.ownerBusinessType,
+    });
+    onSuccess();
+  }
 }
