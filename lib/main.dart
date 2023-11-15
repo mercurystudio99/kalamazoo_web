@@ -24,6 +24,7 @@ import 'package:bestlocaleats/pages/profile.dart';
 import 'package:bestlocaleats/pages/profile2.dart';
 import 'package:bestlocaleats/pages/subscription.dart';
 import 'package:bestlocaleats/pages/uploaddailyspecial.dart';
+import 'package:bestlocaleats/pages/event.dart';
 import 'package:bestlocaleats/pages/terms.dart';
 import 'package:bestlocaleats/pages/policy.dart';
 import 'package:bestlocaleats/pages/error.dart';
@@ -156,6 +157,12 @@ final GoRouter _router = GoRouter(
       path: '/terms',
       builder: (BuildContext context, GoRouterState state) {
         return const TermsPage();
+      },
+    ),
+    GoRoute(
+      path: '/event',
+      builder: (BuildContext context, GoRouterState state) {
+        return const EventPage();
       },
     ),
     GoRoute(

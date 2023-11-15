@@ -672,4 +672,39 @@ class AppModel extends Model {
     });
     onSuccess();
   }
+
+  void getEventBanners({
+    required Function(List<String>) onSuccess,
+  }) async {
+    List<String> banners = [];
+    final snapshots =
+        await _firestore.collection(Constants.C_EVENTS).doc('banners').get();
+    if (snapshots.data()!.isNotEmpty) {
+      for (var item in snapshots.data()!['banners']) {
+        banners.add(item);
+      }
+    }
+    onSuccess(banners);
+  }
+
+  void getEventForMonth({
+    required String year,
+    required String month,
+    required Function(List<Map<String, dynamic>>) onSuccess,
+  }) async {
+    final snapshots = await _firestore
+        .collection(Constants.C_EVENTS)
+        .where(Constants.EVENT_YEAR, isEqualTo: year)
+        .where(Constants.EVENT_MONTH, isEqualTo: month)
+        .get();
+    if (snapshots.docs.isEmpty) {
+      onSuccess([]);
+    } else {
+      List<Map<String, dynamic>> list = [];
+      for (var element in snapshots.docs) {
+        list.add(element.data());
+      }
+      onSuccess(list);
+    }
+  }
 }
